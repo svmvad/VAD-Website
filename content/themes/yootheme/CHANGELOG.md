@@ -1,5 +1,112 @@
 # Changelog
 
+## 4.0.1 (May 26, 2023)
+
+### Fixed
+
+- Hide skip navigation link if CSS isn't recompiled
+- Fix preserve color option in column
+
+## 4.0.0 (May 24, 2023)
+
+### Added
+
+- Add parent content sources
+- Add dynamic multiplication for section, row, column and elements
+- Add nesting of multiple items content sources
+- Add general and advanced settings to Sublayout element
+- Add source option to all multiple items elements
+- Add articles as source to category source (Joomla)
+- Add tagged items source to tag source (Joomla)
+- Add post type source to taxonomy source (WordPress)
+- Add single article page source to Category Blog and Featured Articles (Joomla)
+- Add single tag page source to Tagged Items and List All Tags (Joomla)
+- Add single tagged item page source to Tagged Items (Joomla)
+- Add single post type page source to Post Type and Taxonomy Archives (WordPress)
+- Add custom menu item source
+- Add child menu items as source to menu item source
+- Add aria label option for links across all elements
+- Add aria label to form controls which don't have a label
+- Add aria label to search form controls
+- Add aria label to the link of the logo image
+- Add aria label and use `nav` element for breadcrumb navigation
+- Add structured data to breadcrumb navigation
+- Add `comment` role to comments
+- Add skip navigation link to main content
+- Add `main`, `header` and `footer` HTML elements to site templates
+- Add HTML element option to section, row, column and Sublayout
+- Add HTML element option to multiple items elements
+- Add HTML element option to Text, Panel, Overlay and Subnav elements
+- Add HTML element option to Nav element
+- Add support for Module Tag option to Builder module on top/bottom positions (Joomla)
+- Add HTML Element option to Builder widget on top/bottom positions (WordPress)
+- Add YOOtheme link to admin menu
+- Add scroll into view buttons for elements to builder and preview
+- Add article edit button to builder (Joomla)
+- Add option to transform element type into another
+- Add focal point option for image cropping across all elements
+- Add blur property to parallax settings
+- Add 6 column layout presets to row layouts in builder
+- Add alignment option to builder rows
+- Add card styles to column
+- Add manual order for filter navigation to Grid and Gallery elements
+- Add expand to title grid width option in Panel, Grid, Panel Slider and Switcher elements
+- Add field mapping for id option in across all elements
+- Add dynamic content to Countdown element
+- Add inline SVG option to Social element
+- Add direction outside mode for theme transition border to style customizer
+- Add option to limit the template assignment by tags set in the menu item for Category Blog (Joomla)
+- Add option to limit the template assignment by terms set in the URL for Taxonomy Archives (WordPress)
+- Add image quality options to advanced settings
+- Add support for multiple media root folders in finder (Joomla 4+)
+- Add favicon to admin area (WordPress)
+- Add pagination option to WooCommerce Products element (WordPress)
+- Add cart cross-sells columns option to WooCommerce layout settings (WordPress)
+- Add support for YouTube Shorts URLs in Video element
+- Add support for native lazy loading YouTube or Vimeo videos in Video element
+- Add page `locale` and `url` as site source
+- Add ID field to type sources
+- Add User Groups field to user type source (Joomla)
+- Add Roles field to user type source (WordPress)
+- Add `size` filter to user avatar source (WordPress)
+- Add localized 404 error page link in customizer (Joomla)
+
+### Changed
+
+- IMPORTANT: Change PHP requirement from 7.2 to 7.4
+- Disabled elements will no longer show in customizer preview (WYSIWYG)
+- Refactor item link in List element
+- `Load image eagerly` affects first image in Slideshow element only
+- Change header social links into content items with more fields
+- Remove YOOtheme API from theme settings export
+- Use native table prefix placeholder in sql queries (Joomla)
+- Move popular posts from custom source to order and direction options (WordPress)
+- Change Template matching for single post template type. Use `and` operator to match across taxonomies and `or` operator to match within taxonomy. (WordPress)
+- Load Leaflet library and GoogleMaps Markerclusterer scripts locally
+- Update GraphQL library to version 15.2.3
+
+### Removed
+
+- Remove YOOtheme quick icon from admin dashboard (Joomla)
+- Remove option to limit the template assignment by tagged categories for Category Blog (Joomla)
+
+### Fixed
+
+- Fix section overlap for builder module in top and bottom positions
+- Fix padding and image overlay position if no style is selected in column
+- Fix missing `active` field in menu item source
+- Fix search term highlighting in search results (Joomla 4)
+- Fix lazy loading Font Awesome (Joomla 4+)
+- Fix compatibility for YITH WooCommerce plugins (WordPress)
+
+## 3.0.32 (May 19, 2023)
+
+### Fixed
+
+- Fix "YOOtheme Builder" button in article edit view (Joomla 4.3+)
+- Fix Customizer not opening if no theme css file can be found (WordPress)
+- Fix for non-existing fields in element config
+
 ## 3.0.31 (April 24, 2023)
 
 ### Fixed
@@ -81,7 +188,7 @@
 
 ## 3.0.21 (January 12, 2023)
 
-### Add
+### Added
 
 - Add style to WooCommerce remove coupon link on Cart and Checkout pages (WordPress)
 
@@ -449,220 +556,6 @@
 - Fix theme not being updatable with WP-CLI (WordPress)
 - Fix PHP deprecation warnings
 
-## 3.0.0-beta.6 (August 24, 2022)
-
-### Added
-
-- Add transition border option to Panel, Grid, Overlay and Gallery elements
-
-### Changed
-
-- Improve active state for menu items (Joomla)
-
-### Fixed
-
-- Fix sticky elements within column in builder columns
-- Fix margin shift in Accordion element
-- Fix parallax in Panel element
-- Fix menu item source (Joomla 4.2+)
-- Fix switching style while using 'Preview all UI components' breaks Navbar
-
-## 3.0.0-beta.5 (August 12, 2022)
-
-### Added
-
-- Add subfolders for image caching
-- Add additional filters to Custom Menu Items source
-
-### Fixed
-
-- Fix dialog toggle padding in navbar position for stacked header layouts
-- Fix rendering Widget Area element within a Builder Widget (WordPress)
-- Fix navbar border vertical mode in combination with justified header layouts
-- Fix importing CSS files from Less files
-
-## 3.0.0-beta.4 (August 8, 2022)
-
-### Added
-
-- Add option to keep IPTC Photo Metadata of JPEG images
-- Add content width option for dialog dropbar layouts
-
-### Changed
-
-- IMPORTANT: Change PHP requirement from 5.6 to 7.2
-- Change default parallax easing to linear (0), previously ease-in-quad (1)
-- Update GraphQL library to version 14.11.6
-- Remove .woff format from font files in CSS
-
-### Fixed
-
-- Fix remove horizontal padding for dropbar menus
-- Fix entering a percent value in parallax props
-- Fix position center in RTL CSS
-- Fix custom articles/post source filter by authors (WordPress)
-- Fix theme not being updateable with WP-CLI (WordPress)
-
-## 3.0.0-beta.3 (July 15, 2022)
-
-### Added
-
-- Add grid options to Nav element
-- Add field type source for ACF file field (WordPress)
-
-### Fixed
-
-- Fix logo link for pages with module builder element (Joomla)
-
-## 3.0.0-beta.2 (July 13, 2022)
-
-### Added
-
-- Add menu position settings to Menu panel
-- Add all menu position settings to menu module/widget and vice versa
-- Add nav style option to menu position and menu module/widget settings
-- Add image alignment to menu position and menu module/widget settings
-- Add smooth scrolling to links with URL fragments in all menus
-- Add nav secondary style modifier across all menu options and style customizer
-- Add dropdown large option to menu item settings
-- Add dropbar dialog layouts to header settings
-- Add option to show parent icon in navbar to header settings
-- Add width option to modal header layouts
-- Add option to disable transparency to mobile header settings
-- Add image, icon and subtitle to menu item source
-- Add image, icon and subtitle fields to Nav element
-- Add nav item type header and divider to Nav element
-- Add none to gap option in Button element
-- Add option to show points of interest on Google Maps in Map element
-- Add navbar primary gap options to Navbar component in style customizer
-- Add dedicated parent icon for primary accordion nav
-
-### Changed
-
-- Move general menu item options to menu position settings
-- Rename menu style option to menu type in menu position and menu module/widget settings
-- Inherit hover and active colors for parent icon of accordion nav
-- Use language overrides in custom fields (Joomla)
-- Active nav menu accordion items are open on page load
-
-### Removed
-
-- Remove dividers from navbar dropdown grids
-
-### Fixed
-
-- Fix regression with menu item active states in WordPress
-- Fix margin for iconnav style
-- Fix menu item source no longer ignores `Display in Menu` param (Joomla)
-- Fix ordering of Articles Field source (Joomla)
-- Fix inserting Rows into Sublayout element
-- Fix navbar justify in combination with navbar-nav-item-line-mode in all styles
-- Fix padding for navbar-mode-border-vertical set to partial in Pinewood Lake style
-- Fix missing navbar top border if headerbar top is present in Pinewood Lake style
-- Fix modules not displaying in module element (Joomla)
-- Fix PHP deprecation warnings
-- Fix SvgHelper handles values ending with 'px'
-- Fix frontend editing modal (Joomla)
-- Fix menu item source link field for alias menu items (Joomla)
-
-## 3.0.0-beta.1 (June 7, 2022)
-
-### Added
-
-- Add dropdown builder for mega menus to menu item settings
-- Add width and padding options for builder dropdowns to menu item settings
-- Add option to stretch the dropdown to navbar or its container to menu item settings
-- Add option to change default dropdown alignment to menu item settings
-- Add image width and height as well as inline SVG options to menu item settings
-- Add icon and width option to menu item settings
-- Add margin between image and title option to menu settings
-- Add subtitle option for all menu types and levels
-- Add dropdowns for subnav and iconnav menu type
-- Add `Horizontal Justify` and `Stacked Justify` layouts to header layouts
-- Add `Stacked Center Split B` layout to header layouts
-- Add split items option for stacked center split header layouts
-- Add push items option for stacked left header layout
-- Add offcanvas and modal dialog layout option for any header layout
-- Add `dialog` module position and widget area
-- Add push items option for dialog layouts
-- Add dialog logo image and mobile inverse logo image
-- Add position start and end options for dialog toggle, search and social icons in header layouts
-- Add option to disable mobile header
-- Add mobile header and mobile dialog layout options
-- Add `navbar-mobile` and `header-mobile` module positions and widget areas
-- Add push items option for mobile dialog layouts
-- Add dropdown animations for mobile dropdown dialog layouts
-- Add position start and end options for mobile dialog toggle in mobile header layouts
-- Add search and social options for mobile header layouts
-- Add module/widget builder support for positions other than `top` and `bottom`
-- Add Sublayout element
-- Add custom menu item source
-- Add sticky cover and reveal effects to builder sections
-- Add two additional position sticky modes to builder columns
-- Add status icons for sticky columns to builder
-- Add index to column and element items in builder
-- Add background video to builder columns
-- Add parallax stops to parallax settings
-- Add start and end options to parallax settings
-- Add transform origin option to parallax settings
-- Add more viewport height options to builder sections
-- Add custom CSS field for builder rows
-- Add border option to Overlay and Gallery elements
-- Add loading eager option for images across all elements
-- Add text small and large options to title, meta and content styles in all elements
-- Add AVIF image support
-- Add WebP image support for Safari
-- Add option to disable expanding the main section height to fill the viewport on small pages
-- Add border bottom option for headerbar bottom to style customizer
-- Add nav subtitle options to Nav, Dropdown and Navbar component in style customizer
-- Add navbar primary toggle width option to Navbar component in style customizer
-- Add nav item padding option for medium breakpoint to Navbar component in style customizer
-- Add nav item gap options to Navbar component in style customizer
-
-### Changed
-
-- Move navbar item settings from Layout panel to Menu panel
-- Make Joomla menu item editing available as button in menu item settings
-- Merge stacked left header, modal and offcanvas dialog layouts thanks to push options
-- Move modal and offcanvas layouts from header to dialog layouts
-- Improve close icon not overlaying other content in offcanvas and modal dialog layouts
-- Refactor mobile header settings to have mobile header and dialog layouts
-- Rename `mobile` module position and widget area to `dialog-mobile`
-- Refactor builder columns
-- Allow parent row and column as target value for parallax settings
-- Use better popover positioning instead of switcher fallback on small devices in Popover element
-- Use native loading lazy attribute for images
-- Use picture element to serve next-gen images
-- Remove lazy loading and next-gen image options. Now enabled by default
-- Set `width` and `height` attributes for image elements to prevent layout shifts
-- Crop external images correctly if width and height are set
-- Change template name from `yootheme` to `YOOtheme` (Joomla)
-- Improve social links icon detection
-- Allow mapping Url, Alt and Caption in Toolset image field (WordPress)
-- Refactor source query builder and improve field aliases
-- Update Leaflet library to version 1.8.0
-- Update Google Maps JavaScript MarkerClusterer library to 2.0.7
-
-### Removed
-
-- Remove support for start playing animated Gifs when entering the viewport
-- Remove dropbar push mode in navbar settings
-
-### Fixed
-
-- Fix layout if only the column width for phone portrait is set to `1/1`
-- Fix caching plugins to work with next-gen images
-- Fix font loading in Font Picker after search
-- Fix navbar primary toggle font-size and font-weight
-- Fix missing `hidden` HTML class (Joomla 4)
-- Fix search icon for smart search (Joomla)
-- Fix search icon if backdrop-filter is used
-- Fix frontend editing button not overlaying content (Joomla)
-- Fix panel closes when deleting an element through preview, while editing that element
-- Fix search using obsolete mod_search (Joomla 4)
-- Fix deprecation warning when querying authors (WordPress)
-- Fix '0' values not rendered in table element
-
 ## 2.7.26 (September 5, 2022)
 
 ### Fixed
@@ -748,19 +641,6 @@
 ## 2.7.17 (February 9, 2022)
 
 ### Changed
-
-- Errors in custom CSS/Less code no longer prevent the style from being compiled
-- Sidebar only displays modules with content (Joomla 4)
-- Use stream wrappers for template loading (Joomla)
-
-### Fixed
-
-- Fix warning thrown by `ini_set()` is suppressed now
-- Fix error with saved Element presets
-
-## 2.7.17 beta 1 (February 3, 2022)
-
-### Change
 
 - Errors in custom CSS/Less code no longer prevent the style from being compiled
 - Sidebar only displays modules with content (Joomla 4)
@@ -985,72 +865,6 @@
 - Fix empty social icons are no longer rendered in toolbar
 - Fix error during installation (Joomla)
 
-## 2.7.0-beta.4 (November 15, 2021)
-
-### Fixed
-
-- Fix error during installation (Joomla)
-
-## 2.7.0-beta.3 (November 15, 2021)
-
-### Changed
-
-- Update translation files
-- Update internal build process
-
-## 2.7.0-beta.2 (November 11, 2021)
-
-### Added
-
-- Add inline SVG option for the logo
-
-### Changed
-
-- Upgrade Less to version 4
-
-### Fixed
-
-- Fix assign template query properties for existing templates
-- Fix language filter template matching with WPML active (WordPress)
-- Fix upload of document type extensions in media manager (Joomla >= 4)
-- Fix frontend article picker (Joomla < 4)
-
-## 2.7.0-beta.1 (October 28, 2021)
-
-### Added
-
-- Add position sticky options to row columns in builder
-- Add video field to Overlay and Gallery element
-- Add image/video options to Overlay and Gallery elements
-- Add hover image to Overlay Slider element
-- Add tile style options to Panel, Grid and Panel Slider element
-- Add marker color option to Popover element
-- Add active item option to Nav and Subnav elements
-- Add navigation large margin option to Slideshow, Panel/Overlay Slider elements
-- Add heading options to content style in all elements
-- Add text lead option to meta style in all elements
-- Add text lead and meta options to title style in all elements
-- Add a default mask box decoration to all styles
-- Add image alignment to blog and post layout settings (Joomla)
-
-### Changed
-
-- Refactor Overlay, Gallery and Overlay Slider elements
-- Bring navigation options in Switcher element into line with other multiple items elements
-- Allow to set min-height for any case in Overlay Slider element
-- Change focus styles in all styles
-- Change thumbnav style in all styles
-- Add gradient for text background to all styles
-
-### Fixed
-
-- Fix image shrinking on small viewports if item width is auto in Panel and Panel Slider elements
-- Fix box decoration in combination with min-height in Overlay and Gallery elements
-- Fix image background color with blend mode in combination with image transition in Overlay Slider element
-- Fix iframe video not being responsive in modal in Image element
-- Fix post type content source rendering too many closing `</p>` tags (WordPress)
-- Fix missing uk-h3 class on archive title (WordPress)
-
 ## 2.6.9 (October 28, 2021)
 
 ### Fixed
@@ -1162,57 +976,6 @@
 - Fix module and menu items not being checked-in after edit in customizer (Joomla)
 - Fix duplicated module ids for menus in navbar and header position (Joomla)
 - Fix compiling CSS with active child theme on Windows (WordPress)
-
-## 2.6.0-beta.5 (September 2, 2021)
-
-### Added
-
-- Add option to prevent Bootstrap CSS from loading (Joomla)
-- Render single product hooks in WooCommerce builder elements (WordPress)
-
-### Changed
-
-- Use default naming convention (`_` instead of `-`) for widget ids and classes (WordPress)
-
-## 2.6.0-beta.4 (August 27, 2021)
-
-### Fixed
-
-- Fix frontend system messages (Joomla)
-- Fix duplicated module ids for menus in navbar and header position (Joomla)
-
-## 2.6.0-beta.3 (August 25, 2021)
-
-### Added
-
-- Add Bootstrap 5.1 Less UIkit adaptor (Joomla)
-
-### Fixed
-
-- Fix markup position of menu item classes
-- Fix regression in style compiling
-- Fix regression in navbar dropdowns
-- Fix module and menu items not being checked-in after edit in customizer (Joomla)
-- Fix "class not found" error in builder search element (Joomla)
-
-## 2.6.0-beta.2 (August 20, 2021)
-
-### Fixed
-
-- Fix hide title option for navbar menu items (Joomla)
-- Fix search icon for smart search (Joomla)
-- Fix pagination (Joomla)
-
-## 2.6.0-beta.1 (August 19, 2021)
-
-### Added
-
-- Add Joomla 4 support
-- Add Subform field to content sources (Joomla)
-
-### Fixed
-
-- Fix frontend editing button no longer shows in customizer (Joomla)
 
 ## 2.5.10 (August 16, 2021)
 
@@ -1371,92 +1134,6 @@
 - Fix text color in headerbar top and bottom for Max and Trek styles
 - Fix toolbar style in theme test in style customizer
 - Fix missing translations for source types
-
-## 2.5.0-beta.3 (June 25, 2021)
-
-### Added
-
-- Add bag icon
-
-### Fixed
-
-- Fix regression with menu rendering
-
-## 2.5.0-beta.2 (June 24, 2021)
-
-### Added
-
-- Variable products update the default price, stock and description automatically (WooCommerce)
-- Add option to show lowest price instead of price range for variable products (WooCommerce)
-- Add option to switch sale and regular prices (WooCommerce)
-- Add option for product gallery thumbnail columns (WooCommerce)
-- Add display settings for Related and Upsell Products elements (WooCommerce)
-- Add out of stock style option to Stock element (WooCommerce)
-- Add color mode option for toolbar and headerbar to style customizer
-- Add style options for price and price from to style customizer (WooCommerce)
-- Add margin option for sale and regular price (WooCommerce)
-- Add link color options for cart and product list widgets (WooCommerce)
-- Add option to render menu module/widget as nav, iconnav or subnav in any position
-- Add subnav divider option for menu modules/widgets
-- Add image and hide title options to the navbar menu items panel (Joomla)
-
-### Changed
-
-- Remove converting first letter to uppercase for filter navigation in Grid and Gallery elements
-
-### Fixed
-
-- Fix text color in headerbar top and bottom for Max and Trek styles
-- Fix relative urls if baseUrl is empty (WordPress)
-- Fix cart menu item showing quantity if it's zero (WooCommerce)
-- Fix prevent uploading elements to the layout library
-- Fix prevent uploading layouts to the element library
-
-## 2.5.0-beta.1 (June 10, 2021)
-
-### Added
-
-- Add WooCommerce builder elements (WordPress)
-- Add WooCommerce page and custom sources (WordPress)
-- Add WooCommerce template support for the product archive and single product page (WordPress)
-- Add WooCommerce template support for product category and tag taxonomy archives (WordPress)
-- Add WooCommerce cart quantity and style options to cart page menu item (WordPress)
-- Add WooCommerce style options to style customizer (WordPress)
-- Add WooCommerce breadcrumbs support to Breadcrumbs element (WordPress)
-- Add header and toolbar menu position to Menus panel (Joomla)
-- Add header and toolbar menu locations (WordPress)
-- Add navbar item options for menus using a module/widget instead of a menu position
-- Add logic operator options (OR, NOR, AND) to filter custom sources
-- Add option to filter custom sources by user
-- Add Related Articles field with logic operators to article source (Joomla)
-- Add Related Posts field with logic operators to posts and custom post types sources (WordPress)
-- Add option to limit the template assignment by language
-- Add What's New Landing Screen
-- Add alternative icon and image fields to Social Items element
-- Add Discord, TikTok and Twitch to social icons
-
-### Changed
-
-- Refactor and optimize WooCommerce CSS (WordPress)
-- Removed requirement to set the REST API base slug for dynamic content (WordPress)
-- Improve badge, card badge, form range, navbar and search toggles, button link, form focus across all styles
-
-### Removed
-
-- Remove Google Plus from social icons
-
-### Fixed
-
-- Fix syntax highlighting and bottom padding in Code element
-- Fix missing show image option in Panel Slider element
-- Fix link styles in Icon element
-- Prevent uninstalling the YOOtheme installer plugin if used with Widgetkit or ZOO (Joomla)
-- Fix style of search modal toggle in header layouts
-- Fix offcanvas header layout if backdrop-filter is used like in Devstack style
-- Fix stacking context if backdrop-filter is used like in Devstack style
-- Fix toolbar style in theme test in style customizer
-- Fix missing translations for source types
-- Fix post type source no longer applies wpautop if the option 'Disable wpautop' is enabled
 
 ## 2.4.21 (June 18, 2021)
 
@@ -1727,112 +1404,6 @@
 - Fix popup position in Maps element if Leaflet is used
 - Fix editor no longer strips HTML markup
 - Fix filter navigation in Grid and Gallery element if first tag is a number
-
-## 2.4.0-beta.5 (March 2, 2021)
-
-### Added
-
-- Add customizer shows error in dev tools if duplicate id attributes are found
-- Add Show Taxonomy option to Meta field (Joomla)
-- Add selecting an image from Media Library in builder will select the alt text too (WordPress)
-
-### Changed
-
-- Date filter no longer shows current date for empty value
-
-### Removed
-
-- Remove order by Id in custom posts query, use date instead (WordPress)
-
-### Fixed
-
-- Fix filter navigation in Grid and Gallery element if first tag is a number
-
-## 2.4.0-beta.4 (February 26, 2021)
-
-### Fixed
-
-- Fix search source (Joomla)
-- Fix cluster icon text color picker in Maps element
-- Fix editor no longer strips HTML markup
-
-## 2.4.0-beta.3 (February 24, 2021)
-
-### Added
-
-- Add download all buttons to My Layouts, My Styles and My Element Presets libraries
-- Add custom cluster icons to Maps element
-- Add minimum zoom and maximum zoom options to Maps element
-- Add multi-line border radius option to form in style customizer
-- Add additional fields to Smart Search item type (Joomla)
-
-### Fixed
-
-- Fix setting active menu item for children (WordPress)
-- Fix width/height setting of marker icon in Maps element
-- Fix popup position in Maps element if Leaflet is used
-- Fix translation strings for search input placeholder
-
-## 2.4.0-beta.2 (February 19, 2021)
-
-### Added
-
-- Add error field to search source (Joomla)
-
-### Fixed
-
-- Fix do not show empty popups in Maps element
-- Fix clustering markers in Leaflet
-- Fix Group/Repeater ACF fields (WordPress)
-- Fix current user fields return 'false' for guest users (WordPress)
-- Fix custom users source default ordering (WordPress)
-- Fix quantity and order options for custom tags query source (WordPress)
-
-## 2.4.0-beta.1 (February 18, 2021)
-
-### Added
-
-- Add user as custom source
-- Add tags as custom source (Joomla)
-- Add non-hierarchical taxonomies as custom sources (WordPress)
-- Add the current logged in user as site source
-- Add guest user field to site source
-- Add concatenated source fields for list and checkboxes fields (Joomla)
-- Add concatenated source fields for ACF select and checkbox fields and the Toolset checkboxes field (WordPress)
-- Add template support for 404 error pages
-- Add template support for Tagged Items, List All Tags, Search, Smart Search and Single Contact (Joomla)
-- Add template support for author, date, search and non-hierarchical taxonomy archives (WordPress)
-- Add filter to load tags from the selected parent tag only (Joomla)
-- Add dynamic condition filters "Starts/Ends with"
-- Add theme settings import and export buttons to advanced settings
-- Add Panel Slider element to builder
-- Add Search element to builder
-- Add Nav element to builder
-- Add viewport height option to Map element
-- Add custom image marker option to Map element
-- Add marker clustering option to Map element
-- Add meta, image and link fields and settings to Map element
-- Add Location custom field (Joomla)
-- Add filter animations to Grid and Gallery elements
-- Add panel style option to Grid Item and Panel Slider Item elements
-- Add background size options for 100% width and height to Section and Column elements
-- Add visibility option for background videos to Section element
-- Add help videos for the page builder, layout library, element library and sections
-- Add support for resizing webp images
-
-### Changed
-
-- Rename Slider element to Overlay Slider
-- Rename Map Marker element to Map Item
-- Google Maps has at most one info window open at any time in Maps element
-- Split settings of item elements into content and settings tabs
-- Search view no longer requires jQuery/Bootstrap (Joomla)
-
-### Fixed
-
-- Fix text alignment not working for table headings in Table element
-- Fix background color for blending mode in Overlay Slider element
-- Fix tags with special characters cause filter to break
 
 ## 2.3.32 (February 12, 2021)
 
@@ -2138,88 +1709,6 @@
 - Fix left/right aligned images not covering cards with different heights in Panel element
 - Fix countdown element placeholder behavior
 
-## 2.3.0-beta.7 (October 09, 2020)
-
-### Fixed
-
-- Fix images saved to cache in customizer mode
-- Fix builder collision detection
-
-## 2.3.0-beta.6 (October 05, 2020)
-
-### Changed
-
-- Improve GraphQL query execution performance
-- Disable visual editor if disabled in system config (Joomla)
-
-### Fixed
-
-- Fix memory leak with tinyMCE editor plugins (WordPress)
-
-## 2.3.0-beta.5 (September 25, 2020)
-
-### Added
-
-- Add custom file source
-- Add search to field mapping dropdown
-- Add option to limit the template assignment to the page number for index pages
-- Add search with autofocus and item count to all libraries
-- Add upload and download buttons to My Layouts, My Styles and My Element Presets libraries
-- Add modify date to My Layouts, My Styles and My Element Presets libraries
-- Add matching indicator to My Layouts and My Styles libraries
-- Add button to recompile the style to style customizer
-- Add help videos for updating, minimum stability, changelog, dynamic conditions and more
-- Add border and background options to lightbox button in style customizer
-- Add support for any Joomla editor plugin (Joomla)
-
-### Changed
-
-- Use own tinyMCE as visual editor (Joomla)
-- Make Module and Widget elements cross-system compatible
-- Make Position and Area elements cross-system compatible
-- Make current menu parent items active in menus (WordPress)
-
-### Fixed
-
-- Fix margin if pagination items wrap into the next line in Pagination elements
-- Fix media overlay not being below mobile navbar in boxed page layout
-
-## 2.3.0-beta.4 (September 14, 2020)
-
-### Changed
-
-- Use autoloading for component helpers (Joomla)
-- Refactor route handling using com_ajax (Joomla)
-- Refactor event dispatcher using event objects (Joomla)
-
-### Fixed
-
-- Fix breadcrumbs if no posts page is assigned (WordPress)
-
-## 2.3.0-beta.3 (September 4, 2020)
-
-### Fixed
-
-- Fix match height if panels wrap into the next row in row settings
-- Fix template rendering with activated system cache (Joomla)
-- Fix Category/Tag Archive not selectable in templates if WooCommerce is active (WordPress)
-
-## 2.3.0-beta.2 (September 2, 2020)
-
-### Changed
-
-- Refactor builder-templates matching
-
-### Fixed
-
-- Fix left/right aligned images not covering cards with different heights in Panel element
-
-## 2.3.0-beta.1 (August 26, 2020)
-
-### Changed
-
-- Refactor load event for builder templates (Joomla)
-
 ## 2.2.4 (August 21, 2020)
 
 ### Added
@@ -2324,97 +1813,6 @@
 - Fix unsaved changes warning not showing when closing template section
 - Fix search and social icons widgets position for Stacked Center C layout (WordPress)
 
-## 2.2.0-beta.5 (July 22, 2020)
-
-### Added
-
-- Add title grid options to To Top element
-- Add image option to navbar menu items (WordPress)
-
-### Changed
-
-- Change URL generation to use content directory (WordPress)
-
-### Fixed
-
-- Fix unsaved changes warning not showing when clicking on link in preview (WordPress)
-
-## 2.2.0-beta.4 (July 14, 2020)
-
-### Added
-
-- Add next page button to pagebreak navigation (WordPress)
-- Add support for Toolset address field (WordPress)
-
-### Fixed
-
-- Fix child theme custom Less style meta parsing
-- Fix My Customizations modal not instantly showing changes
-- Fix breadcrumbs not showing the posts page on the single post, category and tag archive (WordPress)
-- Remove `loop_shop_per_page` filter to fix the Columns per page option in WooCommerce (WordPress)
-
-## 2.2.0-beta.3 (July 10, 2020)
-
-### Added
-
-- Add title field to To Top element
-
-### Fixed
-
-- Fix title style update script in Description List element
-
-## 2.2.0-beta.2 (July 09, 2020)
-
-### Added
-
-- Add link field and more title and content options to Alert element
-- Add HTML element option for title to Description List element
-- Add xl grid breakpoint to Accordion, Panel, Grid, Gallery and Switcher elements
-- Add navbar rail mode to style customizer
-
-### Fixed
-
-- Fix WooCommerce style compiling (WordPress)
-- Fix ACF date using wrong time zone (WordPress)
-- Fix wpautop filter for source post content (WordPress)
-- Fix Toolset repetitive fields
-- Fix drop cap option in builder for page break navigation
-- Fix remove margin for meta text if HTML element is a heading in elements
-
-## 2.2.0-beta.1 (July 02, 2020)
-
-### Added
-
-- Add filter options to custom post source
-- Add alphanumeric order option for custom sources
-- Add HTML element option for meta text in elements
-- Add dynamic condition option to Divider element
-- Add field mapping for transparent header option in Section element
-- Add custom attributes option to row builder element
-- Add `Stacked Center C` layout to header layouts
-- Add support for search suggestions in Smart Search module (Joomla)
-- Add help videos for custom fields, custom post types and 3rd party integration (WordPress)
-
-### Changed
-
-- Refactor GraphQL schema configuration
-- Refactor page break navigation
-- Make the Social element a multiple items element
-- Move cookie banner bar to bottom of document body in dom
-- Change Fjord `h4` and Horizon `h6` heading colors
-
-### Fixed
-
-- Fix date filter not translating according to site language (WordPress)
-- Fix apply the_content filter to builder main content output only (WordPress)
-- Fix include `pagination.php` from child-theme folder (Joomla)
-- Fix empty multiple sources render placeholder item
-- Fix elements with invalid source collapse
-- Fix none deferred, enqueued scripts and styles are not rendered in footer (WordPress)
-- Fix determining the current locale (WordPress)
-- Fix category articles source no longer contains link items (Joomla)
-- Fix article permalink not using https (Joomla)
-
 ## 2.1.2 (July 07, 2020)
 
 ### Added
@@ -2489,82 +1887,6 @@
 - Fix pagination element if the plugin is disabled (Joomla)
 - Fix shortcode widgets not rendered (WordPress)
 - Fix shortcodes being applied to saved post content (WordPress)
-
-## 2.1.0-beta.3 (June 11, 2020)
-
-### Added
-
-- Add field mapping for text color option to builder elements
-- Add help videos for dynamic content and templates (WordPress)
-
-### Fixed
-
-- Fix icon width update script in Grid and List elements
-- Fix filtering Popular Posts by taxonomy (WordPress)
-- Fix empty ACF Gallery element renders placeholder (WordPress)
-- Fix date filter uses default date format (WordPress)
-- Fix wrong profile link in login module (Joomla)
-- Fix author uses created by alias (Joomla)
-- Fix custom `uk-scrollspy` attribute not being applied in sections
-- Fix loading `config.php` from child-theme (WordPress)
-- Fix text not being truncated in dynamic input field
-- Fix dynamic content for grid and group field types
-- Fix Single Post Page Navigation (WordPress)
-- Fix pagination element if the plugin is disabled (Joomla)
-
-## 2.1.0-beta.2 (June 05, 2020)
-
-### Changed
-
-- Update Google Fonts list
-
-### Fixed
-
-- Fix post multiple categories styling (WordPress)
-- Fix shortcode plugin assets not rendered (WordPress)
-- Fix search module setting not affecting mobile search module (Joomla)
-- Fix redirect builder pages to login page if "Show Unauthorised Links" is true (Joomla)
-
-## 2.1.0-beta.1 (June 04, 2020)
-
-### Added
-
-- Add 6 Creative Hub styles to style library
-- Add dynamic conditions to display elements depending on a content field
-- Add custom fields support for Toolset plugin (WordPress)
-- Add content source support for WordPress Popular Posts plugin (WordPress)
-- Add page builder support for custom post types (WordPress)
-- Add excerpt option to teaser source
-- Add teaser option to content source (WordPress)
-- Add Featured Articles Order option to custom articles source (Joomla)
-- Add 5 column layout presets to row layouts in builder
-- Add row layout settings to customize the columns widths for each breakpoint in builder
-- Add order first option for each column to row layout settings in builder
-- Add hidden options to visibility setting in elements
-- Add status icons for element visibility to builder
-- Add status option to element items
-- Add custom attributes option to builder elements
-- Add marker type and color options to List and Description List elements
-- Add collapse size option to List and Description List elements
-- Add HTML element option to List and Description List elements
-- Add column options to List, Description List, Panel, Grid, Accordion and Switcher elements
-- Add dropcap option to Panel, Grid, Accordion and Switcher elements
-- Add meta to content style option in elements
-- Add more image and title grid widths to Accordion, Grid, Panel and Switcher elements
-- Add `logo` and `logo-mobile` module positions and widget areas
-- Add current page and home display options to breadcrumbs layout settings
-- Add social icons size and gap options to header layout
-
-### Changed
-
-- Make icon size based on width instead of ratio in builder elements
-- Refactor breadcrumbs widget and element (WordPress)
-
-### Fixed
-
-- Fix bottom margin if content is linked in List and Description List elements
-- Fix Vimeo and YouTube video size if only width or height is set
-- Fix Newsletter element in IE 11
 
 ## 2.0.14 (June 03, 2020)
 
@@ -2825,149 +2147,6 @@
 - Fix breadcrumbs element in builder module (Joomla)
 - Fix newsletter element
 
-## 2.0.0-beta.10 (March 5, 2020)
-
-### Fixed
-
-- Fix disabled `System - Fields` plugin throws error (Joomla)
-- Fix filtering Custom Articles source by tag (Joomla)
-- Fix Breadcrumbs not showing current item (Joomla)
-- Fix load single value of multiple items content sources (Joomla)
-- Fix keyboard navigation in accordion menu
-- Fix cookie `notification` mode blocking script execution
-
-## 2.0.0-beta.9 (February 28, 2020)
-
-### Added
-
-- Add field mapping for dynamic content to elements
-- Add current page content sources
-- Add custom queried content sources
-- Add related content sources
-- Add multiple items content sources
-- Add support for page, post, category, tag and user source types
-- Add support for custom post types and taxonomies as source type (WordPress)
-- Add custom fields support for field mapping
-- Add custom fields support for Advanced Custom Field plugin (WordPress)
-- Add custom fields support for Article Field from Regular Labs (Joomla)
-- Add template builder
-- Add template support for Category Blog, Single Article and Featured Articles (Joomla)
-- Add template support for Single, Archive, Post Type Archive and Posts Page (WordPress)
-- Add Breadcrumbs, Pagination and Comments elements
-- Add status icons for disabled and positioned elements to builder
-- Add id and class options to row columns in builder
-- Add option to remove horizontal padding from section and row containers
-- Add option to center rows to Grid and Gallery element
-
-### Changed
-
-- Group elements into basic, container and system elements in element library
-- Group layouts into pages and templates in layout library
-- Group section, row and column setting in tabs in builder
-- File upload uses allowed file extensions and MIME types from system settings (Joomla)
-- Collisions detection changed to hash over article/post content
-
-### Fixed
-
-- Fix collision notification
-
-## 2.0.0-beta.8 (February 13, 2020)
-
-### Fixed
-
-- Fix override `index.php` in child-theme (Joomla)
-- Fix 'save' and 'save as copy' could corrupt Builder data in article (Joomla)
-- Fix disappearing image when left/right aligned after stacking in Panel and Grid element
-- Fix loading RTL stylesheet
-- Fix color picker hex values
-
-### Changed
-
-- Update `mod_articles_news` module override to support article images (Joomla)
-
-## 2.0.0-beta.7 (January 30, 2020)
-
-### Fixed
-
-- Fix styler preview in customizer (WordPress)
-- Fix overrides in child-theme folder (Joomla)
-- Fix https detection for routing
-
-## 2.0.0-beta.6 (January 23, 2020)
-
-### Added
-
-- Add link options to Panel, Grid, Popover, Overlay and Gallery element
-- Add hover effects for title to Popover, Overlay and Gallery element
-- Add xlarge width to Row, Section and Slideshow element and header, blog and layout options
-- Add `div` to HTML element option in elements
-- Add option to reverse filter navigation to Grid and Gallery element
-- Add 2xlarge overlay width to Slideshow and Slider element
-- Add `com_finder` component override (Joomla)
-
-### Changed
-
-- Update `com_search` component override (Joomla)
-
-### Fixed
-
-- Fix support for hosting environment with a changed `wp-content` folder location
-- Fix Builder panels UI (WordPress)
-- Fix link picker (WordPress)
-- Fix `Stacked Left B` header layout
-- Fix duplicate attribute `rel="stylesheet"`
-- Fix comments reply form (WordPress)
-
-## 2.0.0-beta.5 (December 13, 2019)
-
-### Fixed
-
-- Fix error "Service 'Joomla\CMS\User\User' is not defined" on SunOS (Joomla)
-- Fix load custom elements from child-theme folder (Joomla)
-
-## 2.0.0-beta.4 (December 11, 2019)
-
-### Added
-
-- Add option to center columns to Grid and Gallery element
-- Add column width auto to Grid and Gallery element
-- Add warning if builder module wasn't saved (Joomla)
-
-### Fixed
-
-- Fix mod_languages default styling (Joomla)
-- Fix image download in layout library
-- Fix URL generation issue
-
-## 2.0.0-beta.3 (December 10, 2019)
-
-### Fixed
-
-- Fix Undefined filter 'builder'
-- Fix custom code not available (Joomla)
-- Fix file `css/custom.css` and `js/custom.js` not loaded
-- Fix error Class `YOOtheme\FinderHelperRoute` not found (Joomla)
-
-## 2.0.0-beta.2 (December 10, 2019)
-
-### Fixed
-
-- Fix URL generation issue
-
-## 2.0.0-beta.1 (December 09, 2019)
-
-### Changed
-
-- IMPORTANT: Breaking changes for template files and module API
-- IMPORTANT: Change PHP requirement from 5.4 to 5.6
-- Refactor dependency injection
-- Refactor module configuration
-- Refactor boot files, e.g. index.php is now bootstrap.php
-
-### Fixed
-
-- Fix Toolset plugin compatibility (WordPress)
-
 ## 1.22.8 (January 23, 2020)
 
 ### Fixed
@@ -3049,41 +2228,6 @@
 - Fix active menu item state for blog and shop pages (WordPress)
 - Fix customizer sidebar in RTL mode (WordPress)
 - Fix readmore button if the post excerpt is used
-
-## 1.22.0-beta.2 (September 23, 2019)
-
-### Added
-
-- Add IPTC metadata when saving cache `jpg` images
-
-### Fixed
-
-- Fix Module Header Class (Joomla)
-- Fix passing `layout` parameter in URL (Joomla)
-- Fix active menu item state for blog and shop pages (WordPress)
-- Fix customizer sidebar in RTL mode (WordPress)
-- Fix readmore button if the post excerpt is used
-
-## 1.22.0-beta.1 (September 10, 2019)
-
-### Added
-
-- Add column and row gap options to elements
-- Add column and row gap options to blog, top and bottom layout settings
-- Add possibility to create accordion menus in mobile position
-- Add possibility to create menu headings and dividers (WordPress)
-- Add `mod_language` module override (Joomla)
-
-### Changed
-
-- Use the gap option for the one column blog layout instead of defining the gap size in CSS
-- Change behavior when an accordion menu item is displayed
-
-### Fixed
-
-- Fix column not expanding if sibling column collapses in rare cases
-- Fix `YOOtheme Builder` button in frontend editing on new articles (Joomla)
-- Fix Leaflet map marker popup position on load
 
 ## 1.21.10 (September 2, 2019)
 
@@ -3191,30 +2335,6 @@
 - Fix media manager (Joomla)
 - Fix link picker in frontend editing (Joomla)
 - Fix warning on builder pages (Joomla)
-
-## 1.21.0-beta.2 (June 17, 2019)
-
-### Fixed
-
-- Fix media manager (Joomla)
-- Fix link picker in frontend editing (Joomla)
-- Fix warning on builder pages (Joomla)
-
-## 1.21.0-beta.1 (June 14, 2019)
-
-### Added
-
-- Add font family option to title fields in elements
-- Add content events to builder pages for plugin compatibility (Joomla)
-
-### Changed
-
-- Don't add theme object to query vars for plugin compatibility (WordPress)
-
-### Fixed
-
-- Fix text alignment 'justify' applied responsive breakpoints
-- Fix gallery shortcode rendering images attached to a post (WordPress)
 
 ## 1.20.6 (May 28, 2019)
 
@@ -3324,101 +2444,6 @@
 - Update customizer config
 - Fix last child margin for absolute positioned elements
 
-## 1.20.0-beta.7 (May 15, 2019)
-
-### Fixed
-
-- Update customizer config
-- Fix last child margin for absolute positioned elements
-
-## 1.20.0-beta.6 (May 13, 2019)
-
-### Added
-
-- Add theme config update scripts
-
-### Changed
-
-- Refactor customizer config
-
-### Fixed
-
-- Fix position of absolute positioned elements
-- Fix widget editing (WordPress)
-- Fix page heading being displayed for builder pages (Joomla)
-- Fix Toolset plugin compatibility (WordPress)
-
-## 1.20.0-beta.5 (May 7, 2019)
-
-### Added
-
-- Add Etsy icon to social icons
-- Add help videos for lazy loading and webp images
-
-### Fixed
-
-- Fix JavaScript errors in customizer
-- Fix menu link picker filter dropdowns in Firefox (Joomla)
-
-## 1.20.0-beta.4 (May 3, 2019)
-
-### Fixed
-
-- Fix block alignment setting in elements
-
-## 1.20.0-beta.3 (May 2, 2019)
-
-### Fixed
-
-- Fix missing `bootstrap.php` in templateDetails.xml (Joomla)
-
-## 1.20.0-beta.2 (May 2, 2019)
-
-### Added
-
-- Add block alignment breakpoint and fallback option to elements
-- Add help videos for links, media manager and Unsplash library
-
-### Fixed
-
-- Fix combination of border and border-radius for thumbnav in styler
-
-## 1.20.0-beta.1 (April 30, 2019)
-
-### Added
-
-- Add width option to header layouts
-- Add position options to elements
-- Add heading style options to title and meta fields to elements
-- Add option to align meta text above the content to elements
-- Add hover effects for title and image in Panel and Grid elements
-- Add tab style option to Subnav element
-- Add navbar frame mode to style customizer
-- Add padding option to navbar in style customizer
-
-### Changed
-
-- Update CSS heading sizes in styles
-- Disable wpautop filter for text-widget in navbar, header and toolbar positions (WordPress)
-- Rename page container padding variable to margin in styler
-- Render favicon configured in theme settings only (WordPress)
-- Prevent stripping of common HTML elements if whole element is linked
-
-### Removed
-
-- Remove Primary modifier from Heading component in style customizer. Use Medium instead.
-- Remove Hero modifier from Heading component in style customizer. Use X-Large instead.
-
-### Fixed
-
-- Fix headings if animation option is set in the builder for Vibe style
-- Fix image hover box shadow option if title/image are linked for Panel and Grid element
-- Fix link set to target blank in Slider element
-- Fix Unsplash tab loosing scroll position after re-opening
-- Fix meta alignment in Description List element
-- Fix container elements not collapsing, if they contain empty elements only
-- Fix frontend editor field (Joomla)
-
 ## 1.19.2 (April 5, 2019)
 
 ### Changed
@@ -3479,60 +2504,6 @@
 - Fix overlay is shown empty in Overlay, Gallery and Slider element
 - Fix scroll position when searching the Unsplash library
 - Fix rare case of broken header in Chrome
-
-## 1.19.0-beta.3 (March 27, 2019)
-
-### Added
-
-- Add page builder support for blog posts
-- Add option show the post excerpt in the blog overview (WordPress)
-
-### Fixed
-
-- Fix rare case of broken header in Chrome
-
-## 1.19.0-beta.2 (March 25, 2019)
-
-### Added
-
-- Add primary navbar style
-
-### Changed
-
-- Change default page container width to 1500px
-- Allow navbar to have different top and bottom paddings
-
-### Fixed
-
-- Fix background image size for external images
-- Fix image link missing target attribute in List element
-- Fix duplicate items in Lightbox
-- Fix overlay is shown empty in Overlay, Gallery and Slider element
-- Fix scroll position when searching the Unsplash library
-
-## 1.19.0-beta.1 (March 19, 2019)
-
-### Added
-
-- Add help system
-- Add help videos for layout and module panels
-- Add image options for boxed page layout
-- Add option to display the header outside of the boxed page layout
-- Add option to let the toolbar inherit the transparency from the navbar
-- Add grid options for title alignment in Panel, Grid and Switcher elements
-- Add option to align meta text below the content to elements
-- Add link type options to Panel, Grid and Popover elements
-- Add panel padding option to Panel and Grid elements
-- Add link options to Overlay, Gallery and Slider elements
-
-### Changed
-
-- Allow to set top and bottom margin independently for the boxed page layout
-- Improve links for search engines and accessibility in Panel, Grid, Popover, Overlay, Gallery and Slider elements
-
-### Fixed
-
-- Fix headerbar-bottom color if transparent in `Stacked Center B` layout
 
 ## 1.18.16 (March 19, 2019)
 

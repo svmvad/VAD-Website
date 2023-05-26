@@ -35,10 +35,7 @@ return [
                 }
             }
 
-            if (
-                !empty($node->source->query->field->name) &&
-                str_contains($node->source->query->field->name, 'toolset.')
-            ) {
+            if (str_contains($node->source->query->field->name ?? '', 'toolset.')) {
                 $parts = explode('.', $node->source->query->field->name);
                 $index = array_search('toolset', $parts);
 
@@ -70,14 +67,12 @@ return [
             );
         }
 
-        if (!empty($node->source->props)) {
-            foreach ((array) $node->source->props as $prop) {
-                if (str_contains($prop->name ?? '', 'toolset.')) {
-                    $prop->name = implode(
-                        '.',
-                        array_map([Str::class, 'snakeCase'], explode('.', $prop->name))
-                    );
-                }
+        foreach ($node->source->props ?? [] as $prop) {
+            if (str_contains($prop->name ?? '', 'toolset.')) {
+                $prop->name = implode(
+                    '.',
+                    array_map([Str::class, 'snakeCase'], explode('.', $prop->name))
+                );
             }
         }
     },

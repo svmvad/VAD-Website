@@ -3,6 +3,41 @@
 namespace YOOtheme;
 
 return [
+    '4.0.0-beta.11.1' => function ($config) {
+        if (empty(Arr::get($config, 'footer.content.children'))) {
+            Arr::del($config, 'footer.content');
+        }
+
+        return $config;
+    },
+    '3.1.0-beta.0.4' => function ($config) {
+        Arr::updateKeys($config, [
+            'header.social_links' => 'header.social_items',
+            'mobile.header.social_links' => 'mobile.header.social_items',
+        ]);
+
+        return $config;
+    },
+    '3.1.0-beta.0.2' => function ($config) {
+        foreach (['mobile.header', 'header'] as $header) {
+            $links = [];
+            foreach (
+                Arr::filter((array) Arr::get($config, "{$header}.social_links", []))
+                as $link
+            ) {
+                if ($link) {
+                    $links[] = ['link' => $link];
+                }
+            }
+            if ($links) {
+                Arr::set($config, "{$header}.social_links", $links);
+            } else {
+                Arr::del($config, "{$header}.social_links");
+            }
+        }
+
+        return $config;
+    },
     '3.0.1.1' => function ($config) {
         if (Arr::get($config, 'image_metadata')) {
             Arr::set($config, 'webp', false);
@@ -17,10 +52,10 @@ return [
     },
     '3.0.0-beta.3.1' => function ($config) {
         if (
-            Arr::get($config, '~theme.site.image_effect') == 'parallax' &&
-            !is_numeric(Arr::get($config, '~theme.site.image_parallax_easing'))
+            Arr::get($config, 'site.image_effect') == 'parallax' &&
+            !is_numeric(Arr::get($config, 'site.image_parallax_easing'))
         ) {
-            Arr::set($config, '~theme.site.image_parallax_easing', '1');
+            Arr::set($config, 'site.image_parallax_easing', '1');
         }
 
         return $config;
@@ -297,15 +332,11 @@ return [
             $key = "site.image_parallax_{$prop}";
             $start = implode(
                 ',',
-                array_map(function ($value) {
-                    return trim($value);
-                }, explode(',', Arr::get($config, "{$key}_start", '')))
+                array_map('trim', explode(',', Arr::get($config, "{$key}_start", '')))
             );
             $end = implode(
                 ',',
-                array_map(function ($value) {
-                    return trim($value);
-                }, explode(',', Arr::get($config, "{$key}_end", '')))
+                array_map('trim', explode(',', Arr::get($config, "{$key}_end", '')))
             );
             if ($start !== '' || $end !== '') {
                 Arr::set(
@@ -611,12 +642,10 @@ return [
     '1.20.4.1' => function ($config) {
         Arr::updateKeys($config, [
             // Less
-            'less.@theme-toolbar-padding-vertical' => function ($value) {
-                return [
-                    'less.@theme-toolbar-padding-top' => $value,
-                    'less.@theme-toolbar-padding-bottom' => $value,
-                ];
-            },
+            'less.@theme-toolbar-padding-vertical' => fn($value) => [
+                'less.@theme-toolbar-padding-top' => $value,
+                'less.@theme-toolbar-padding-bottom' => $value,
+            ],
             // Header settings
             'site.toolbar_fullwidth' => function ($value) {
                 if ($value) {

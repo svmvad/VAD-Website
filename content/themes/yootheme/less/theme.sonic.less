@@ -64,23 +64,23 @@ Preview: https://yootheme.com/api/style/sonic/dark-turquoise.jpg
 // Box Decoration
 //
 
-@theme-box-decoration-default-transform-horizontal:      -15px;
-@theme-box-decoration-default-transform-vertical:        15px;
-@theme-box-decoration-default-background:                transparent;
-@theme-box-decoration-default-border-width:              2px;
-@theme-box-decoration-default-border:                    darken(@global-muted-background, 5%);
+@theme-box-decoration-default-transform-horizontal:       -15px;
+@theme-box-decoration-default-transform-vertical:         15px;
+@theme-box-decoration-default-background:                 transparent;
+@theme-box-decoration-default-border-width:               2px;
+@theme-box-decoration-default-border:                     darken(@global-muted-background, 5%);
 
-@theme-box-decoration-primary-transform-horizontal:      15px;
-@theme-box-decoration-primary-transform-vertical:        15px;
-@theme-box-decoration-primary-background:                transparent;
-@theme-box-decoration-primary-border-width:              2px;
-@theme-box-decoration-primary-border:                    @global-primary-background;
+@theme-box-decoration-primary-transform-horizontal:       15px;
+@theme-box-decoration-primary-transform-vertical:         15px;
+@theme-box-decoration-primary-background:                 transparent;
+@theme-box-decoration-primary-border-width:               2px;
+@theme-box-decoration-primary-border:                     @global-primary-background;
 
-@theme-box-decoration-secondary-transform-horizontal:    15px;
-@theme-box-decoration-secondary-transform-vertical:      -15px;
-@theme-box-decoration-secondary-background:              transparent;
-@theme-box-decoration-secondary-border-width:            2px;
-@theme-box-decoration-secondary-border:                  @global-secondary-background;
+@theme-box-decoration-secondary-transform-horizontal:     15px;
+@theme-box-decoration-secondary-transform-vertical:       -15px;
+@theme-box-decoration-secondary-background:               transparent;
+@theme-box-decoration-secondary-border-width:             2px;
+@theme-box-decoration-secondary-border:                   @global-secondary-background;
 
 //
 // New
@@ -101,9 +101,9 @@ Preview: https://yootheme.com/api/style/sonic/dark-turquoise.jpg
 
 }
 
-@inverse-theme-box-decoration-default-border:            @inverse-global-muted-background;
-@inverse-theme-box-decoration-primary-border:            @inverse-global-primary-background;
-@inverse-theme-box-decoration-secondary-border:          @inverse-global-primary-background;
+@inverse-theme-box-decoration-default-border:             @inverse-global-muted-background;
+@inverse-theme-box-decoration-primary-border:             @inverse-global-primary-background;
+@inverse-theme-box-decoration-secondary-border:           @inverse-global-primary-background;
 
 .hook-inverse-box-decoration-primary() when not (@theme-box-decoration-primary-border-width = 0) {
     &::before { border-image: none; }
@@ -114,6 +114,15 @@ Preview: https://yootheme.com/api/style/sonic/dark-turquoise.jpg
 }
 
 //
+// Transition Border
+//
+
+@theme-transition-border-hover-border-width:              7px;
+
+@internal-theme-transition-border-border-gradient:        linear-gradient(135deg, #f95860, #ff7f58);
+@internal-theme-transition-border-hover-border-gradient:  @internal-theme-transition-border-border-gradient;
+
+//
 // Woocommerce
 //
 
@@ -121,7 +130,7 @@ Preview: https://yootheme.com/api/style/sonic/dark-turquoise.jpg
 // Widgets
 //
 
-@woocommerce-widget-active-filters-font-size:            @global-small-font-size;
+@woocommerce-widget-active-filters-font-size:             @global-small-font-size;
 
 
 // Style

@@ -12,6 +12,7 @@
         "link_style": "button",
         "grid": "horizontal",
         "grid_gap": "small",
+        "image_svg_inline": true,
         "margin": "default"
     },
     "placeholder": {
@@ -91,6 +92,16 @@
             "type": "checkbox",
             "text": "Open in a new window"
         },
+        "link_aria_label": {
+            "label": "ARIA Label",
+            "description": "Enter a descriptive text label to make it accessible if the link has no visible text."
+        },
+        "image_svg_inline": {
+            "label": "Inline SVG",
+            "description": "Inject SVG images into the page markup so that they can easily be styled with CSS.",
+            "type": "checkbox",
+            "text": "Make SVG stylable with CSS"
+        },
         "position": "${builder.position}",
         "position_left": "${builder.position_left}",
         "position_right": "${builder.position_right}",
@@ -127,7 +138,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-link"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -150,9 +162,20 @@
                                 "image_loading",
                                 "grid",
                                 "grid_vertical_breakpoint",
-                                "grid_gap",
-                                "link_target"
+                                "grid_gap"
                             ]
+                        },
+                        {
+                            "label": "Link",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["link_target", "link_aria_label"]
+                        },
+                        {
+                            "label": "Image",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["image_svg_inline"]
                         },
                         {
                             "label": "General",

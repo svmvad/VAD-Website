@@ -1,7 +1,5 @@
 <?php
 
-use function YOOtheme\trans;
-
 $el = $this->el('div');
 
 // Link
@@ -10,7 +8,6 @@ $link = $this->el('a', [
     'title' => ['{link_title}'],
     'uk-totop' => true,
     'uk-scroll' => true,
-    'aria-label' => trans('Back to top'),
 ]);
 
 // Title

@@ -102,14 +102,25 @@
 //
 
 @inverse-global-color-mode: dark;
+@inverse-marker-background: @global-background;
+@inverse-marker-hover-background: rgba(0, 0, 0, 0.8);
 @inverse-nav-secondary-item-hover-color: @global-inverse-color;
 @inverse-nav-secondary-subtitle-hover-color: @global-inverse-color;
+@inverse-totop-color: @global-color;
 
 //
 // Label
 //
 
 @label-color: @global-inverse-color;
+
+//
+// Marker
+//
+
+@marker-background: @global-primary-background;
+@marker-color: @global-background;
+@marker-hover-background: fade(@global-primary-background, 90%);
 
 //
 // Nav
@@ -136,6 +147,16 @@
 
 @search-default-focus-background: lighten(@search-default-background, 5%);
 
+//
+// Slidenav
+//
+
+@slidenav-background: @global-primary-background;
+@slidenav-color: @global-inverse-color;
+@slidenav-hover-background: fade(@global-primary-background, 90%);
+@slidenav-hover-color: @global-inverse-color;
+@slidenav-active-background: fade(@global-primary-background, 80%);
+@slidenav-active-color: @global-inverse-color;
 
 //
 // Subnav

@@ -17,9 +17,7 @@ return [
 
             $widget = $node->props['widget'] ?? null;
             $instance = $wp_registered_widgets[$widget] ?? null;
-            $filter = function ($widgets) use ($widget) {
-                return in_array($widget, $widgets);
-            };
+            $filter = fn($widgets) => in_array($widget, $widgets);
 
             if (
                 !is_callable($instance['callback'] ?? null) ||

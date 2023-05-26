@@ -1,6 +1,6 @@
 <?php
 
-namespace YOOtheme\Theme;
+namespace YOOtheme\Theme\Styler;
 
 use YOOtheme\Http\Uri;
 use YOOtheme\HttpClientInterface;
@@ -65,9 +65,7 @@ class StyleFontLoader
 
         // load font url
         $fonts = $this->load($url);
-        $relative = function ($path) use ($basePath) {
-            return Path::relative($basePath, $path);
-        };
+        $relative = fn($path) => Path::relative($basePath, $path);
 
         // relative font path
         foreach ($fonts as &$font) {
@@ -273,9 +271,10 @@ class StyleFontLoader
         $query = $uri->getQueryParams();
 
         if (isset($query['family'], $query['subset'])) {
-            return array_map(function ($family) use ($uri, $query) {
-                return (string) $uri->withQueryParams(compact('family') + $query);
-            }, explode('|', $query['family']));
+            return array_map(
+                fn($family) => (string) $uri->withQueryParams(compact('family') + $query),
+                explode('|', $query['family'])
+            );
         }
 
         return [$url];

@@ -4,7 +4,6 @@ namespace YOOtheme\Builder;
 
 use YOOtheme\Builder;
 use YOOtheme\Config;
-use YOOtheme\Path;
 use YOOtheme\View;
 
 return [
@@ -17,7 +16,7 @@ return [
 
     'events' => [
         'customizer.init' => [
-            BuilderListener::class => ['initCustomizer', -10],
+            Listener\LoadBuilderData::class => ['@handle', -10],
         ],
     ],
 
@@ -41,60 +40,34 @@ return [
     ],
 
     'services' => [
-        Builder::class => function (
-            Config $config,
-            View $view,
-            UpdateTransform $update,
-            ElementTransform $element
-        ) {
-            $config->addFile('builder', Path::get('./config/builder.json'));
-            $config->addFilter('builder', function ($value) use ($config) {
-                // map builder: to builder.
-                return $config->get("builder.{$value}");
-            });
+        Builder::class => function (View $view, Config $config, UpdateTransform $update) {
+            $config->addFile('builder', __DIR__ . '/config/builder.json');
+
+            // Deprecated: BC support e.g. `${builder:margin}` config interpolation in element json files.
+            $config->addFilter('builder', fn($value) => $config->get("builder.{$value}"));
 
             $builder = new Builder([$config, 'loadFile'], [$view, 'render']);
             $builder->addTransform('preload', $update);
             $builder->addTransform('preload', new DefaultTransform());
-            $builder->addTransform('presave', new OptimizeTransform());
-            $builder->addTransform('precontent', new NormalizeTransform());
-            $builder->addTransform('prerender', new NormalizeTransform());
-            $builder->addTransform('prerender', function ($node, $params) use ($config) {
-                $index = $params['index'] ?? null;
-                $prefix = $params['prefix'] ?? null;
-                $type = $params['type'];
-                $parent = $params['parent'];
-
-                if ($type->container) {
-                    $node->parent = !empty($node->children);
-                }
-
-                if ($parent && !empty($prefix) && ($type->element || $type->container)) {
-                    $node->id = empty($parent->id)
-                        ? "{$prefix}#{$index}"
-                        : "{$parent->id}-{$index}";
-
-                    if ($config('app.isCustomizer') && $type->element) {
-                        $node->attrs['data-id'] = $node->id;
-                    }
-                }
-            });
-
-            if (!$config('app.isCustomizer')) {
-                $builder->addTransform('precontent', new DisabledTransform());
-                $builder->addTransform('prerender', new DisabledTransform());
+            if ($config('app.isCustomizer')) {
+                $builder->addTransform('preload', new IndexTransform());
             }
-
+            $builder->addTransform('preload', [CollapseTransform::class, 'preload']);
+            $builder->addTransform('presave', new OptimizeTransform());
+            $builder->addTransform('prerender', new NormalizeTransform());
+            $builder->addTransform('precontent', new NormalizeTransform());
+            $builder->addTransform('prerender', new DisabledTransform());
+            $builder->addTransform('precontent', new DisabledTransform());
             $builder->addTransform('prerender', new PlaceholderTransform());
-            $builder->addTransform('render', $element);
-            $builder->addTransform('render', function ($node) {
-                return !(empty($node->children) && !empty($node->parent));
-            });
-
-            $builder->addTypePath(Path::get('./elements/*/element.json'));
+            $builder->addTransform('render', new ElementTransform($view));
+            $builder->addTransform('render', new VisibilityTransform());
+            $builder->addTransform('render', [CollapseTransform::class, 'render']);
+            $builder->addTypePath(__DIR__ . '/elements/*/element.json');
 
             return $builder;
         },
+
+        BuilderConfig::class => '',
 
         UpdateTransform::class => function (Config $config) {
             $update = new UpdateTransform($config('theme.version', ''));

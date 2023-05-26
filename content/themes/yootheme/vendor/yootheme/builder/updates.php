@@ -3,6 +3,14 @@
 namespace YOOtheme;
 
 return [
+    '3.1.0-beta.0.1' => function ($node) {
+        if (
+            ($target = Arr::get($node->props, 'parallax_target')) &&
+            str_starts_with($target, '![uk-grid]')
+        ) {
+            Arr::set($node->props, 'parallax_target', str_replace('[uk-grid]', '', $target));
+        }
+    },
     '3.0.5.1' => function ($node) {
         if (
             (Arr::get($node->props, 'animation') == 'parallax' ||
@@ -40,15 +48,11 @@ return [
 
             $start = implode(
                 ',',
-                array_map(function ($value) {
-                    return trim($value);
-                }, explode(',', Arr::get($node->props, "{$key}_start", '')))
+                array_map('trim', explode(',', Arr::get($node->props, "{$key}_start", '')))
             );
             $end = implode(
                 ',',
-                array_map(function ($value) {
-                    return trim($value);
-                }, explode(',', Arr::get($node->props, "{$key}_end", '')))
+                array_map('trim', explode(',', Arr::get($node->props, "{$key}_end", '')))
             );
             if ($start !== '' || $end !== '') {
                 $default = in_array($prop, ['scale', 'opacity']) ? 1 : 0;
@@ -135,9 +139,7 @@ return [
         if (isset($node->type) && in_array($node->type, ['joomla_position', 'wordpress_area'])) {
             Arr::updateKeys($node->props, [
                 'grid_divider' => 'divider',
-                'grid_gutter' => function ($value) {
-                    return ['column_gap' => $value, 'row_gap' => $value];
-                },
+                'grid_gutter' => fn($value) => ['column_gap' => $value, 'row_gap' => $value],
             ]);
         }
     },
@@ -209,7 +211,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';

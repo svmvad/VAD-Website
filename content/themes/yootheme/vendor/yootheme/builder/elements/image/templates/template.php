@@ -20,6 +20,7 @@ $image = $this->el('image', [
     'loading' => $props['image_loading'] ? false : null,
     'width' => $props['image_width'],
     'height' => $props['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'uk-svg' => $props['image_svg_inline'],
     'thumbnail' => true,
 ]);
@@ -51,6 +52,7 @@ $link = $this->el('a', [
     ],
 
     'href' => ['{link}'],
+    'aria-label' => ['{link_aria_label}'],
     'target' => ['_blank {@link_target: blank}'],
     'uk-scroll' => str_contains((string) $props['link'], '#'),
 
@@ -69,6 +71,7 @@ if ($props['link'] && $props['link_target'] === 'modal') {
     if ($this->isImage($props['link'])) {
 
         $lightbox = $target($props, [
+            'focal_point' => $props['lightbox_image_focal_point'],
             'thumbnail' => true,
         ]);
 

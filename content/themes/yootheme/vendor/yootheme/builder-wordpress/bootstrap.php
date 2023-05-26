@@ -1,27 +1,22 @@
 <?php
 
-namespace YOOtheme;
+namespace YOOtheme\Builder\Wordpress;
 
-use YOOtheme\Builder\Wordpress\BuilderController;
-use YOOtheme\Builder\Wordpress\ContentListener;
+use YOOtheme\Builder;
+use YOOtheme\View;
 
 return [
     'routes' => [
-        ['post', '/page', [ContentListener::class, 'savePage']],
+        ['post', '/page', [PageController::class, 'savePage']],
         ['post', '/builder/image', [BuilderController::class, 'loadImage']],
     ],
 
     'filters' => [
-        'pre_post_content' => [
-            ContentListener::class => 'onPrePostContent',
-        ],
-
-        'builder_content' => [
-            ContentListener::class => ['onBuilderContent', 10, 2],
-        ],
-
+        'pre_post_content' => [Listener\RemoveContentFilter::class => '@handle'],
+        'builder_content' => [Listener\ApplyContentFilter::class => ['@handle', 10, 2]],
         'template_include' => [
-            ContentListener::class => [['onTemplateInclude'], ['onLateTemplateInclude', 50]],
+            Listener\RenderBuilderPage::class => '@handle',
+            Listener\RenderBuilderTemplate::class => ['@handle', 50],
         ],
     ],
 
@@ -39,7 +34,7 @@ return [
         },
 
         Builder::class => function (Builder $builder, $app) {
-            $builder->addTypePath(Path::get('./elements/*/element.json'));
+            $builder->addTypePath(__DIR__ . '/elements/*/element.json');
 
             if ($childDir = $app->config->get('theme.childDir')) {
                 $builder->addTypePath("{$childDir}/builder/*/element.json");

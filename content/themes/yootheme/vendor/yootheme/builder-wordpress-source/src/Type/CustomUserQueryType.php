@@ -80,7 +80,7 @@ class CustomUserQueryType
                                     'multiple' => true,
                                     'class' => 'uk-height-small',
                                 ],
-                                'options' => [['evaluate' => 'config.roles']],
+                                'options' => [['evaluate' => 'yootheme.builder.roles']],
                             ],
                             '_offset' => [
                                 'description' => trans(

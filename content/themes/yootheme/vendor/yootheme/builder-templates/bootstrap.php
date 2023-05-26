@@ -1,10 +1,8 @@
 <?php
 
-namespace YOOtheme;
+namespace YOOtheme\Builder\Templates;
 
-use YOOtheme\Builder\Templates\TemplateController;
-use YOOtheme\Builder\Templates\TemplateHelper;
-use YOOtheme\Builder\Templates\TemplateListener;
+use YOOtheme\Builder\BuilderConfig;
 
 return [
     'routes' => [
@@ -15,9 +13,7 @@ return [
     ],
 
     'events' => [
-        'customizer.init' => [
-            TemplateListener::class => ['initCustomizer', -20],
-        ],
+        BuilderConfig::class => [Listener\LoadBuilderConfig::class => ['@handle', -20]],
     ],
 
     'services' => [

@@ -143,7 +143,7 @@ foreach ($items as $item) {
 
                 $wrapper = [
                     'class' => [
-                        'uk-dropdown-grid',
+                        'uk-drop-grid',
                         "uk-child-width-1-{$columnsCount}",
                     ],
                     'uk-grid' => true,

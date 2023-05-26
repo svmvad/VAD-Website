@@ -2,13 +2,14 @@
 
 $link = $props['link'] ? $this->el('a', [
     'href' => $props['link'],
+    'aria-label' => $props['link_aria_label'] ?: $element['link_aria_label'],
     'target' => ['_blank {@link_target}'],
     'uk-scroll' => str_contains((string) $props['link'], '#'),
 ]) : null;
 
 if ($link && $element['overlay_link']) {
 
-    $el->attr($link->attrs + [
+    $link_container->attr($link->attrs + [
 
         'class' => [
             'uk-display-block',
@@ -16,8 +17,6 @@ if ($link && $element['overlay_link']) {
             // Needs to be child of `uk-light` or `uk-dark`
             'uk-link-toggle',
         ],
-
-        'aria-label' => $props['link_aria_label'],
 
     ]);
 

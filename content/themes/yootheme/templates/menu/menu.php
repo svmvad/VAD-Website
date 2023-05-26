@@ -12,11 +12,13 @@ $dialog = '~theme.dialog';
 // Menu ID
 $attrs['id'] = $config('~menu.tag_id');
 
-$hasHeaderParent = function ($items) {
-    return Arr::some($items, function ($item) {
-        return $item->type == 'heading' && !empty($item->children) && isset($item->url) && ($item->url === '#' || $item->url === '');
-    });
-};
+$hasHeaderParent = fn($items) =>
+    Arr::some($items, fn($item) =>
+        $item->type == 'heading' &&
+        !empty($item->children) &&
+        isset($item->url) &&
+        ($item->url === '#' || $item->url === '')
+    );
 
 // Set `nav` menu_type to default in header positions
 if ($config('~menu.type') == 'nav' && preg_match('/^(toolbar-(left|right)|logo(-mobile)?|navbar(-split|-push|-mobile)?|header(-split|-mobile)?)$/', $config('~menu.position'))) {

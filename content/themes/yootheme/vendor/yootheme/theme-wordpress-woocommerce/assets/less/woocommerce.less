@@ -1767,13 +1767,24 @@ div.images {
 .woocommerce-result-count,
 .woocommerce-ordering { margin: 0 0 @global-margin; }
 
-.woocommerce-result-count {
+// `:not(.uk-panel) >` needed for Filter element to not set the properties
+:not(.uk-panel) > .woocommerce-result-count {
     // Center vertically to order select
     line-height: 1em;
     margin-top: ~'calc((@{form-height} - 1em) / 2)' !important;
 }
 
 .woocommerce-ordering select { vertical-align: top; }
+
+// Reset in Filter element
+.tm-element-woo-filter {
+
+    .woocommerce-result-count,
+    .woocommerce-ordering { float: none; }
+
+    .woocommerce-ordering select { width: auto; }
+
+}
 
 /*
  * Products Grid
@@ -2854,13 +2865,13 @@ dl.variation {
     .woocommerce-cart-form,
     .cart_totals { width: 100%; }
 
-    /* Phone landscape and bigger */
-    @media (min-width: @breakpoint-small) {
+    // /* Phone landscape and bigger */
+    // @media (min-width: @breakpoint-small) {
 
-        .woocommerce-cart-form,
-        .cart_totals { width: ~'calc(50% - (@{grid-large-gutter-horizontal} / 2))'; }
+    //     .woocommerce-cart-form,
+    //     .cart_totals { width: ~'calc(50% - (@{grid-large-gutter-horizontal} / 2))'; }
 
-    }
+    // }
 
     /* Desktop and bigger */
     @media (min-width: @breakpoint-large) {
@@ -3237,7 +3248,8 @@ form.woocommerce-cart-form {
     > * + * { margin-top: @global-margin; }
 }
 
-.woocommerce-privacy-policy-text > :last-child { margin-bottom: 0; }
+// Note, text is also shown on register page
+.woocommerce-terms-and-conditions-wrapper > .woocommerce-privacy-policy-text > :last-child { margin-bottom: 0; }
 
 .woocommerce-terms-and-conditions {
     // uk-alert
@@ -3433,6 +3445,7 @@ ol.commentlist.notes {
 
     form.login {
 
+        .woocommerce-form-login__rememberme { display: block; }
         .woocommerce-form-login__submit { margin-top: @global-margin; }
         .woocommerce-form-login__submit:extend(.uk-button-primary all) {}
 
@@ -4434,6 +4447,8 @@ ul.product_list_widget {
         .price_label {
             flex: 1;
             order: -1;
+            // Needed for Filter element to expand dropdown
+            white-space: nowrap;
             // uk-text-small
             font-size: @text-small-font-size;
             line-height: @text-small-line-height;

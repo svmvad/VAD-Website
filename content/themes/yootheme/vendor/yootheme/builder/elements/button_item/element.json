@@ -25,6 +25,7 @@
         },
         "link": "${builder.link}",
         "link_title": "${builder.link_title}",
+        "link_aria_label": "${builder.link_aria_label}",
         "icon": {
             "label": "Icon",
             "description": "Pick an optional icon from the icon library.",
@@ -67,6 +68,24 @@
             },
             "enable": "link_target == 'modal'"
         },
+        "lightbox_image_focal_point": {
+            "label": "Modal Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "link_target == 'modal'"
+        },
         "icon_align": {
             "label": "Alignment",
             "description": "Choose the icon position.",
@@ -86,7 +105,7 @@
             "fields": [
                 {
                     "title": "Content",
-                    "fields": ["content", "link", "link_title", "icon"]
+                    "fields": ["content", "link", "link_title", "link_aria_label", "icon"]
                 },
                 {
                     "title": "Settings",
@@ -109,7 +128,8 @@
                                     "type": "grid",
                                     "width": "1-2",
                                     "fields": ["lightbox_width", "lightbox_height"]
-                                }
+                                },
+                                "lightbox_image_focal_point"
                             ]
                         },
                         {

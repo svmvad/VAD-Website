@@ -57,14 +57,14 @@
             "fields": {
                 "custom_js": {
                     "label": "Script",
-                    "description": "Add custom JavaScript to your site. The &lt;script&gt; tag is not needed.",
+                    "description": "Add custom JavaScript to your site. The <code>&lt;script&gt;</code> tag is not needed.",
                     "type": "editor",
                     "editor": "code",
                     "mode": "javascript"
                 },
                 "custom_less": {
                     "label": "CSS/Less",
-                    "description": "Add custom CSS or Less to your site. All Less theme variables and mixins are available. The &lt;style&gt; tag is not needed.",
+                    "description": "Add custom CSS or Less to your site. All Less theme variables and mixins are available. The <code>&lt;style&gt;</code> tag is not needed.",
                     "type": "editor",
                     "editor": "code",
                     "mode": "text/x-less",
@@ -106,6 +106,11 @@
                     "description": "Serve optimized image formats with better compression and quality than JPEG and PNG.",
                     "text": "Serve AVIF images",
                     "type": "checkbox"
+                },
+                "_image_quality": {
+                    "type": "button-panel",
+                    "panel": "image-quality",
+                    "text": "Edit Image Quality"
                 },
                 "jquery": {
                     "label": "jQuery",
@@ -171,6 +176,46 @@
         "about": {
             "title": "About",
             "width": 400
+        },
+        "image-quality": {
+            "title": "Image Quality",
+            "width": 400,
+            "fields": {
+                "_image_quality_description": {
+                    "description": "Define the image quality in percent for generated JPG images and when converting JPEG and PNG to next-gen image formats.<br><br>Mind that setting the image quality too high will have a negative impact on page loading times.<br><br>Press the Clear Cache button in the advanced settings after changing the image quality.",
+                    "type": "description"
+                },
+                "image_quality_jpg": {
+                    "label": "JPEG",
+                    "attrs": {
+                        "placeholder": "80"
+                    }
+                },
+                "image_quality_png_webp": {
+                    "label": "PNG to WebP",
+                    "attrs": {
+                        "placeholder": "100"
+                    }
+                },
+                "image_quality_jpg_webp": {
+                    "label": "JPEG to WebP",
+                    "attrs": {
+                        "placeholder": "85"
+                    }
+                },
+                "image_quality_png_avif": {
+                    "label": "PNG to AVIF",
+                    "attrs": {
+                        "placeholder": "85"
+                    }
+                },
+                "image_quality_jpg_avif": {
+                    "label": "JPEG to AVIF",
+                    "attrs": {
+                        "placeholder": "75"
+                    }
+                }
+            }
         }
     }
 }

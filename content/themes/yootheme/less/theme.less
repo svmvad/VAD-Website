@@ -93,14 +93,23 @@ body {
 
 /*
  * Page
- * 1. Position context needed for `tm-header-overlay`.
- * 2. Stacking context needed for section sticky cover and reveal effects
+ * Position context needed for `tm-page-container` if background image is set and for `tm-header-overlay`.
  */
 
-.tm-page {
-    position: relative;
-    z-index: 0;
-}
+.tm-page  { position: relative; }
+
+/*
+ * Needed for section sticky cover and reveal effects because of negative z-index
+ * 1. Create stacking context to make interactive elements clickable
+ * 2. Remove box from box tree 
+ */
+
+/* 1 */
+.tm-page:has(> * > .uk-position-z-index-negative) { isolation: isolate; }
+
+/* 2 */
+.tm-page > main:has(> .uk-position-z-index-negative),
+.tm-page > footer:has(> .uk-position-z-index-negative) { display: contents; }
 
 /*
  * Border
@@ -257,7 +266,7 @@ body {
 
 .tm-header-mobile {}
 
-.tm-header-mobile-slide { z-index: @dropdown-z-index; }
+.tm-header-mobile-slide { z-index: @drop-z-index; }
 
 /*
  * Subnav in Navbar
@@ -276,18 +285,6 @@ body {
 
 }
 
-
-/* Dropdown stack
- ========================================================================== */
-
-/*
- * Reset width if column width is set
- */
-
-.uk-dropdown-navbar.uk-dropdown-stack {
-    min-width: 0 !important;
-    max-width: none !important;
-}
 
 /* Dropbar Center Layout
  ========================================================================== */
@@ -699,28 +696,29 @@ body {
 /* Transition Border
  ========================================================================== */
 
-@theme-transition-border-transition-duration:                    0.1s;
-@theme-transition-border-border-width:                           0;
-@theme-transition-border-border:                                 @global-primary-background;
-@theme-transition-border-hover-border-width:                     10px;
-@theme-transition-border-hover-border:                           @global-primary-background;
+@theme-transition-border-direction-mode:                    inside; // inside, outside
+@theme-transition-border-transition-duration:               0.1s;
+@theme-transition-border-border-width:                      0;
+@theme-transition-border-border:                            @global-primary-background;
+@theme-transition-border-hover-border-width:                10px;
+@theme-transition-border-hover-border:                      @global-primary-background;
 
-.tm-transition-border {
+@internal-theme-transition-border-border-gradient:          ~'';
+@internal-theme-transition-border-hover-border-gradient:    ~'';
+
+// Low specificity
+:where(.tm-transition-border) {
     display: block;
     position: relative;
 }
 
 .tm-transition-border::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        transition: @theme-transition-border-transition-duration ease-in-out;
-        transition-property: border-color, border-width;
-        border: @theme-transition-border-border-width solid @theme-transition-border-border;
+    content: '';
+    position: absolute;
+    z-index: 1; // Place outside border above adjacent content
+    pointer-events: none;
+    transition: @theme-transition-border-transition-duration ease-in-out;
+    .hook-transition-border();
 }
 
 /* Show */
@@ -728,9 +726,68 @@ body {
 .uk-transition-toggle:focus .tm-transition-border::after,
 .uk-transition-toggle:hover.tm-transition-border::after,
 .uk-transition-toggle:focus.tm-transition-border::after {
+    .hook-transition-border-hover();
+}
+
+.hook-transition-border() when (@theme-transition-border-direction-mode = inside) {
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+}
+
+.hook-transition-border() when (@theme-transition-border-direction-mode = outside) and (@internal-theme-transition-border-border-gradient = ~'') and (@internal-theme-transition-border-hover-border-gradient = ~'') {
+    top: 1px;
+    bottom: 1px;
+    left: 1px;
+    right: 1px;
+}
+
+.hook-transition-border() when (@theme-transition-border-direction-mode = inside),
+                               (@theme-transition-border-direction-mode = outside) and not (@internal-theme-transition-border-border-gradient = ~''),
+                               (@theme-transition-border-direction-mode = outside) and not (@internal-theme-transition-border-hover-border-gradient = ~'') {
+    transition-property: border-color, border-width;
+    border: @theme-transition-border-border-width solid @theme-transition-border-border;
+}
+
+.hook-transition-border() when (@theme-transition-border-direction-mode = outside) and (@internal-theme-transition-border-border-gradient = ~'') and (@internal-theme-transition-border-hover-border-gradient = ~'') {
+    transition-property: outline-color, outline-width;
+    outline: @theme-transition-border-border-width solid @theme-transition-border-border;
+}
+
+.hook-transition-border() when (@theme-transition-border-direction-mode = outside) and not (@internal-theme-transition-border-border-gradient = ~''),
+                               (@theme-transition-border-direction-mode = outside) and not (@internal-theme-transition-border-hover-border-gradient = ~'') {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: ~'calc(100% - 2px)';
+    height: ~'calc(100% - 2px)';
+    box-sizing: content-box;
+}
+
+.hook-transition-border-hover() when (@theme-transition-border-direction-mode = inside),
+                                     (@theme-transition-border-direction-mode = outside) and not (@internal-theme-transition-border-border-gradient = ~''),
+                                     (@theme-transition-border-direction-mode = outside) and not (@internal-theme-transition-border-hover-border-gradient = ~'') {
     border-width: @theme-transition-border-hover-border-width;
     border-color: @theme-transition-border-hover-border;
 }
+
+.hook-transition-border-hover() when (@theme-transition-border-direction-mode = outside) and (@internal-theme-transition-border-border-gradient = ~'') and (@internal-theme-transition-border-hover-border-gradient = ~'') {
+    outline-width: @theme-transition-border-hover-border-width;
+    outline-color: @theme-transition-border-hover-border;
+}
+
+// Gradient
+.hook-transition-border() when not (@internal-theme-transition-border-border-gradient = ~'') {
+    border-image: @internal-theme-transition-border-border-gradient 1;
+}
+
+.hook-transition-border-hover() when not (@internal-theme-transition-border-hover-border-gradient = ~'') {
+    border-image: @internal-theme-transition-border-hover-border-gradient 1;
+}
+
+.hook-transition-border() {}
+.hook-transition-border-hover() {}
 
 
 /* Font Family

@@ -57,7 +57,7 @@ abstract class File
      */
     public static function find($path)
     {
-        return ($files = static::glob($path)) ? $files[0] : null;
+        return ($files = static::glob($path, GLOB_NOSORT)) ? $files[0] : null;
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class File
         $pattern = Path::resolveAlias($pattern);
 
         if (defined('GLOB_BRACE') && !str_starts_with($pattern, '{')) {
-            return glob($pattern, $flags | GLOB_BRACE | GLOB_NOSORT) ?: [];
+            return glob($pattern, $flags | GLOB_BRACE) ?: [];
         }
 
         return static::_glob($pattern, $flags);

@@ -6,6 +6,21 @@ use YOOtheme\Builder\Source\Query\Node;
 
 class SourceQuery
 {
+    public const PARENT = '#parent';
+
+    /**
+     * @var Node
+     */
+    public $document;
+
+    /**
+     * Constructor.
+     */
+    public function __construct(Node $document = null)
+    {
+        $this->document = $document ?? Node::document();
+    }
+
     /**
      * Creates a source query.
      *
@@ -15,11 +30,7 @@ class SourceQuery
      */
     public function create($node)
     {
-        $document = Node::document();
-
-        $this->querySource($node->source, $document->query());
-
-        return $document;
+        return $this->querySource($node->source, $this->document->query());
     }
 
     /**
@@ -28,11 +39,16 @@ class SourceQuery
      * @param object $source
      * @param Node   $node
      *
-     * @return void
+     * @return Node
      */
     public function querySource($source, Node $node)
     {
-        $field = $this->queryField($source->query, $node);
+        $field = $node;
+
+        // add query selection
+        if ($source->query->name !== self::PARENT) {
+            $field = $this->queryField($source->query, $field);
+        }
 
         // add field selection
         if (isset($source->query->field)) {
@@ -45,6 +61,8 @@ class SourceQuery
                 $this->queryField($prop, $field);
             }
         }
+
+        return $field;
     }
 
     /**

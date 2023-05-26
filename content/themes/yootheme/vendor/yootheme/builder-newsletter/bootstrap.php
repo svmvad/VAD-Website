@@ -26,7 +26,7 @@ return [
 
     'extend' => [
         Builder::class => function (Builder $builder) {
-            $builder->addTypePath(Path::get('./elements/*/element.json'));
+            $builder->addTypePath(__DIR__ . '/elements/*/element.json');
         },
     ],
 

@@ -72,6 +72,7 @@ class FieldsType
                     'metadata' => [
                         'label' => __('On Sale', 'woocommerce'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                     'extensions' => [
                         'call' => __CLASS__ . '::is_on_sale',
@@ -194,8 +195,14 @@ class FieldsType
                                         'type' => 'select',
                                         'default' => 'rand',
                                         'options' => [
-                                            ['evaluate' => 'config.sources.postTypeOrderOptions'],
-                                            ['evaluate' => 'config.sources.productOrderOptions'],
+                                            [
+                                                'evaluate' =>
+                                                    'yootheme.builder.sources.postTypeOrderOptions',
+                                            ],
+                                            [
+                                                'evaluate' =>
+                                                    'yootheme.builder.sources.productOrderOptions',
+                                            ],
                                         ],
                                     ],
                                     'order_direction' => [
@@ -278,8 +285,14 @@ class FieldsType
                                         'type' => 'select',
                                         'default' => 'rand',
                                         'options' => [
-                                            ['evaluate' => 'config.sources.postTypeOrderOptions'],
-                                            ['evaluate' => 'config.sources.productOrderOptions'],
+                                            [
+                                                'evaluate' =>
+                                                    'yootheme.builder.sources.postTypeOrderOptions',
+                                            ],
+                                            [
+                                                'evaluate' =>
+                                                    'yootheme.builder.sources.productOrderOptions',
+                                            ],
                                         ],
                                     ],
                                     'order_direction' => [
@@ -436,9 +449,9 @@ class FieldsType
     }
 
     /**
+     * @param mixed $product
      * @see wc_display_product_attributes
      *
-     * @param mixed $product
      */
     public static function attributes($product)
     {

@@ -1,4 +1,4 @@
-/*! UIkit 3.15.25 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
+/*! UIkit 3.16.19 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -17,48 +17,60 @@
       mixins: [Class],
       props: {
         date: String,
-        clsWrapper: String
+        clsWrapper: String,
+        role: String
       },
       data: {
         date: "",
-        clsWrapper: ".uk-countdown-%unit%"
+        clsWrapper: ".uk-countdown-%unit%",
+        role: "timer"
       },
       connected() {
-        this.date = Date.parse(this.$props.date);
+        uikitUtil.attr(this.$el, "role", this.role);
+        this.date = uikitUtil.toFloat(Date.parse(this.$props.date));
+        this.end = false;
         this.start();
       },
       disconnected() {
         this.stop();
       },
-      events: [
-        {
-          name: "visibilitychange",
-          el() {
-            return document;
-          },
-          handler() {
-            if (document.hidden) {
-              this.stop();
-            } else {
-              this.start();
-            }
+      events: {
+        name: "visibilitychange",
+        el() {
+          return document;
+        },
+        handler() {
+          if (document.hidden) {
+            this.stop();
+          } else {
+            this.start();
           }
         }
-      ],
+      },
       methods: {
         start() {
           this.stop();
           this.update();
-          this.timer = setInterval(this.update, 1e3);
+          if (!this.timer) {
+            uikitUtil.trigger(this.$el, "countdownstart");
+            this.timer = setInterval(this.update, 1e3);
+          }
         },
         stop() {
-          clearInterval(this.timer);
+          if (this.timer) {
+            clearInterval(this.timer);
+            uikitUtil.trigger(this.$el, "countdownstop");
+            this.timer = null;
+          }
         },
         update() {
           const timespan = getTimeSpan(this.date);
-          if (!this.date || timespan.total <= 0) {
+          if (!timespan.total) {
             this.stop();
-            timespan.days = timespan.hours = timespan.minutes = timespan.seconds = 0;
+            if (!this.end) {
+              uikitUtil.trigger(this.$el, "countdownend");
+              this.end = true;
+            }
           }
           for (const unit of units) {
             const el = uikitUtil.$(this.clsWrapper.replace("%unit%", unit), this.$el);
@@ -79,7 +91,7 @@
       }
     };
     function getTimeSpan(date) {
-      const total = (date - Date.now()) / 1e3;
+      const total = Math.max(0, date - Date.now()) / 1e3;
       return {
         total,
         seconds: total % 60,

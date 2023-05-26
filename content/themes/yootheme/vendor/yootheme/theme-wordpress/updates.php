@@ -70,7 +70,7 @@ return [
     },
     '1.20.0-beta.6' => function ($config) {
         // Deprecated Blog settings
-        if (!empty($config) && !Arr::has($config, 'post.image_margin')) {
+        if (!Arr::has($config, 'post.image_margin')) {
             if (Arr::get($config, 'post.meta_align') == 'top') {
                 Arr::set(
                     $config,

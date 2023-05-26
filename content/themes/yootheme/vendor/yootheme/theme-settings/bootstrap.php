@@ -12,11 +12,13 @@ return [
 
     'events' => [
         'theme.head' => [
-            SettingsListener::class => 'initHead',
+            Listener\SetFavicons::class => '@handle',
+            Listener\SetBodyClass::class => '@handle',
         ],
 
         'customizer.init' => [
-            SettingsListener::class => 'initCustomizer',
+            Listener\ShowNewsModal::class => '@handle',
+            Listener\AvifImageSupport::class => '@handle',
         ],
     ],
 ];

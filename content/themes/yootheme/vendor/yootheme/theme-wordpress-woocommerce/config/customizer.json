@@ -8,33 +8,6 @@
                     }
                 }
             }
-        },
-        "styler": {
-            "components": {
-                "woocommerce": {
-                    "name": "WooCommerce",
-                    "general": true,
-                    "groups": {
-                        "product page price": "@woocommerce-product-page-price-*",
-                        "product page price from": "@woocommerce-product-page-price-from-*",
-                        "product page rating": "@woocommerce-product-page-rating-*",
-                        "product page title": "@woocommerce-product-page-title-*",
-                        "shop page price": "@woocommerce-shop-page-price-*",
-                        "shop page rating": "@woocommerce-shop-page-rating-*",
-                        "shop page title": "@woocommerce-shop-page-title-*",
-                        "price": "@woocommerce-price-*",
-                        "rating": "@woocommerce-rating-*",
-                        "review link": "@woocommerce-review-link-*",
-                        "cart page": "@woocommerce-cart-page-*",
-                        "checkout page": "@woocommerce-checkout-page-*",
-                        "order page": "@woocommerce-order-page-*",
-                        "myaccount page": "@woocommerce-myaccount-page-*",
-                        "widget": "@woocommerce-widget-*",
-                        "widget active filters": "@woocommerce-widget-active-filters-*",
-                        "alert": "@woocommerce-alert-*"
-                    }
-                }
-            }
         }
     },
     "panels": {
@@ -73,6 +46,19 @@
                     "description": "Set the number of columns for the gallery thumbnails.",
                     "type": "select",
                     "default": "4",
+                    "options": {
+                        "2": "2",
+                        "3": "3",
+                        "4": "4",
+                        "5": "5",
+                        "6": "6"
+                    }
+                },
+                "woocommerce.cross_sells_columns": {
+                    "label": "Cart Cross-sells Columns",
+                    "description": "Set the number of columns for the cart cross-sell products.",
+                    "type": "select",
+                    "default": "2",
                     "options": {
                         "2": "2",
                         "3": "3",

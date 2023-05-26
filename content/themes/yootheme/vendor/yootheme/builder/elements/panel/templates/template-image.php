@@ -17,18 +17,19 @@ if ($props['image']) {
         'loading' => $props['image_loading'] ? false : null,
         'width' => $props['image_width'],
         'height' => $props['image_height'],
+        'focal_point' => $props['image_focal_point'],
         'uk-svg' => $props['image_svg_inline'],
         'uk-cover' => $props['panel_style'] && $props['panel_image_no_padding'] && in_array($props['image_align'], ['left', 'right']),
         'thumbnail' => true,
     ]);
 
-    if (!$props['image_transition'] && !$props['image_transition_border']) {
+    if (!$props['image_transition']) {
         $image->attr('class', [
             'uk-border-{image_border}' => !$props['panel_style'] || ($props['panel_style'] && (!$props['panel_image_no_padding'] || $props['image_align'] == 'between')),
             'uk-box-shadow-{image_box_shadow} {@!panel_style}',
             'uk-box-shadow-hover-{image_hover_box_shadow} {@!panel_style} {@link}' => $props['image_link'] || $props['panel_link'],
 
-            'uk-margin[-{image_margin}]-top {@!image_margin: remove} {@!image_box_decoration}' => $props['image_align'] == 'between' || ($props['image_align'] == 'bottom' && !($props['panel_style'] && $props['panel_image_no_padding'])),
+            'uk-margin[-{image_margin}]-top {@!image_margin: remove} {@!image_box_decoration} {@!image_transition_border}' => $props['image_align'] == 'between' || ($props['image_align'] == 'bottom' && !($props['panel_style'] && $props['panel_image_no_padding'])),
         ]);
     }
 

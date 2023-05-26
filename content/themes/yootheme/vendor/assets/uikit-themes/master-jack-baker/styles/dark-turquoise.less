@@ -152,7 +152,10 @@
 // Marker
 //
 
-@marker-hover-color: @global-color;
+@marker-border: rgba(255, 255, 255, 0.15);
+@marker-color: @global-emphasis-color;
+@marker-hover-background: @global-emphasis-color;
+@marker-hover-color: @global-inverse-color;
 
 //
 // Nav
@@ -215,9 +218,13 @@
 // Slidenav
 //
 
-@inverse-slidenav-background: #fff;
-@inverse-slidenav-hover-background: fade(@inverse-slidenav-background, 70%);
-@inverse-slidenav-active-background: fade(@inverse-slidenav-background, 70%);
+@slidenav-background: @global-emphasis-color;
+@slidenav-hover-background: fade(@slidenav-background, 80%);
+@slidenav-active-background: fade(@slidenav-background, 60%);
+
+@inverse-slidenav-background: @global-background;
+@inverse-slidenav-hover-background: fade(@inverse-slidenav-background, 80%);
+@inverse-slidenav-active-background: fade(@inverse-slidenav-background, 60%);
 
 //
 // Thumbnav

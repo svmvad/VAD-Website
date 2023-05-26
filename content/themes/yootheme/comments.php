@@ -62,7 +62,7 @@ function comment_callback($comment, $args, $depth) {
 
 ?>
 <li id="comment-<?php comment_ID() ?>">
-    <article id="comment-article-<?php comment_ID() ?>" class="<?= implode(' ', $classes) ?>" tabindex="-1">
+    <article id="comment-article-<?php comment_ID() ?>" class="<?= implode(' ', $classes) ?>" tabindex="-1" role="comment">
         <header class="uk-comment-header uk-position-relative">
             <div class="uk-grid-medium uk-flex-middle" uk-grid>
                 <?php if ($args['avatar_size'] != 0) : ?>

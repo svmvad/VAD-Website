@@ -90,6 +90,7 @@
         "visibility": "${builder.visibility}",
         "name": "${builder.name}",
         "status": "${builder.status}",
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -103,7 +104,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-item", ".el-content"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

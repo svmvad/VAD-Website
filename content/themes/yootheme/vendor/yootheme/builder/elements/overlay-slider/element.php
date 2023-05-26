@@ -4,6 +4,15 @@ namespace YOOtheme;
 
 return [
     'updates' => [
+        '4.0.0-beta.9' => function ($node) {
+            if (Arr::get($node->props, 'overlay_link') && Arr::get($node->props, 'css')) {
+                $node->props['css'] = str_replace(
+                    '.el-item',
+                    ':has(> .el-item)',
+                    $node->props['css']
+                );
+            }
+        },
         '2.8.0-beta.0.13' => function ($node) {
             foreach (['title_style', 'meta_style', 'content_style'] as $prop) {
                 if (in_array(Arr::get($node->props, $prop), ['meta', 'lead'])) {
@@ -106,7 +115,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';
@@ -148,7 +157,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['lilian'])) {
+            if ($style == 'lilian') {
                 if (Arr::get($node->props, 'title_style') === 'heading-xlarge') {
                     $node->props['title_style'] = 'heading-2xlarge';
                 }

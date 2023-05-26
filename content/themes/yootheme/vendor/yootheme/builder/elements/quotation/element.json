@@ -93,7 +93,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-footer", ".el-author"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

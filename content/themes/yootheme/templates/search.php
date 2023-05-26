@@ -96,7 +96,7 @@ if (in_array($style, ['dropdown', 'justify'])) {
 
 <?php if (false && $style == 'drop') : ?>
 
-    <a<?= $this->attrs($toggle) ?> href="#" uk-search-icon></a>
+    <a<?= $this->attrs($toggle) ?> href uk-search-icon></a>
     <div uk-drop="mode: click; pos: left-center; offset: 0">
         <?= $this->form($fields, $attrs) ?>
     </div>
@@ -116,7 +116,7 @@ if (in_array($style, ['dropdown', 'justify'])) {
 
     ?>
 
-    <a<?= $this->attrs($toggle) ?> href="#" uk-search-icon></a>
+    <a<?= $this->attrs($toggle) ?> href uk-search-icon></a>
     <div class="uk-navbar-dropdown" <?= $this->attrs(['uk-drop' => json_encode(array_filter($drop))]) ?>>
 
         <div class="uk-grid uk-grid-small uk-flex-middle">
@@ -124,7 +124,7 @@ if (in_array($style, ['dropdown', 'justify'])) {
                 <?= $this->form($fields, $attrs) ?>
             </div>
             <div class="uk-width-auto">
-                <a class="uk-navbar-dropdown-close" href="#" uk-close></a>
+                <a class="uk-drop-close" href uk-close></a>
             </div>
         </div>
 

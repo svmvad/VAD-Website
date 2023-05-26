@@ -16,6 +16,7 @@ if ($iframe = $this->iframeVideo($props['video'], [], false)) {
         'allow' => 'autoplay',
         'allowfullscreen' => true,
         'uk-responsive' => true,
+        'loading' => ['lazy {@video_lazyload}'],
 
     ]);
 
@@ -35,12 +36,29 @@ if ($iframe = $this->iframeVideo($props['video'], [], false)) {
         'muted' => $props['video_muted'],
         'playsinline' => $props['video_playsinline'],
         'preload' => ['none {@video_lazyload}'],
-        'poster' => $props['video_poster'] && ($props['video_width'] || $props['video_height'])
-            ? $imageProvider->getUrl("{$props['video_poster']}#thumbnail={$props['video_width']},{$props['video_height']}")
-            : $props['video_poster'],
         $props['video_autoplay'] === 'inview' ? 'uk-video' : 'autoplay' => $props['video_autoplay'],
 
     ]);
+
+    if ($props['video_poster']) {
+
+        if ($props['video_width'] || $props['video_height']) {
+
+            $thumbnail = [$props['video_width'], $props['video_height'], ''];
+            if (!empty($props['video_poster_focal_point'])) {
+                [$y, $x] = explode('-', $props['video_poster_focal_point']);
+                $thumbnail += [3 => $x, 4 => $y];
+            }
+
+            $props['video_poster'] = "{$props['video_poster']}#thumbnail=" . implode(',', $thumbnail);
+
+        }
+
+        $video->attr([
+            'poster' => $imageProvider->getUrl($props['video_poster']),
+        ]);
+
+    }
 
 }
 

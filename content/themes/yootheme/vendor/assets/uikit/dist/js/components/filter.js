@@ -1,4 +1,4 @@
-/*! UIkit 3.15.25 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
+/*! UIkit 3.16.19 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -6,8 +6,74 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.UIkitFilter = factory(global.UIkit.util));
 })(this, (function (uikitUtil) { 'use strict';
 
+    function resize(options) {
+      return observe(uikitUtil.observeResize, options, "resize");
+    }
+    function mutation(options) {
+      return observe(uikitUtil.observeMutation, options);
+    }
+    function observe(observe2, options, emit) {
+      return {
+        observe: observe2,
+        handler() {
+          this.$emit(emit);
+        },
+        ...options
+      };
+    }
+
+    ({
+      props: {
+        margin: String,
+        firstColumn: Boolean
+      },
+      data: {
+        margin: "uk-margin-small-top",
+        firstColumn: "uk-first-column"
+      },
+      observe: [
+        mutation({
+          options: {
+            childList: true,
+            attributes: true,
+            attributeFilter: ["style"]
+          }
+        }),
+        resize({
+          target: ({ $el }) => [$el, ...uikitUtil.children($el)]
+        })
+      ],
+      update: {
+        read() {
+          const rows = getRows(this.$el.children);
+          return {
+            rows,
+            columns: getColumns(rows)
+          };
+        },
+        write({ columns, rows }) {
+          for (const row of rows) {
+            for (const column of row) {
+              uikitUtil.toggleClass(column, this.margin, rows[0] !== row);
+              uikitUtil.toggleClass(column, this.firstColumn, columns[0].includes(column));
+            }
+          }
+        },
+        events: ["resize"]
+      }
+    });
     function getRows(items) {
       return sortBy(items, "top", "bottom");
+    }
+    function getColumns(rows) {
+      const columns = [];
+      for (const row of rows) {
+        const sorted = sortBy(row, "left", "right");
+        for (let j = 0; j < sorted.length; j++) {
+          columns[j] = columns[j] ? columns[j].concat(sorted[j]) : sorted[j];
+        }
+      }
+      return uikitUtil.isRtl ? columns.reverse() : columns;
     }
     function sortBy(items, startProp, endProp) {
       const sorted = [[]];
@@ -257,58 +323,89 @@
       }
     };
 
+    function parseOptions(options, args = []) {
+      try {
+        return options ? uikitUtil.startsWith(options, "{") ? JSON.parse(options) : args.length && !uikitUtil.includes(options, ":") ? { [args[0]]: options } : options.split(";").reduce((options2, option) => {
+          const [key, value] = option.split(/:(.*)/);
+          if (key && !uikitUtil.isUndefined(value)) {
+            options2[key.trim()] = value.trim();
+          }
+          return options2;
+        }, {}) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    const keyMap = {
+      TAB: 9,
+      ESC: 27,
+      SPACE: 32,
+      END: 35,
+      HOME: 36,
+      LEFT: 37,
+      UP: 38,
+      RIGHT: 39,
+      DOWN: 40
+    };
+
     var Component = {
       mixins: [Animate],
       args: "target",
       props: {
-        target: Boolean,
+        target: String,
         selActive: Boolean
       },
       data: {
-        target: null,
+        target: "",
         selActive: false,
         attrItem: "uk-filter-control",
         cls: "uk-active",
         duration: 250
       },
       computed: {
-        toggles: {
-          get({ attrItem }, $el) {
-            return uikitUtil.$$(`[${attrItem}],[data-${attrItem}]`, $el);
-          },
-          watch() {
-            this.updateState();
-            if (this.selActive !== false) {
-              const actives = uikitUtil.$$(this.selActive, this.$el);
-              this.toggles.forEach((el) => uikitUtil.toggleClass(el, this.cls, uikitUtil.includes(actives, el)));
-            }
-          },
-          immediate: true
+        toggles({ attrItem }, $el) {
+          return uikitUtil.$$(`[${attrItem}],[data-${attrItem}]`, $el);
         },
-        children: {
-          get({ target }, $el) {
-            return uikitUtil.$$(`${target} > *`, $el);
-          },
-          watch(list, old) {
-            if (old && !isEqualList(list, old)) {
-              this.updateState();
-            }
-          },
-          immediate: true
+        children({ target }, $el) {
+          return uikitUtil.$$(`${target} > *`, $el);
         }
       },
-      events: [
-        {
-          name: "click",
-          delegate() {
-            return `[${this.attrItem}],[data-${this.attrItem}]`;
-          },
-          handler(e) {
+      watch: {
+        toggles(toggles) {
+          this.updateState();
+          const actives = uikitUtil.$$(this.selActive, this.$el);
+          for (const toggle of toggles) {
+            if (this.selActive !== false) {
+              uikitUtil.toggleClass(toggle, this.cls, uikitUtil.includes(actives, toggle));
+            }
+            const button = findButton(toggle);
+            if (uikitUtil.isTag(button, "a")) {
+              uikitUtil.attr(button, "role", "button");
+            }
+          }
+        },
+        children(list, prev) {
+          if (prev) {
+            this.updateState();
+          }
+        }
+      },
+      events: {
+        name: "click keydown",
+        delegate() {
+          return `[${this.attrItem}],[data-${this.attrItem}]`;
+        },
+        handler(e) {
+          if (e.type === "keydown" && e.keyCode !== keyMap.SPACE) {
+            return;
+          }
+          if (uikitUtil.closest(e.target, "a,button")) {
             e.preventDefault();
             this.apply(e.current);
           }
         }
-      ],
+      },
       methods: {
         apply(el) {
           const prevState = this.getState();
@@ -326,9 +423,9 @@
         async setState(state, animate = true) {
           state = { filter: { "": "" }, sort: [], ...state };
           uikitUtil.trigger(this.$el, "beforeFilter", [this, state]);
-          this.toggles.forEach(
-            (el) => uikitUtil.toggleClass(el, this.cls, !!matchFilter(el, this.attrItem, state))
-          );
+          for (const toggle of this.toggles) {
+            uikitUtil.toggleClass(toggle, this.cls, matchFilter(toggle, this.attrItem, state));
+          }
           await Promise.all(
             uikitUtil.$$(this.target, this.$el).map((target) => {
               const filterFn = () => {
@@ -345,8 +442,8 @@
         }
       }
     };
-    function getFilter(el, attr) {
-      return uikitUtil.parseOptions(uikitUtil.data(el, attr), ["filter"]);
+    function getFilter(el, attr2) {
+      return parseOptions(uikitUtil.data(el, attr2), ["filter"]);
     }
     function isEqualState(stateA, stateB) {
       return ["filter", "sort"].every((prop) => uikitUtil.isEqual(stateA[prop], stateB[prop]));
@@ -362,8 +459,8 @@
         }
       }
     }
-    function mergeState(el, attr, state) {
-      const { filter, group, sort, order = "asc" } = getFilter(el, attr);
+    function mergeState(el, attr2, state) {
+      const { filter, group, sort, order = "asc" } = getFilter(el, attr2);
       if (filter || uikitUtil.isUndefined(sort)) {
         if (group) {
           if (filter) {
@@ -384,12 +481,9 @@
       }
       return state;
     }
-    function matchFilter(el, attr, { filter: stateFilter = { "": "" }, sort: [stateSort, stateOrder] }) {
-      const { filter = "", group = "", sort, order = "asc" } = getFilter(el, attr);
+    function matchFilter(el, attr2, { filter: stateFilter = { "": "" }, sort: [stateSort, stateOrder] }) {
+      const { filter = "", group = "", sort, order = "asc" } = getFilter(el, attr2);
       return uikitUtil.isUndefined(sort) ? group in stateFilter && filter === stateFilter[group] || !filter && group && !(group in stateFilter) && !stateFilter[""] : stateSort === sort && stateOrder === order;
-    }
-    function isEqualList(listA, listB) {
-      return listA.length === listB.length && listA.every((el) => listB.includes(el));
     }
     function getSelector({ filter }) {
       let selector = "";
@@ -400,6 +494,9 @@
       return [...nodes].sort(
         (a, b) => uikitUtil.data(a, sort).localeCompare(uikitUtil.data(b, sort), void 0, { numeric: true }) * (order === "asc" || -1)
       );
+    }
+    function findButton(el) {
+      return uikitUtil.$("a,button", el) || el;
     }
 
     if (typeof window !== "undefined" && window.UIkit) {

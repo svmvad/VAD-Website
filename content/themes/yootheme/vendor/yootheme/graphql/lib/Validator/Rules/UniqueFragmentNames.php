@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace YOOtheme\GraphQL\Validator\Rules;
 
@@ -10,29 +8,26 @@ use YOOtheme\GraphQL\Language\AST\NameNode;
 use YOOtheme\GraphQL\Language\AST\NodeKind;
 use YOOtheme\GraphQL\Language\Visitor;
 use YOOtheme\GraphQL\Language\VisitorOperation;
-use YOOtheme\GraphQL\Validator\ValidationContext;
-use function sprintf;
+use YOOtheme\GraphQL\Validator\QueryValidationContext;
 
 class UniqueFragmentNames extends ValidationRule
 {
-    /** @var NameNode[] */
-    public $knownFragmentNames;
+    /** @var array<string, NameNode> */
+    protected array $knownFragmentNames;
 
-    public function getVisitor(ValidationContext $context)
+    public function getVisitor(QueryValidationContext $context): array
     {
         $this->knownFragmentNames = [];
 
         return [
-            NodeKind::OPERATION_DEFINITION => static function () : VisitorOperation {
-                return Visitor::skipNode();
-            },
-            NodeKind::FRAGMENT_DEFINITION  => function (FragmentDefinitionNode $node) use ($context) : VisitorOperation {
+            NodeKind::OPERATION_DEFINITION => static fn (): VisitorOperation => Visitor::skipNode(),
+            NodeKind::FRAGMENT_DEFINITION => function (FragmentDefinitionNode $node) use ($context): VisitorOperation {
                 $fragmentName = $node->name->value;
                 if (! isset($this->knownFragmentNames[$fragmentName])) {
                     $this->knownFragmentNames[$fragmentName] = $node->name;
                 } else {
                     $context->reportError(new Error(
-                        self::duplicateFragmentNameMessage($fragmentName),
+                        static::duplicateFragmentNameMessage($fragmentName),
                         [$this->knownFragmentNames[$fragmentName], $node->name]
                     ));
                 }
@@ -42,8 +37,8 @@ class UniqueFragmentNames extends ValidationRule
         ];
     }
 
-    public static function duplicateFragmentNameMessage($fragName)
+    public static function duplicateFragmentNameMessage(string $fragName): string
     {
-        return sprintf('There can be only one fragment named "%s".', $fragName);
+        return "There can be only one fragment named \"{$fragName}\".";
     }
 }

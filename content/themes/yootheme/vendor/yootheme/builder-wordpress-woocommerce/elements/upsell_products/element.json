@@ -34,7 +34,7 @@
             "description": "Set the product ordering.",
             "type": "select",
             "options": {
-                "Id": "id",
+                "ID": "id",
                 "Date": "date",
                 "Modified": "modified",
                 "Title": "title",
@@ -100,7 +100,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

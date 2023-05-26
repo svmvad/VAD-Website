@@ -1,5 +1,8 @@
 <?php
 
+// Item
+$el = $props['item_element'] ? $this->el($props['item_element']) : null;
+
 // Extra effect for pull/push
 $opacity = ($props['text_color'] ?: $element['text_color']) === 'light' ? '0.5' : '0.2';
 
@@ -62,9 +65,10 @@ $image = $this->el('image', [
 
     'src' => $props['image'],
     'alt' => $props['image_alt'],
-    'loading' => $element['image_loading'] ? false : null,
+    'loading' => $element['image_loading'] && $i === 0 ? false : null,
     'width' => $element['image_width'],
     'height' => $element['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'uk-cover' => true,
     'thumbnail' => true,
 ]);
@@ -161,6 +165,10 @@ $overlay = $this->el('div', [
 
 ?>
 
+<?php if ($el) : ?>
+<?= $el($element) ?>
+<?php endif ?>
+
 <?php if (in_array($element['slideshow_animation'], ['push', 'pull'])) : ?>
 <?= $pull_push($element) ?>
 <?php endif ?>
@@ -193,4 +201,8 @@ $overlay = $this->el('div', [
 
     </div>
 </div>
+<?php endif ?>
+
+<?php if ($el) : ?>
+<?= $el->end() ?>
 <?php endif ?>

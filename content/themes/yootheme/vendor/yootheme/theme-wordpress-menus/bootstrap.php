@@ -1,24 +1,15 @@
 <?php
 
-use YOOtheme\Theme\Wordpress\MenuListener;
+namespace YOOtheme\Theme\Wordpress;
 
 return [
     'actions' => [
-        'init' => [
-            MenuListener::class => 'registerMenus',
-        ],
+        'init' => [Listener\AddMenus::class => '@handle'],
     ],
+
     'filters' => [
-        'wp_nav_menu_args' => [
-            MenuListener::class => 'filterMenuArgs',
-        ],
-
-        'widget_nav_menu_args' => [
-            MenuListener::class => ['filterWidgetMenuArgs', 10, 4],
-        ],
-
-        'wp_nav_menu_objects' => [
-            MenuListener::class => ['getNavMenuObjects', 10, 2],
-        ],
+        'wp_nav_menu_args' => [Listener\FilterMenuArgs::class => 'handle'],
+        'wp_nav_menu_objects' => [Listener\FilterMenuItems::class => ['handle', 10, 2]],
+        'widget_nav_menu_args' => [Listener\FilterWidgetMenuArgs::class => ['handle', 10, 4]],
     ],
 ];

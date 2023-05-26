@@ -63,9 +63,10 @@ class FieldsType
             );
         }
 
-        return array_map(function ($config) use ($field, $source) {
-            return Event::emit('source.toolset.field|filter', $config, $field, $source);
-        }, $fields);
+        return array_map(
+            fn($config) => Event::emit('source.toolset.field|filter', $config, $field, $source),
+            $fields
+        );
     }
 
     public static function toolset($post, $args, $context, $info)

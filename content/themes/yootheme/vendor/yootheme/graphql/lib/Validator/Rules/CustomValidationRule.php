@@ -1,30 +1,36 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace YOOtheme\GraphQL\Validator\Rules;
 
-use YOOtheme\GraphQL\Error\Error;
+use YOOtheme\GraphQL\Language\AST\Node;
+use YOOtheme\GraphQL\Language\VisitorOperation;
 use YOOtheme\GraphQL\Validator\ValidationContext;
 
+/**
+ * @see Node, VisitorOperation
+ *
+ * @phpstan-type NodeVisitorFnResult VisitorOperation|mixed|null
+ * @phpstan-type VisitorFnResult array<string, callable(Node): NodeVisitorFnResult>|array<string, array<string, callable(Node): NodeVisitorFnResult>>
+ * @phpstan-type VisitorFn callable(ValidationContext): VisitorFnResult
+ */
 class CustomValidationRule extends ValidationRule
 {
-    /** @var callable */
-    private $visitorFn;
+    /**
+     * @var callable
+     *
+     * @phpstan-var VisitorFn
+     */
+    protected $visitorFn;
 
-    public function __construct($name, callable $visitorFn)
+    /** @phpstan-param VisitorFn $visitorFn */
+    public function __construct(string $name, callable $visitorFn)
     {
-        $this->name      = $name;
+        $this->name = $name;
         $this->visitorFn = $visitorFn;
     }
 
-    /**
-     * @return Error[]
-     */
-    public function getVisitor(ValidationContext $context)
+    public function getVisitor(ValidationContext $context): array
     {
-        $fn = $this->visitorFn;
-
-        return $fn($context);
+        return ($this->visitorFn)($context);
     }
 }

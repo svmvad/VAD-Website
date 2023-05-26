@@ -154,7 +154,10 @@
 // Marker
 //
 
-@marker-hover-color: @global-color;
+@marker-border: rgba(255, 255, 255, 0.15);
+@marker-color: @global-emphasis-color;
+@marker-hover-background: @global-emphasis-color;
+@marker-hover-color: @global-background;
 
 //
 // Nav
@@ -208,6 +211,14 @@
 
 @section-primary-color-mode: dark;
 @section-secondary-color-mode: light;
+
+//
+// Slidenav
+//
+
+@slidenav-background: @global-emphasis-color;
+@slidenav-hover-background: fade(@slidenav-background, 80%);
+@slidenav-active-background: fade(@slidenav-background, 60%);
 
 //
 // Tab

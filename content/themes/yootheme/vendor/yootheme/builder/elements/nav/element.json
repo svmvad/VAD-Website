@@ -58,6 +58,15 @@
             "text": "Show dividers",
             "enable": "nav_style != 'navbar-dropdown-nav'"
         },
+        "html_element": {
+            "label": "HTML Element",
+            "description": "Define a navigation menu or give it no semantic meaning.",
+            "type": "select",
+            "options": {
+                "div": "",
+                "nav": "nav"
+            }
+        },
         "grid": {
             "label": "Grid",
             "description": "Set the number of grid columns.",
@@ -114,13 +123,6 @@
                 "None": "collapse"
             }
         },
-        "image_loading": {
-            "label": "Loading",
-            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
-            "type": "checkbox",
-            "text": "Load image eagerly",
-            "enable": "show_image"
-        },
         "image_width": {
             "attrs": {
                 "placeholder": "auto"
@@ -131,6 +133,13 @@
             "attrs": {
                 "placeholder": "auto"
             },
+            "enable": "show_image"
+        },
+        "image_loading": {
+            "label": "Loading",
+            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
+            "type": "checkbox",
+            "text": "Load image eagerly",
             "enable": "show_image"
         },
         "image_border": {
@@ -212,6 +221,7 @@
         "visibility": "${builder.visibility}",
         "name": "${builder.name}",
         "status": "${builder.status}",
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -225,7 +235,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-item", ".el-content", ".el-image", ".el-link"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -245,6 +256,7 @@
                             "fields": [
                                 "nav_style",
                                 "nav_divider",
+                                "html_element",
                                 "grid",
                                 "grid_divider",
                                 "grid_breakpoint",
@@ -257,7 +269,6 @@
                             "type": "group",
                             "divider": true,
                             "fields": [
-                                "image_loading",
                                 {
                                     "label": "Width/Height",
                                     "description": "Setting just one value preserves the original proportions. The image will be resized and cropped automatically, and where possible, high resolution images will be auto-generated.",
@@ -265,6 +276,7 @@
                                     "width": "1-2",
                                     "fields": ["image_width", "image_height"]
                                 },
+                                "image_loading",
                                 "icon_width",
                                 "image_margin",
                                 "image_border",

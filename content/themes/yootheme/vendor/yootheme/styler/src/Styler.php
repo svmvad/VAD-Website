@@ -1,6 +1,6 @@
 <?php
 
-namespace YOOtheme\Theme;
+namespace YOOtheme\Theme\Styler;
 
 use YOOtheme\Config;
 use YOOtheme\File;

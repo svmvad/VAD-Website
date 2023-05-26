@@ -15,7 +15,7 @@ return [
 
             [$style] = explode(':', $config('~theme.style'));
 
-            if (in_array($style, ['fjord'])) {
+            if ($style == 'fjord') {
                 if (Arr::get($node->props, 'width') === 'default') {
                     $node->props['width'] = 'large';
                 }
@@ -23,7 +23,7 @@ return [
         },
 
         '2.1.0-beta.1.1' => function ($node) {
-            if (!empty($node->props['layout']) && $node->props['layout'] === '1-1') {
+            if (($node->props['layout'] ?? '') === '1-1') {
                 unset($node->props['layout']);
             }
         },
@@ -154,9 +154,7 @@ return [
 
         '1.22.0-beta.0.1' => function ($node) {
             Arr::updateKeys($node->props, [
-                'gutter' => function ($value) {
-                    return ['column_gap' => $value, 'row_gap' => $value];
-                },
+                'gutter' => fn($value) => ['column_gap' => $value, 'row_gap' => $value],
             ]);
 
             if (empty($node->props['layout'])) {

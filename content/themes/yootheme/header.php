@@ -41,6 +41,7 @@ if ($config("$site.layout") == 'boxed') {
         $attrs_image = $view->bgImage($config("$site.boxed.media"), [
             'width' => $config("$site.image_width"),
             'height' => $config("$site.image_height"),
+            'focal_point' => $config("$site.image_focal_point"),
             'size' => $config("$site.image_size"),
             'position' => $config("$site.image_position"),
             'visibility' => $config("$site.image_visibility"),
@@ -112,8 +113,14 @@ if ($layout == 'post') {
         <?php wp_head() ?>
     </head>
     <body <?php body_class((array) $config('~theme.body_class')) ?>>
-        <?php wp_body_open(); ?>
+        <?php wp_body_open() ?>
 
+        <div class="uk-hidden-visually uk-notification uk-notification-top-left uk-width-auto">
+            <div class="uk-notification-message">
+                <a href="#tm-main"><?= $view->trans('Skip to main content') ?></a>
+            </div>
+        </div>
+    
         <?php if ($config("$site.layout") == 'boxed') : ?>
         <div<?= $view->attrs($attrs_page_container) ?>>
 
@@ -139,9 +146,9 @@ if ($layout == 'post') {
 
             <?php dynamic_sidebar("top:section") ?>
 
-            <?php if (!$config('app.isBuilder')) : ?>
+            <main id="tm-main" <?= !$config('app.isBuilder') ? $view->attrs($attrs_main_section) : '' ?>>
 
-            <div id="tm-main" <?= $view->attrs($attrs_main_section) ?>>
+                <?php if (!$config('app.isBuilder')) : ?>
                 <div<?= $view->attrs($attrs_main_container) ?>>
 
                     <?php if (is_active_sidebar('sidebar')) :
@@ -160,4 +167,4 @@ if ($layout == 'post') {
                                 <?= $view->section('breadcrumbs') ?>
                             <?php endif ?>
 
-            <?php endif ?>
+                <?php endif ?>

@@ -19,6 +19,46 @@ class PostArchiveQueryType
 
         return [
             'fields' => [
+                Str::camelCase([$field, 'Single']) => [
+                    'type' => Str::camelCase($name, true),
+
+                    'args' => [
+                        'offset' => [
+                            'type' => 'Int',
+                        ],
+                    ],
+
+                    'metadata' => [
+                        'label' => $type->labels->singular_name,
+                        'group' => trans('Page'),
+                        'view' => [
+                            "archive-{$type->name}",
+                            'search',
+                            'author-archive',
+                            'date-archive',
+                        ],
+                        'fields' => [
+                            'offset' => [
+                                'label' => trans('Start'),
+                                'description' => trans(
+                                    'Set the starting point to specify which %post_type% is loaded.',
+                                    ['%post_type%' => $type->labels->singular_name]
+                                ),
+                                'type' => 'number',
+                                'default' => 0,
+                                'modifier' => 1,
+                                'attrs' => [
+                                    'min' => 1,
+                                    'required' => true,
+                                ],
+                            ],
+                        ],
+                    ],
+
+                    'extensions' => [
+                        'call' => __CLASS__ . '::resolveSingle',
+                    ],
+                ],
                 $field => [
                     'type' => [
                         'listOf' => $name,
@@ -100,5 +140,12 @@ class PostArchiveQueryType
         }
 
         return $wp_query->posts;
+    }
+
+    public static function resolveSingle($root, array $args)
+    {
+        global $wp_query;
+
+        return $wp_query->posts[$args['offset'] ?? 0] ?? null;
     }
 }

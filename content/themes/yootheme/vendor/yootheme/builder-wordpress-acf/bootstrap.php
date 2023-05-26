@@ -2,22 +2,13 @@
 
 namespace YOOtheme\Builder\Wordpress\Acf;
 
+use YOOtheme\Builder\BuilderConfig;
 use YOOtheme\Builder\UpdateTransform;
-
-// is acf installed?
-if (!is_callable('acf_get_fields')) {
-    return [];
-}
 
 return [
     'events' => [
-        'source.init' => [
-            SourceListener::class => ['initSource', -10],
-        ],
-
-        'customizer.init' => [
-            SourceListener::class => ['initCustomizer', 10],
-        ],
+        'source.init' => [Listener\LoadSourceTypes::class => ['@handle', -10]],
+        BuilderConfig::class => [Listener\LoadBuilderConfig::class => ['@handle', -10]],
     ],
 
     'extend' => [

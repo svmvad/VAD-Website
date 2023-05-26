@@ -26,11 +26,11 @@ switch ($props['table_order']) {
 }
 
 // Find empty fields
-$filtered = array_values(Arr::filter($fields, function ($field) use ($props, $children) {
-    return $props["show_{$field}"] && Arr::some($children, function ($child) use ($field) {
-        return $child->props[$field] != '';
-    });
-}));
+$filtered = array_values(Arr::filter($fields, fn($field) =>
+    $props["show_{$field}"] && Arr::some($children, fn($child) =>
+        $child->props[$field] != ''
+    )
+));
 
 $el = $this->el('div', [
 
@@ -72,7 +72,7 @@ $table = $this->el('table', [
     <?= $table($props, $attrs) ?>
 <?php endif ?>
 
-        <?php if (Arr::some($filtered, function ($field) use ($props) { return $props["table_head_{$field}"]; })) : ?>
+        <?php if (Arr::some($filtered, fn($field) => $props["table_head_{$field}"])) : ?>
         <thead>
             <tr>
 

@@ -18,7 +18,7 @@ if (!$hasContent) {
 $props['image'] = $this->render("{$__dir}/template-image", compact('props'));
 
 // Item
-$el = $this->el('div', [
+$el = $this->el($props['item_element'] ?: 'div', [
     'class' => [
         'el-item',
         'uk-text-default uk-font-default', // Reset Google Maps Style

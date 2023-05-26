@@ -12,24 +12,22 @@ class GroupType
         return [
             'fields' => array_filter(
                 array_reduce(
-                    Helper::fields('posts', $fieldGroup['fieldSlugs'], true),
-                    function ($fields, $field) use ($fieldGroup) {
-                        return $fields +
-                            Helper::loadFields($field, [
-                                'type' => 'String',
-                                'name' => Str::snakeCase($field['slug']),
-                                'metadata' => [
-                                    'label' => $field['name'],
-                                    'group' => $fieldGroup['name'],
+                    Helper::fields('posts', $fieldGroup['fieldSlugs']),
+                    fn($fields, $field) => $fields +
+                        Helper::loadFields($field, [
+                            'type' => 'String',
+                            'name' => Str::snakeCase($field['slug']),
+                            'metadata' => [
+                                'label' => $field['name'],
+                                'group' => $fieldGroup['name'],
+                            ],
+                            'extensions' => [
+                                'call' => [
+                                    'func' => __CLASS__ . '::resolve',
+                                    'args' => ['slug' => $field['slug']],
                                 ],
-                                'extensions' => [
-                                    'call' => [
-                                        'func' => __CLASS__ . '::resolve',
-                                        'args' => ['slug' => $field['slug']],
-                                    ],
-                                ],
-                            ]);
-                    },
+                            ],
+                        ]),
                     []
                 )
             ),

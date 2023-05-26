@@ -2,19 +2,18 @@
 
 $link = $props['link'] ? $this->el('a', [
     'href' => $props['link'],
+    'aria-label' => $props['link_aria_label'] ?: $element['link_aria_label'],
     'target' => ['_blank {@link_target}'],
     'uk-scroll' => str_contains((string) $props['link'], '#'),
 ]) : null;
 
 if ($link && $element['card_link']) {
 
-    $el->attr($link->attrs + [
+    $link_container->attr($link->attrs + [
 
         'class' => [
             'uk-display-block uk-link-toggle',
         ],
-
-        'aria-label' => $props['link_aria_label'],
 
     ]);
 
@@ -45,9 +44,7 @@ if ($link && $props['title'] && $element['title_link']) {
 
 if ($link && $props['image'] && $element['image_link']) {
 
-    $props['image'] = $link($element, [
-        'aria-label' => $props['link_aria_label'],
-    ], $props['image']);
+    $props['image'] = $link($element, $props['image']);
 
 }
 

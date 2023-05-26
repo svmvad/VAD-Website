@@ -178,7 +178,8 @@ class Service
             return $class->newInstance();
         }
 
-        $arguments = $container->resolveArguments($constructor, $this->arguments);
+        $resolver = new ParameterResolver($container);
+        $arguments = $resolver->resolve($constructor, $this->arguments);
 
         return $class->newInstanceArgs($arguments);
     }

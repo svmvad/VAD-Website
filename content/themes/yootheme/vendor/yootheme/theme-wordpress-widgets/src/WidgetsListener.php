@@ -287,18 +287,17 @@ class WidgetsListener
 
         // Prepare widget theme settings
         $instance['_theme'] =
-            (!empty($args['_theme']) ? $args['_theme'] : []) +
+            ($args['_theme'] ?? []) +
             json_decode($instance['_theme'] ?? '{}', true) +
-            array_map(function ($field) {
-                return $field['default'] ?? '';
-            }, $this->config['fields']);
+            array_map(fn($field) => $field['default'] ?? '', $this->config['fields']);
 
         // Set settings in config for rendering chrome (templates/position.php and templates/module.php)
-        $config->update("~theme.modules.{$widget->id}", function ($values) use ($type, $instance) {
-            return ['is_list' => $this->isListWidget($type)] +
+        $config->update(
+            "~theme.modules.{$widget->id}",
+            fn($values) => ['is_list' => $this->isListWidget($type)] +
                 $instance['_theme'] +
-                ($values ?: []);
-        });
+                ($values ?: [])
+        );
 
         // Ignore wpautop filter for text-widgets in header position
         if (
@@ -501,9 +500,7 @@ class WidgetsListener
 
         return Arr::some(
             ['header.search', 'header.social', 'mobile.header.search', 'mobile.header.social'],
-            function ($key) use ($config, $sidebar) {
-                return str_starts_with($config("~theme.{$key}", ''), "{$sidebar}:");
-            }
+            fn($key) => str_starts_with($config("~theme.{$key}", ''), "{$sidebar}:")
         );
     }
 
@@ -531,9 +528,7 @@ class WidgetsListener
                 'nav_menu' => $menu,
                 '_theme' => json_encode(
                     array_combine(
-                        array_map(function ($key) {
-                            return "menu_{$key}";
-                        }, array_keys($config)),
+                        array_map(fn($key) => "menu_{$key}", array_keys($config)),
                         $config
                     )
                 ),

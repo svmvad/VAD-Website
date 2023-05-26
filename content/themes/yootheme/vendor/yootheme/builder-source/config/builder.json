@@ -14,7 +14,7 @@
                 "label": "Multiple Items Source",
                 "type": "source-field-select",
                 "description": "By default, fields of related sources with single items are available for mapping. Select a related source which has multiple items to map its fields.",
-                "show": "this.Source.getSourceFieldOptions(this.node)"
+                "show": "yootheme.builder.helpers.Source.getSourceFieldOptions(this.builder.path(this.node))"
             },
             "_sourceFieldArgs": {
                 "type": "source-field-args"
@@ -67,7 +67,7 @@
                         }
                     }
                 },
-                "show": "this.Source.getSourceField(this.node)"
+                "show": "yootheme.builder.helpers.Source.getSourceField(this.builder.path(this.node))"
             }
         }
     }

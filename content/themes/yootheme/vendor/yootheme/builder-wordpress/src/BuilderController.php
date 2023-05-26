@@ -31,10 +31,8 @@ class BuilderController
             }
 
             $file = preg_replace_callback(
-                '/-?(\d*)(\.[^.]+)?$/',
-                function ($match) {
-                    return sprintf('-%02d%s', intval($match[1]) + 1, $match[2] ?? '');
-                },
+                '/(?:-(\d{2}))?(\.[^.]+)?$/',
+                fn($match) => sprintf('-%02d%s', intval($match[1]) + 1, $match[2] ?? ''),
                 $file,
                 1
             );
@@ -59,13 +57,10 @@ class BuilderController
         }
 
         // import file to uploads dir
-        $id = media_handle_sideload(
-            [
-                'name' => $file,
-                'tmp_name' => $tmp,
-            ],
-            0
-        );
+        $id = media_handle_sideload([
+            'name' => $file,
+            'tmp_name' => $tmp,
+        ]);
 
         if (is_wp_error($id)) {
             $request->abort(500, "{$file}: {$id->get_error_message()}");

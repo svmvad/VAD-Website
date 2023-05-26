@@ -5,17 +5,17 @@ use YOOtheme\Arr;
 $fields = ['image', 'title', 'meta', 'content', 'link'];
 
 // Find empty fields
-$filtered = array_values(Arr::filter($fields, function ($field) use ($props, $children) {
-    return Arr::some($children, function ($child) use ($field) {
-        return $child->props[$field] != '';
-    });
-}));
+$filtered = array_values(Arr::filter($fields, fn($field) =>
+    Arr::some($children, fn($child) =>
+        $child->props[$field] != ''
+    )
+));
 
 ?>
 
 <?php if (count($children)) : ?>
 <table>
-    <?php if (Arr::some($filtered, function ($field) use ($props) { return $props["table_head_{$field}"]; })) : ?>
+    <?php if (Arr::some($filtered, fn($field) => $props["table_head_{$field}"])) : ?>
     <thead>
         <tr>
 

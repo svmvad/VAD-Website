@@ -4,14 +4,12 @@ namespace YOOtheme\Builder\Wordpress\Acf;
 
 class AcfHelper
 {
-    /**
-     * @param string $type
-     * @param string $name
-     * @param array  $ignore
-     *
-     * @return array
-     */
-    public static function fields($type, $name = '', array $ignore = [])
+    public static function isActive(): bool
+    {
+        return is_callable('acf_get_fields');
+    }
+
+    public static function fields(string $type, string $name = '', array $ignore = []): array
     {
         $fields = [];
 
@@ -26,13 +24,7 @@ class AcfHelper
         return $fields;
     }
 
-    /**
-     * @param string $type
-     * @param string $name
-     *
-     * @return array
-     */
-    public static function groups($type, $name)
+    public static function groups(string $type, string $name): array
     {
         $groups = [];
 
@@ -45,7 +37,7 @@ class AcfHelper
         return $groups;
     }
 
-    protected static function matchGroup($group, $type, $name)
+    protected static function matchGroup($group, string $type, string $name): bool
     {
         foreach ($group['location'] as $rules) {
             foreach ($rules ?: [] as $rule) {
@@ -65,5 +57,7 @@ class AcfHelper
                 }
             }
         }
+
+        return false;
     }
 }

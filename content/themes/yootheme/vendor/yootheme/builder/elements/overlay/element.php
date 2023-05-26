@@ -11,6 +11,15 @@ return [
     ],
 
     'updates' => [
+        '4.0.0-beta.9' => function ($node) {
+            if (Arr::get($node->props, 'overlay_link') && Arr::get($node->props, 'css')) {
+                $node->props['css'] = str_replace(
+                    '.el-element',
+                    '.el-element > *',
+                    $node->props['css']
+                );
+            }
+        },
         '3.0.0-beta.5.1' => function ($node) {
             if (Arr::get($node->props, 'image_box_decoration') === 'border-hover') {
                 $node->props['image_transition_border'] = true;
@@ -100,7 +109,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';

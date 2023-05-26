@@ -1,5 +1,4 @@
 {
-    "@extend": ["../../builder-templates/config/customizer.json"],
     "sources": {
         "filters": {
             "before": {

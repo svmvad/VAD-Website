@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 use YOOtheme\Container\BadFunctionCallException;
 use YOOtheme\Container\InvalidArgumentException;
 use YOOtheme\Container\LogicException;
+use YOOtheme\Container\ParameterResolver;
 use YOOtheme\Container\RuntimeException;
 use YOOtheme\Container\Service;
 use YOOtheme\Container\ServiceNotFoundException;
@@ -47,7 +48,7 @@ class Container implements ContainerInterface
      */
     public function __invoke($id, ...$ids)
     {
-        return $ids ? array_map([$this, 'get'], array_merge([$id], $ids)) : $this->get($id);
+        return $ids ? array_map([$this, 'get'], [$id, ...$ids]) : $this->get($id);
     }
 
     /**
@@ -209,10 +210,10 @@ class Container implements ContainerInterface
     /**
      * Sets an alias.
      *
-     * @param string $alias
      * @param string $id
+     * @param string $alias
      */
-    public function setAlias($alias, $id)
+    public function setAlias($id, $alias)
     {
         $this->aliases[$alias] = $id;
     }
@@ -227,11 +228,11 @@ class Container implements ContainerInterface
     public function callback($callback)
     {
         if (is_string($callback)) {
-            if (strpos($callback, '::')) {
+            if (str_contains($callback, '::')) {
                 [$service, $method] = explode('::', $callback, 2);
 
                 $callback = [$this->getAlias($service), $method];
-            } elseif (strpos($callback, '@')) {
+            } elseif (str_contains($callback, '@')) {
                 [$service, $method] = explode('@', $callback, 2);
 
                 $callback = [$this->get($service), $method];
@@ -261,8 +262,9 @@ class Container implements ContainerInterface
         }
 
         if ($resolve) {
+            $resolver = new ParameterResolver($this);
             $function = Reflection::getFunction($callable);
-            $parameters = $this->resolveArguments($function, $parameters);
+            $parameters = $resolver->resolve($function, $parameters);
         }
 
         return $callable(...$parameters);
@@ -279,9 +281,9 @@ class Container implements ContainerInterface
      */
     public function wrap($callback, array $parameters = [], $resolve = true)
     {
-        return function (...$params) use ($callback, $parameters, $resolve) {
-            return $this->call($callback, array_replace($parameters, $params), $resolve);
-        };
+        return fn(
+            ...$params
+        ) => $this->call($callback, array_replace($parameters, $params), $resolve);
     }
 
     /**
@@ -318,6 +320,29 @@ class Container implements ContainerInterface
 
         $this->resolving[$id] = true;
 
+        $instance = $this->resolveService($id);
+
+        if ($this->isShared($id)) {
+            $this->instances[$id] = $instance;
+        }
+
+        unset($this->resolving[$id]);
+
+        return $instance;
+    }
+
+    /**
+     * Resolves a service instance.
+     *
+     * @param string $id
+     *
+     * @throws \Exception
+     * @throws \ReflectionException
+     *
+     * @return mixed
+     */
+    protected function resolveService($id)
+    {
         $service = $this->services[$id] ?? new Service($id);
         $instance = $service->resolveInstance($this);
 
@@ -333,102 +358,6 @@ class Container implements ContainerInterface
             );
         }
 
-        if ($this->isShared($id)) {
-            $this->instances[$id] = $instance;
-        }
-
-        unset($this->resolving[$id]);
-
         return $instance;
-    }
-
-    /**
-     * Resolves arguments for given function.
-     *
-     * @param \ReflectionFunctionAbstract $function
-     * @param array                       $parameters
-     *
-     * @return array
-     */
-    public function resolveArguments(\ReflectionFunctionAbstract $function, array $parameters = [])
-    {
-        if ($dependencies = $this->resolveDependencies($function, $parameters)) {
-            $parameters = array_merge($dependencies, $parameters);
-        }
-
-        if ($function->getNumberOfRequiredParameters() > ($count = count($parameters))) {
-            $parameter = $function->getParameters()[$count];
-            $declaring = $parameter->getDeclaringFunction();
-
-            throw new RuntimeException(
-                "Can't resolve {$parameter} for " . Reflection::toString($declaring)
-            );
-        }
-
-        return $parameters;
-    }
-
-    /**
-     * Resolves dependencies for given function.
-     *
-     * @param \ReflectionFunctionAbstract $function
-     * @param array                       $parameters
-     *
-     * @return array
-     */
-    public function resolveDependencies(
-        \ReflectionFunctionAbstract $function,
-        array &$parameters = []
-    ) {
-        $dependencies = [];
-
-        foreach ($function->getParameters() as $parameter) {
-            if (array_key_exists($name = "\${$parameter->name}", $parameters)) {
-                if ($parameters[$name] instanceof \Closure) {
-                    $dependencies[] = $parameters[$name]();
-                } else {
-                    $dependencies[] = $parameters[$name];
-                }
-
-                unset($parameters[$name]);
-            } elseif (
-                ($classname = $this->resolveClassname($parameter)) &&
-                array_key_exists($classname, $parameters)
-            ) {
-                if (is_string($parameters[$classname])) {
-                    $dependencies[] = $this->get($parameters[$classname]);
-                } else {
-                    $dependencies[] = $parameters[$classname];
-                }
-
-                unset($parameters[$classname]);
-            } elseif ($classname && ($this->has($classname) || class_exists($classname))) {
-                $dependencies[] = $this->get($classname);
-            } else {
-                break;
-            }
-        }
-
-        return $dependencies;
-    }
-
-    /**
-     * Resolves classname from parameter type.
-     *
-     * @param \ReflectionParameter $parameter
-     *
-     * @return string|null
-     */
-    public function resolveClassname(\ReflectionParameter $parameter)
-    {
-        if (PHP_VERSION_ID < 70100) {
-            return preg_match('/<\w+?>\s([\\\\\w]+)/', $parameter, $matches) ? $matches[1] : null;
-        }
-
-        if (($type = $parameter->getType()) instanceof \ReflectionNamedType) {
-            return !$type->isBuiltin() ? $type->getName() : null;
-        }
-
-        return null;
     }
 }

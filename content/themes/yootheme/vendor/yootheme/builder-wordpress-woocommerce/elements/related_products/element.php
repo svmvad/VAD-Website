@@ -29,17 +29,10 @@ return [
 
                 $filters[] = Helper::addFilter(
                     'woocommerce_output_related_products_args',
-                    function ($args) use ($node) {
-                        return array_merge(
-                            $args,
-                            Arr::pick($node->props, [
-                                'posts_per_page',
-                                'columns',
-                                'orderby',
-                                'order',
-                            ])
-                        );
-                    }
+                    fn($args) => array_merge(
+                        $args,
+                        Arr::pick($node->props, ['posts_per_page', 'columns', 'orderby', 'order'])
+                    )
                 );
 
                 /**

@@ -10,6 +10,8 @@
 @dropdown-padding:                              25px;
 @dropdown-background:                           @global-background;
 
+@dropdown-dropbar-padding-top:                  5px;
+
 @dropdown-nav-subtitle-font-size:               12px;
 
 //
@@ -25,6 +27,14 @@
 // ========================================================================
 
 .hook-dropdown() { box-shadow: @dropdown-box-shadow; }
+
+
+// Dropbar modifier
+// ========================================================================
+
+.hook-dropdown-dropbar() { box-shadow: none; }
+
+.hook-dropdown-dropbar-large() {}
 
 
 // Nav

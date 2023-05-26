@@ -7,6 +7,7 @@ $image = $this->el('image', [
     'loading' => $element['image_loading'] ? false : null,
     'width' => $element['image_width'],
     'height' => $element['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'thumbnail' => [$element['image_width'], $element['image_height'], $element['image_orientation']],
 
 ]);

@@ -119,11 +119,63 @@ class UserType
 
                 'avatar' => [
                     'type' => 'String',
+                    'args' => [
+                        'size' => [
+                            'type' => 'String',
+                            'default' => '96',
+                        ],
+                    ],
                     'metadata' => [
                         'label' => trans('Avatar'),
+                        'arguments' => [
+                            'size' => [
+                                'label' => trans('Image Size'),
+                                'description' => trans(
+                                    'Set the size for the Gravatar image in pixels.'
+                                ),
+                                'type' => 'text',
+                                'default' => '96',
+                                'attrs' => [
+                                    'min' => 1,
+                                    'required' => true,
+                                ],
+                            ],
+                        ],
                     ],
                     'extensions' => [
                         'call' => __CLASS__ . '::avatar',
+                    ],
+                ],
+
+                'rolesString' => [
+                    'type' => 'String',
+                    'args' => [
+                        'separator' => [
+                            'type' => 'String',
+                        ],
+                    ],
+                    'metadata' => [
+                        'label' => trans('Roles'),
+                        'arguments' => [
+                            'separator' => [
+                                'label' => trans('Separator'),
+                                'description' => trans('Set the separator between user roles.'),
+                                'default' => ', ',
+                            ],
+                        ],
+                    ],
+                    'extensions' => [
+                        'call' => __CLASS__ . '::rolesString',
+                    ],
+                ],
+
+                'id' => [
+                    'type' => 'String',
+                    'metadata' => [
+                        'label' => trans('ID'),
+                    ],
+                    'extensions' => [
+                        'call' => __CLASS__ . '::id',
                     ],
                 ],
             ],
@@ -133,6 +185,11 @@ class UserType
                 'label' => trans('User'),
             ],
         ];
+    }
+
+    public static function id(WP_User $user)
+    {
+        return $user->ID;
     }
 
     public static function name(WP_User $user)
@@ -175,8 +232,21 @@ class UserType
         return get_author_posts_url($user->ID);
     }
 
-    public static function avatar(WP_User $user)
+    public static function avatar(WP_User $user, $args)
     {
-        return get_avatar_url($user->ID);
+        return get_avatar_url($user->ID, $args);
+    }
+
+    public static function rolesString(WP_User $user, $args): string
+    {
+        $result = [];
+        $roles = wp_roles();
+        foreach ($user->roles as $role) {
+            if (isset($roles->role_names[$role])) {
+                $result[] = translate_user_role($roles->role_names[$role]);
+            }
+        }
+
+        return implode($args['separator'] ?? ', ', $result);
     }
 }

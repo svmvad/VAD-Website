@@ -37,10 +37,6 @@ class UpdateTransform
      */
     public function __invoke($node, array &$params)
     {
-        if (isset($node->transient)) {
-            return;
-        }
-
         if (isset($node->version)) {
             $params['version'] = $node->version;
         } elseif (empty($params['version'])) {

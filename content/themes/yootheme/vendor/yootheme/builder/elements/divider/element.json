@@ -28,7 +28,7 @@
         },
         "divider_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set a thematic break between paragraphs or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "hr": "hr",
@@ -105,7 +105,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

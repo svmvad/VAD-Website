@@ -297,8 +297,8 @@
             "text": "Enable marker clustering"
         },
         "popup_max_width": {
-            "label": "Popup max width",
-            "description": "Set a maximum width for the popup.",
+            "label": "Max Width",
+            "description": "Set the maximum width.",
             "type": "text"
         },
         "title_style": {
@@ -383,7 +383,7 @@
         },
         "title_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -458,7 +458,7 @@
         },
         "meta_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -518,13 +518,6 @@
             },
             "enable": "show_content"
         },
-        "image_loading": {
-            "label": "Loading",
-            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
-            "type": "checkbox",
-            "text": "Load image eagerly",
-            "enable": "show_image"
-        },
         "image_width": {
             "attrs": {
                 "placeholder": "auto"
@@ -535,6 +528,13 @@
             "attrs": {
                 "placeholder": "auto"
             },
+            "enable": "show_image"
+        },
+        "image_loading": {
+            "label": "Loading",
+            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
+            "type": "checkbox",
+            "text": "Load image eagerly",
             "enable": "show_image"
         },
         "image_border": {
@@ -593,6 +593,11 @@
         "link_text": {
             "label": "Text",
             "description": "Enter the text for the link.",
+            "enable": "show_link"
+        },
+        "link_aria_label": {
+            "label": "ARIA Label",
+            "description": "Enter a descriptive text label to make it accessible if the link has no visible text.",
             "enable": "show_link"
         },
         "link_style": {
@@ -699,6 +704,7 @@
         "container_padding_remove": "${builder.container_padding_remove}",
         "name": "${builder.name}",
         "status": "${builder.status}",
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -720,7 +726,8 @@
                     ".el-link"
                 ]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -816,7 +823,13 @@
                             "label": "Marker",
                             "type": "group",
                             "divider": true,
-                            "fields": ["clustering", "popup_max_width"]
+                            "fields": ["clustering"]
+                        },
+                        {
+                            "label": "Popup",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["popup_max_width"]
                         },
                         {
                             "label": "Title",
@@ -856,7 +869,6 @@
                             "type": "group",
                             "divider": true,
                             "fields": [
-                                "image_loading",
                                 {
                                     "label": "Width/Height",
                                     "description": "Setting just one value preserves the original proportions. The image will be resized and cropped automatically, and where possible, high resolution images will be auto-generated.",
@@ -864,6 +876,7 @@
                                     "width": "1-2",
                                     "fields": ["image_width", "image_height"]
                                 },
+                                "image_loading",
                                 "image_border",
                                 "image_link",
                                 "image_svg_inline",
@@ -878,6 +891,7 @@
                             "fields": [
                                 "link_target",
                                 "link_text",
+                                "link_aria_label",
                                 "link_style",
                                 "link_size",
                                 "link_fullwidth",

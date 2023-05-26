@@ -5,9 +5,11 @@ namespace YOOtheme;
 return [
     'transforms' => [
         'render' => function ($node) {
-            $getItem = function ($text, $link, $active = true) {
-                return (object) compact('active', 'text', 'link');
-            };
+            $getItem = fn($text, $link, $active = true) => (object) compact(
+                'active',
+                'text',
+                'link'
+            );
 
             if (is_singular()) {
                 $node->props['pagination_type'] = 'previous/next';

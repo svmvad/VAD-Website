@@ -14,7 +14,6 @@ class NormalizeTransform
     {
         $type = $params['type'];
 
-        $node->id = $node->id ?? null;
         $node->attrs = $node->attrs ?? [];
         $node->children = $node->children ?? [];
 

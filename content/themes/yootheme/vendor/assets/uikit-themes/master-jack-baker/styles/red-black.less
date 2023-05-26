@@ -180,9 +180,19 @@
 // Slidenav
 //
 
-@slidenav-background: #fff;
+@slidenav-color: @global-inverse-color;
+@slidenav-hover-color: @slidenav-color;
+@slidenav-active-color: @slidenav-color;
+@slidenav-background: @global-primary-background;
 @slidenav-hover-background: fade(@slidenav-background, 50%);
 @slidenav-active-background: fade(@slidenav-background, 50%);
+
+@inverse-slidenav-color: @global-emphasis-color;
+@inverse-slidenav-hover-color: @slidenav-color;
+@inverse-slidenav-active-color: @slidenav-color;
+@inverse-slidenav-background: #fff;
+@inverse-slidenav-hover-background: fade(@inverse-slidenav-background, 50%);
+@inverse-slidenav-active-background: fade(@inverse-slidenav-background, 50%);
 
 //
 // Text

@@ -49,9 +49,10 @@ class SchemaPrinter extends BasePrinter
                 ? ' implements ' .
                     implode(
                         ' & ',
-                        array_map(static function (InterfaceType $interface): string {
-                            return $interface->name;
-                        }, $interfaces)
+                        array_map(
+                            fn(InterfaceType $interface): string => $interface->name,
+                            $interfaces
+                        )
                     )
                 : '';
 
@@ -75,16 +76,14 @@ class SchemaPrinter extends BasePrinter
         return implode(
             "\n",
             array_map(
-                static function ($f, $i) use ($options): string {
-                    return static::printDescription($options, $f, '  ', !$i) .
-                        '  ' .
-                        $f->name .
-                        static::printArgs($options, $f->args, '  ') .
-                        ': ' .
-                        (string) $f->getType() .
-                        static::printDirectives($f, $options) .
-                        static::printDeprecated($f);
-                },
+                fn($f, $i) => static::printDescription($options, $f, '  ', !$i) .
+                    '  ' .
+                    $f->name .
+                    static::printArgs($options, $f->args, '  ') .
+                    ': ' .
+                    (string) $f->getType() .
+                    static::printDirectives($f, $options) .
+                    static::printDeprecated($f),
                 $fields,
                 array_keys($fields)
             )

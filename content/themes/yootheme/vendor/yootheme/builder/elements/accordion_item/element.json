@@ -37,6 +37,25 @@
             "source": true,
             "enable": "link"
         },
+        "item_element": "${builder.html_element_item}",
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "image"
+        },
         "status": "${builder.statusItem}",
         "source": "${builder.source}"
     },
@@ -47,6 +66,24 @@
                 {
                     "title": "Content",
                     "fields": ["title", "content", "image", "image_alt", "link", "link_text"]
+                },
+                {
+                    "title": "Settings",
+                    "fields": [
+                        {
+                            "label": "Item",
+                            "type": "group",
+                            "divider": true,
+                            "fields": [
+                                "item_element"
+                            ]
+                        },
+                        {
+                            "label": "Image",
+                            "type": "group",
+                            "fields": ["image_focal_point"]
+                        }
+                    ]
                 },
                 "${builder.advancedItem}"
             ]

@@ -43,7 +43,7 @@ $nav_attrs = $props['filter_position'] === 'top'
 <?= $nav($props, $nav_attrs) ?>
 
     <?php if ($props['filter_all']) : ?>
-    <li class="uk-active" uk-filter-control><a href="#"><?= $this->trans($props['filter_all_label'] ?: 'All') ?></a></li>
+    <li class="uk-active" uk-filter-control><a href><?= $this->trans($props['filter_all_label'] ?: 'All') ?></a></li>
     <?php endif ?>
 
     <?php foreach ($tags as $tag => $name) : ?>
@@ -51,7 +51,7 @@ $nav_attrs = $props['filter_position'] === 'top'
         'class' => ['uk-active' => $tag === array_key_first($tags) && !$props['filter_all']],
         'uk-filter-control' => json_encode(['filter' => '[data-tag~="' . str_replace('"', '\"', $tag) . '"]']),
     ]) ?>>
-        <a href="#"><?= $name ?></a>
+        <a href><?= $name ?></a>
     </li>
     <?php endforeach ?>
 

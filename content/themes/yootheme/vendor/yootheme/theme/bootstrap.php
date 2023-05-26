@@ -1,33 +1,31 @@
 <?php
 
-namespace YOOtheme;
+namespace YOOtheme\Theme;
 
-use YOOtheme\Theme\CustomizerListener;
-use YOOtheme\Theme\ImageLoader;
-use YOOtheme\Theme\ThemeListener;
-use YOOtheme\Theme\Updater;
-use YOOtheme\Theme\ViewHelper;
+use YOOtheme\Config;
+use YOOtheme\ImageProvider;
+use YOOtheme\View;
 
 return [
-    'theme' => function (Config $config) {
-        return $config->loadFile(Path::get('./config/theme.json'));
-    },
+    'theme' => fn(Config $config) => $config->loadFile(__DIR__ . '/config/theme.json'),
 
     'events' => [
-        'theme.head' => [
-            ThemeListener::class => ['initHead', -10],
-        ],
+        'app.request' => [Listener\DisableImageCache::class => '@handle'],
+        'metadata.load' => [Listener\LoadThemeVersion::class => ['@handle', -10]],
 
-        'metadata.load' => [
-            ThemeListener::class => ['loadMetadata', -10],
+        'theme.head' => [
+            Listener\LoadThemeI18n::class => '@handle',
+            Listener\LoadThemeHead::class => ['@handle', -10],
         ],
 
         'customizer.init' => [
-            CustomizerListener::class => [['initCustomizer', 0], ['lateInitCustomizer', -20]],
+            Listener\UpdateBuilderLayouts::class => '@handle',
+            Listener\LoadCustomizerData::class => '@handle',
+            Listener\LoadConfigData::class => ['@handle', -20],
         ],
 
-        'app.request' => [
-            CustomizerListener::class => 'handleRequest',
+        'config.save' => [
+            Listener\SaveBuilderLayouts::class => '@handle',
         ],
     ],
 
@@ -44,9 +42,11 @@ return [
     'services' => [
         Updater::class => function (Config $config) {
             $updater = new Updater($config('theme.version'));
-            $updater->add(Path::get('./updates.php'));
+            $updater->add(__DIR__ . '/updates.php');
 
             return $updater;
         },
+
+        Listener\LoadThemeVersion::class => '',
     ],
 ];

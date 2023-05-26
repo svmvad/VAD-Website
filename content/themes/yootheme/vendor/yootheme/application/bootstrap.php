@@ -3,16 +3,16 @@
 namespace YOOtheme\Application;
 
 use YOOtheme\Config;
-use YOOtheme\Database;
 use YOOtheme\Path;
 use YOOtheme\Url;
 use YOOtheme\View;
 
 return [
     'config' => function (Config $config) {
-        $config->addFilter('url', function ($value, $file) {
-            return Url::to(Path::resolve(dirname($file), $value));
-        });
+        $config->addFilter(
+            'url',
+            fn($value, $file) => Url::to(Path::resolve(dirname($file), $value))
+        );
     },
 
     'extend' => [
@@ -24,15 +24,14 @@ return [
 
     'aliases' => [
         View::class => 'view',
-        Database::class => 'db',
     ],
 
     'loaders' => [
-        'services' => new ServiceLoader(),
-        'aliases' => new AliasLoader(),
-        'extend' => new ExtendLoader(),
-        'events' => new EventLoader(),
-        'routes' => new RouteLoader(),
-        'config' => new ConfigLoader(),
+        'services' => ServiceLoader::class,
+        'aliases' => AliasLoader::class,
+        'extend' => ExtendLoader::class,
+        'events' => EventLoader::class,
+        'routes' => RouteLoader::class,
+        'config' => ConfigLoader::class,
     ],
 ];

@@ -9,7 +9,6 @@
     "name": "${theme.name}",
     "version": "${theme.version}",
     "help": "https://yootheme.com",
-    "api": "https://yootheme.com/api",
     "sections": {
         "layout": {
             "title": "Layout",
@@ -253,6 +252,22 @@
                                 "placeholder": "auto"
                             }
                         }
+                    }
+                },
+                "site.image_focal_point": {
+                    "label": "Focal Point",
+                    "description": "Set a focal point to adjust the image focus when cropping.",
+                    "type": "select",
+                    "options": {
+                        "Top Left": "top-left",
+                        "Top Center": "top-center",
+                        "Top Right": "top-right",
+                        "Center Left": "center-left",
+                        "Center Center": "",
+                        "Center Right": "center-right",
+                        "Bottom Left": "bottom-left",
+                        "Bottom Center": "bottom-center",
+                        "Bottom Right": "bottom-right"
                     }
                 },
                 "site.image_size": {
@@ -729,10 +744,10 @@
                         "Logo End": "logo:end"
                     }
                 },
-                "header.social_links": {
+                "header.social_items": {
                     "type": "button-panel",
-                    "text": "Edit Links",
-                    "panel": "social-links"
+                    "text": "Edit Items",
+                    "panel": "social-items"
                 },
                 "header.social_target": {
                     "type": "checkbox",
@@ -740,8 +755,12 @@
                 },
                 "header.social_style": {
                     "type": "checkbox",
-                    "text": "Display icons as buttons",
-                    "description": "Select the position that will display the social icons. Be sure to add your social profile links or no icons can be displayed."
+                    "text": "Display icons as buttons"
+                },
+                "header.social_image_svg_inline": {
+                    "type": "checkbox",
+                    "text": "Make SVG stylable with CSS",
+                    "description": "Select the position that will display the social icons."
                 },
                 "header.social_width": {
                     "label": "Social Icons Size",
@@ -766,35 +785,37 @@
                 }
             }
         },
-        "social-links": {
-            "title": "Social Links",
+        "social-items": {
+            "title": "Social Icons",
             "width": 400,
             "fields": {
-                "header.social_links.0": {
-                    "label": "Links",
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "header.social_links.1": {
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "header.social_links.2": {
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "header.social_links.3": {
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "header.social_links.4": {
-                    "description": "Enter up to 5 links to your social profiles. A corresponding <a href=\"https://getuikit.com/docs/icon\" target=\"_blank\">UIkit brand icon</a> will be displayed automatically, if available. Links to email addresses and phone numbers, like mailto:info@example.com or tel:+491570156, are also supported.",
-                    "attrs": {
-                        "placeholder": "https://"
+                "header.social_items": {
+                    "label": "Items",
+                    "type": "item-panel",
+                    "fields": {
+                        "link": {
+                            "label": "Link",
+                            "attrs": {
+                                "placeholder": "https://"
+                            },
+                            "description": "Enter link to your social profile. A corresponding <a href=\"https://getuikit.com/docs/icon\" target=\"_blank\">UIkit brand icon</a> will be displayed automatically, if available. Links to email addresses and phone numbers, like mailto:info@example.com or tel:+491570156, are also supported."
+                        },
+                        "link_aria_label": {
+                            "label": "Link ARIA Label",
+                            "description": "Set a different link ARIA label for this item."
+                        },
+                        "icon": {
+                            "label": "Icon",
+                            "description": "Pick an alternative icon from the icon library.",
+                            "type": "icon",
+                            "enable": "!image"
+                        },
+                        "image": {
+                            "label": "Image",
+                            "description": "Pick an alternative SVG image from the media manager.",
+                            "type": "image",
+                            "enable": "!icon"
+                        }
                     }
                 }
             }
@@ -809,9 +830,9 @@
                     "type": "select",
                     "options": {
                         "None": "",
-                        "Small": "s",
-                        "Medium": "m",
-                        "Large": "l"
+                        "Small (Phone Landscape)": "s",
+                        "Medium (Tablet Landscape)": "m",
+                        "Large (Desktop)": "l"
                     }
                 },
                 "mobile.header.layout": {
@@ -1021,10 +1042,10 @@
                     },
                     "show": "mobile.breakpoint"
                 },
-                "mobile.header.social_links": {
+                "mobile.header.social_items": {
                     "type": "button-panel",
-                    "text": "Edit Links",
-                    "panel": "mobile.social-links",
+                    "text": "Edit Items",
+                    "panel": "mobile.social-items",
                     "show": "mobile.breakpoint"
                 },
                 "mobile.header.social_target": {
@@ -1035,6 +1056,11 @@
                 "mobile.header.social_style": {
                     "type": "checkbox",
                     "text": "Display icons as buttons",
+                    "show": "mobile.breakpoint"
+                },
+                "mobile.social_image_svg_inline": {
+                    "type": "checkbox",
+                    "text": "Make SVG stylable with CSS",
                     "description": "Select the position that will display the social icons. Be sure to add your social profile links or no icons can be displayed.",
                     "show": "mobile.breakpoint"
                 },
@@ -1061,35 +1087,37 @@
                 }
             }
         },
-        "mobile.social-links": {
-            "title": "Social Links",
+        "mobile.social-items": {
+            "title": "Social Icons",
             "width": 400,
             "fields": {
-                "mobile.header.social_links.0": {
-                    "label": "Links",
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "mobile.header.social_links.1": {
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "mobile.header.social_links.2": {
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "mobile.header.social_links.3": {
-                    "attrs": {
-                        "placeholder": "https://"
-                    }
-                },
-                "mobile.header.social_links.4": {
-                    "description": "Enter up to 5 links to your social profiles. A corresponding <a href=\"https://getuikit.com/docs/icon\" target=\"_blank\">UIkit brand icon</a> will be displayed automatically, if available. Links to email addresses and phone numbers, like mailto:info@example.com or tel:+491570156, are also supported.",
-                    "attrs": {
-                        "placeholder": "https://"
+                "mobile.header.social_items": {
+                    "label": "Items",
+                    "type": "item-panel",
+                    "fields": {
+                        "link": {
+                            "label": "Link",
+                            "attrs": {
+                                "placeholder": "https://"
+                            },
+                            "description": "Enter link to your social profile. A corresponding <a href=\"https://getuikit.com/docs/icon\" target=\"_blank\">UIkit brand icon</a> will be displayed automatically, if available. Links to email addresses and phone numbers, like mailto:info@example.com or tel:+491570156, are also supported."
+                        },
+                        "link_aria_label": {
+                            "label": "Link ARIA Label",
+                            "description": "Set a different link ARIA label for this item."
+                        },
+                        "icon": {
+                            "label": "Icon",
+                            "description": "Pick an alternative icon from the icon library.",
+                            "type": "icon",
+                            "enable": "!image"
+                        },
+                        "image": {
+                            "label": "Image",
+                            "description": "Pick an alternative SVG image from the media manager.",
+                            "type": "image",
+                            "enable": "!icon"
+                        }
                     }
                 }
             }
@@ -1900,7 +1928,7 @@
             }
         },
         "footer-builder": {
-            "title": "Footer",
+            "title": "Builder",
             "heading": false,
             "width": 500
         }

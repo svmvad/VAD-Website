@@ -79,7 +79,7 @@
         },
         "title_element": {
             "label": "HTML Element",
-            "description": "Choose one of the six heading elements to fit your semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "H1": "h1",
@@ -156,7 +156,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

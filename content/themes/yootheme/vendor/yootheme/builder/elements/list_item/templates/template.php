@@ -36,6 +36,7 @@ if ($props['image']) {
         'loading' => $element['image_loading'] ? false : null,
         'width' => $element['image_width'],
         'height' => $element['image_height'],
+        'focal_point' => $props['image_focal_point'],
         'uk-svg' => $element['image_svg_inline'],
         'thumbnail' => true,
     ]);
@@ -103,7 +104,31 @@ $link = $props['link'] ? $this->el('a', [
     'uk-scroll' => str_contains((string) $props['link'], '#'),
 ]) : null;
 
-if ($link) {
+if ($link && $props['image']) {
+
+    $link->attr($link->attrs + [
+
+        'class' => [
+            'uk-link-toggle',
+        ],
+
+    ]);
+
+    $props['content'] = $this->striptags($props['content']);
+
+    if ($element['link_style'] != 'reset') {
+        $props['content'] = $this->el('span', [
+            'class' => [
+                'uk-link-{link_style: muted|text|heading}',
+                'uk-link {!link_style}',
+                'uk-margin-remove-last-child',
+            ],
+        ], $props['content'])->render($element);
+    }
+
+}
+
+if ($link && !$props['image']) {
 
     $props['content'] = $link($props, ['class' => [
 
@@ -113,22 +138,27 @@ if ($link) {
 
     ]], $this->striptags($props['content']));
 
-    if ($props['image']) {
-        $props['image'] = $link($props, [
-            'aria-label' => $this->striptags($props['content'])
-        ], $props['image']);
-    }
 }
 
 ?>
 
 <?php if ($props['image']) : ?>
-    <?= $grid($element) ?>
-        <?= $cell_image($element, $props['image']) ?>
-        <div>
-            <?= $content($element, $props['content'] ?: '') ?>
-        </div>
-    </div>
+
+    <?php if ($props['link']) : ?>
+    <?= $link($element) ?>
+    <?php endif ?>
+
+        <?= $grid($element) ?>
+            <?= $cell_image($element, $props['image']) ?>
+            <div>
+                <?= $content($element, $props['content'] ?: '') ?>
+            </div>
+        <?= $grid->end() ?>
+
+    <?php if ($props['link']) : ?>
+    <?= $link->end() ?>
+    <?php endif ?>
+
 <?php else : ?>
     <?= $content($element, $props['content'] ?: '') ?>
 <?php endif ?>

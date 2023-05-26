@@ -54,7 +54,7 @@ class EventDispatcher
      */
     public function getListeners($event)
     {
-        return !empty($this->listeners[$event]) ? array_merge(...$this->listeners[$event]) : [];
+        return array_merge(...$this->listeners[$event] ?? []);
     }
 
     /**

@@ -1,10 +1,35 @@
 <?php
 
-$el = $this->el($isLink = $props['link'] && $element['overlay_link'] ? 'a' : 'div', [
+// Override default settings
+$element['text_color'] = $props['text_color'] ?: $element['text_color'];
+
+// New logic shortcuts
+$element['has_link'] = $props['link'] && $element['overlay_link'];
+$element['has_transition'] = $element['overlay_hover'] || $element['image_transition'] || $props['hover_image'];
+$element['text_color_inverse'] = $element['text_color'] === 'light' ? 'dark' : 'light';
+
+$el = $this->el($props['item_element'] ?: 'div', [
+
+    'class' => [
+        'el-item',
+
+        // Needs to be parent of `uk-link-toggle`
+        'uk-{0}' => !$element['overlay_style'] || $element['overlay_cover'] ? $element['text_color'] : false,
+
+        // Match link container height because image covers if height is set to viewport or if width is set to auto
+        'uk-grid-item-match {@has_link}' => ($element['slider_width'] && $element['slider_height']) || !$element['slider_width'],
+    ],
+
+]);
+
+// Link Container
+$link_container = $element['has_link'] ? $this->el('a') : null;
+
+($element['has_link'] ? $link_container : $el)->attr([
 
     'class' => [
         'uk-cover-container',
-        'uk-transition-toggle' => $isTransition = $element['overlay_hover'] || $element['image_transition'] || $props['hover_image'],
+        'uk-transition-toggle {@has_transition}',
     ],
 
     'style' => [
@@ -12,7 +37,15 @@ $el = $this->el($isLink = $props['link'] && $element['overlay_link'] ? 'a' : 'di
         'background-color: ' . $props['media_background'] . ';' => $props['media_background'],
     ],
 
-    'tabindex' => $isTransition && !$isLink ? 0 : null,
+    'tabindex' => $element['has_transition'] && !$element['has_link'] ? 0 : null,
+
+    // Needs to be on anchor to have just one focusable toggle when using keyboard navigation
+    'uk-toggle' => ($props['text_color_hover'] || $element['text_color_hover']) && ((!$element['overlay_style'] && $props['hover_image']) || ($element['overlay_cover'] && $element['overlay_hover'] && $element['overlay_transition_background'])) ? [
+        'cls: uk-{text_color_inverse} [uk-{text_color}];',
+        'mode: hover;',
+        'target: !*; {@has_link}',
+    ] : false,
+    
 ]);
 
 $overlay = $this->el('div', [
@@ -56,43 +89,13 @@ if (!$element['overlay_cover']) {
 // Link
 $link = include "{$__dir}/template-link.php";
 
-// Helper
-$helper = '';
-
-$helper_condition_color = (!$element['overlay_style'] || $element['overlay_mode'] == 'cover') && ($props['text_color'] ?: $element['text_color']);
-$helper_condition_toggle = ($props['text_color_hover'] || $element['text_color_hover']) && ((!$element['overlay_style'] && $props['hover_image']) || ($element['overlay_cover'] && $element['overlay_hover'] && $element['overlay_transition_background']));
-
-if ($helper_condition_color || $helper_condition_toggle) {
-
-    $color = $props['text_color'] ?: $element['text_color'];
-    $inverse = $color === 'light' ? 'dark' : 'light';
-
-    $helper = $this->el('div', [
-
-        'class' => [
-            // Needed to match helper `dìv` height because image covers if height is set to viewport or if width is set to auto
-            'uk-grid-item-match' => ($element['slider_width'] && $element['slider_height']) || !$element['slider_width'],
-            // Needs to be parent of `uk-light` or `uk-dark`
-            'uk-{0}' => $helper_condition_color ? $color : false,
-        ],
-
-    ]);
-
-    // Needs to be on anchor to have just one focusable toggle when using keyboard navigation
-    if ($helper_condition_toggle) {
-        // Inverse text color on hover
-        $el->attr('uk-toggle', "cls: uk-{$inverse} uk-{$color}; mode: hover; target: !*");
-    }
-
-}
-
 ?>
 
-<?php if ($helper) : ?>
-<?= $helper($props) ?>
-<?php endif ?>
-
 <?= $el($element, $attrs) ?>
+
+    <?php if ($link_container) : ?>
+    <?= $link_container($element) ?>
+    <?php endif ?>
 
         <?= $this->render("{$__dir}/template-media", compact('props')) ?>
 
@@ -108,8 +111,8 @@ if ($helper_condition_color || $helper_condition_toggle) {
         <?= $position($element, $content($element, $this->render("{$__dir}/template-content", compact('props', 'link')))) ?>
         <?php endif ?>
 
-<?= $el->end() ?>
+    <?php if ($link_container) : ?>
+    <?= $link_container->end() ?>
+    <?php endif ?>
 
-<?php if ($helper) : ?>
-<?= $helper->end() ?>
-<?php endif ?>
+<?= $el->end() ?>

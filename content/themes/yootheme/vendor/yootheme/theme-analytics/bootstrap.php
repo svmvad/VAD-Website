@@ -1,13 +1,7 @@
 <?php
 
-namespace YOOtheme;
-
-use YOOtheme\Theme\AnalyticsListener;
+namespace YOOtheme\Theme\Analytics;
 
 return [
-    'events' => [
-        'theme.head' => [
-            AnalyticsListener::class => 'initHead',
-        ],
-    ],
+    'events' => ['theme.head' => [Listener\LoadThemeHead::class => '@handle']],
 ];

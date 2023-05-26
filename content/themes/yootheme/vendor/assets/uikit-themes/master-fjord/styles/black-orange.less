@@ -25,6 +25,7 @@
 @theme-box-decoration-default-background: lighten(@global-muted-background, 16%);
 @theme-box-decoration-secondary-background: lighten(@global-secondary-background, 8%);
 @inverse-theme-box-decoration-default-background: fadein(@inverse-global-muted-background, 6%);
+@internal-theme-transition-border-border-gradient: linear-gradient(85deg, #ffa967, #ff3a39);
 
 //
 // Alert
@@ -143,8 +144,9 @@
 // Marker
 //
 
-@marker-color: @global-emphasis-color;
-@marker-hover-color: @global-emphasis-color;
+@marker-background: @global-emphasis-color;
+@marker-color: @global-background;
+@marker-hover-color: @global-background;
 
 //
 // Nav

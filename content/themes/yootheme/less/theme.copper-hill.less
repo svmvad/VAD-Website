@@ -60,6 +60,10 @@ Preview: https://yootheme.com/api/style/copper-hill/black-beige.jpg
 // Variables
 // ========================================================================
 
+//
+// Box Decoration
+//
+
 @theme-box-decoration-top:                               10px;
 @theme-box-decoration-bottom:                            10px;
 @theme-box-decoration-left:                              10px;
@@ -147,6 +151,14 @@ Preview: https://yootheme.com/api/style/copper-hill/black-beige.jpg
 .hook-inverse-box-decoration-secondary() when not (@theme-box-decoration-secondary-border-width = 0) {
     &::after { border-color: @inverse-theme-box-decoration-secondary-border; }
 }
+
+//
+// Transition Border
+//
+
+@theme-transition-border-border:                        @global-background;
+@theme-transition-border-hover-border-width:            14px;
+@theme-transition-border-hover-border:                  @theme-transition-border-border;
 
 //
 // WooCommerce

@@ -13,9 +13,10 @@ return [
         '1.22.0-beta.0.1' => function ($node) {
             Arr::updateKeys($node->props, [
                 'image_breakpoint' => 'image_grid_breakpoint',
-                'image_gutter' => function ($value) {
-                    return ['image_grid_column_gap' => $value, 'image_grid_row_gap' => $value];
-                },
+                'image_gutter' => fn($value) => [
+                    'image_grid_column_gap' => $value,
+                    'image_grid_row_gap' => $value,
+                ],
             ]);
         },
 

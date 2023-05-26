@@ -71,18 +71,18 @@ return [
                 'switcher_breakpoint' => 'switcher_grid_breakpoint',
                 'title_breakpoint' => 'title_grid_breakpoint',
                 'image_breakpoint' => 'image_grid_breakpoint',
-                'switcher_gutter' => function ($value) {
-                    return [
-                        'switcher_grid_column_gap' => $value,
-                        'switcher_grid_row_gap' => $value,
-                    ];
-                },
-                'title_gutter' => function ($value) {
-                    return ['title_grid_column_gap' => $value, 'title_grid_row_gap' => $value];
-                },
-                'image_gutter' => function ($value) {
-                    return ['image_grid_column_gap' => $value, 'image_grid_row_gap' => $value];
-                },
+                'switcher_gutter' => fn($value) => [
+                    'switcher_grid_column_gap' => $value,
+                    'switcher_grid_row_gap' => $value,
+                ],
+                'title_gutter' => fn($value) => [
+                    'title_grid_column_gap' => $value,
+                    'title_grid_row_gap' => $value,
+                ],
+                'image_gutter' => fn($value) => [
+                    'image_grid_column_gap' => $value,
+                    'image_grid_row_gap' => $value,
+                ],
             ]);
         },
 
@@ -142,7 +142,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';

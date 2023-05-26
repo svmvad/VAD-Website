@@ -98,6 +98,13 @@ Preview: https://yootheme.com/api/style/creative-hub/white-blue.jpg
 
 .tm-border-bottom { border-bottom: @global-border-width solid @global-border; }
 
+//
+// Transition Border
+//
+
+@internal-theme-transition-border-border-gradient:          linear-gradient(320deg, @card-primary-background, spin(@card-primary-background, 15%));
+@internal-theme-transition-border-hover-border-gradient:    @internal-theme-transition-border-border-gradient;
+
 
 // Style
 // ========================================================================

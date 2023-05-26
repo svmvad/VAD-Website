@@ -62,9 +62,7 @@ class Breadcrumbs
             $items[count($items) - 1]['link'] = '';
         }
 
-        return array_map(function ($item) {
-            return (object) $item;
-        }, $items);
+        return array_map(fn($item) => (object) $item, $items);
     }
 
     protected static function handlePage($id = null)

@@ -1,24 +1,26 @@
 <?php
 
-$el = $this->el('div', $attrs);
+$el = $this->el(!$props['width'] && $props['html_element'] ? $props['html_element'] : 'div', $attrs);
 
 $el->attr([
 
     'class' => [
-        'tm-grid-expand',
+        'uk-grid',
+        'tm-grid-expand {!alignment}',
+        'uk-flex-center {@alignment:center}',
         $props['column_gap'] == $props['row_gap'] ? 'uk-grid-{column_gap}' : '[uk-grid-column-{column_gap}] [uk-grid-row-{row_gap}]',
-        'uk-grid-divider {@divider} {@!column_gap:collapse} {@!row_gap:collapse}',
+        'uk-grid-divider {@divider} {@!column_gap:collapse} {@!row_gap:collapse}' => count($children) > 1,
         'uk-child-width-1-1 {@!layout}',
     ],
 
-    'uk-grid' => true,
+    'uk-grid' => (count($children) > 1),
 
     // Match height if single panel element inside cell
     'uk-height-match' => ['target: .uk-card {@match}'],
 ]);
 
 // Margin
-$margin = $this->el('div', [
+$margin = $this->el($props['html_element'] ?: 'div', [
     'class' => [
 
         'uk-grid-margin[-{row_gap}] {@!margin} {@row_gap: |small|medium|large}',

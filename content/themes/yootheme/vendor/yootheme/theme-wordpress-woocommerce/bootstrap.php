@@ -1,18 +1,15 @@
 <?php
 
-namespace YOOtheme\Theme\Wordpress;
+namespace YOOtheme\Theme\Wordpress\WooCommerce;
 
 use YOOtheme\Path;
+use YOOtheme\Theme\Styler\StylerConfig;
 
 $config = [
     'events' => [
-        'customizer.init' => [
-            WooCommerceListener::class => 'initCustomizer',
-        ],
-
-        'styler.imports' => [
-            WooCommerceListener::class => 'stylerImports',
-        ],
+        StylerConfig::class => [Listener\LoadStylerConfig::class => '@handle'],
+        'styler.imports' => [Listener\LoadStylerImports::class => '@handle'],
+        'customizer.init' => [Listener\LoadCustomizer::class => '@handle'],
     ],
 ];
 
@@ -21,67 +18,71 @@ if (!class_exists('WooCommerce', false)) {
 }
 
 return array_merge_recursive($config, [
-    'theme' => function () {
-        return [
-            'styles' => [
-                'imports' => [
-                    'search' => Path::get('../../assets/uikit/src/images/icons/search.svg'),
-                ],
+    'theme' => fn() => [
+        'styles' => [
+            'imports' => [
+                'search' => Path::get('../../assets/uikit/src/images/icons/search.svg'),
             ],
-        ];
-    },
-
-    'events' => [
-        'theme.breadcrumbs' => [
-            WooCommerceListener::class => 'breadcrumbs',
         ],
     ],
 
+    'config' => [
+        StylerConfig::class => __DIR__ . '/config/styler.json',
+    ],
+
+    'events' => [
+        'theme.breadcrumbs' => [Listener\LoadBreadcrumbs::class => 'handle'],
+    ],
+
     'actions' => [
-        'wp_enqueue_scripts' => [
-            WooCommerceListener::class => ['removeSelect', 100],
-        ],
+        'wp_enqueue_scripts' => [Listener\RemoveSelect::class => ['handle', 100]],
 
         'woocommerce_before_add_to_cart_form' => [
-            WooCommerceListener::class => 'beforeAddToCartForm',
+            Listener\FilterPriceHtml::class => '@variableScript',
         ],
     ],
 
     'filters' => [
-        'woocommerce_enqueue_styles' => [
-            WooCommerceListener::class => 'removeStyle',
-        ],
-
-        'woocommerce_product_review_comment_form_args' => [
-            WooCommerceListener::class => 'reviewCommentFormArgs',
-        ],
-
         'wp_nav_menu_objects' => [
-            WooCommerceListener::class => ['navMenuObjects', 10, 2],
+            Listener\ShowCartQuantity::class => ['@navMenuObjects', 10, 2],
         ],
 
         'woocommerce_add_to_cart_fragments' => [
-            WooCommerceListener::class => 'addToCartFragments',
-        ],
-
-        'woocommerce_variable_price_html' => [
-            WooCommerceListener::class => ['variablePriceHtml', 10, 2],
-        ],
-
-        'woocommerce_grouped_price_html' => [
-            WooCommerceListener::class => ['groupedPriceHtml', 10, 3],
+            Listener\ShowCartQuantity::class => 'addToCartFragments',
         ],
 
         'woocommerce_format_sale_price' => [
-            WooCommerceListener::class => ['formatSalePrice', 10, 3],
+            Listener\FilterPriceHtml::class => ['@sale', 10, 3],
+        ],
+
+        'woocommerce_grouped_price_html' => [
+            Listener\FilterPriceHtml::class => ['@grouped', 10, 3],
+        ],
+
+        'woocommerce_variable_price_html' => [
+            Listener\FilterPriceHtml::class => ['@variable', 10, 2],
+        ],
+
+        'woocommerce_cross_sells_columns' => [
+            Listener\FilterProductHtml::class => '@crossSellsColumns',
         ],
 
         'woocommerce_product_thumbnails_columns' => [
-            WooCommerceListener::class => 'productThumbnailsColumns',
+            Listener\FilterProductHtml::class => '@thumbnailsColumns',
         ],
 
         'woocommerce_product_review_list_args' => [
-            WooCommerceListener::class => 'productReviewListArgs',
+            Listener\FilterProductHtml::class => 'reviewListArgs',
         ],
+
+        'woocommerce_product_review_comment_form_args' => [
+            Listener\FilterProductHtml::class => 'reviewCommentArgs',
+        ],
+
+        'woocommerce_enqueue_styles' => [Listener\RemoveStyles::class => 'handle'],
+
+        'woocommerce_pagination_args' => [Listener\FilterPaginationHtml::class => 'args'],
+
+        'paginate_links_output' => [Listener\FilterPaginationHtml::class => ['@links', 10, 2]],
     ],
 ]);

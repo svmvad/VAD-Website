@@ -29,6 +29,7 @@
         },
         "link": "${builder.link}",
         "link_target": "${builder.link_target}",
+        "link_aria_label": "${builder.link_aria_label}",
         "icon_color": {
             "label": "Color",
             "description": "Select the icon color.",
@@ -100,7 +101,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -108,7 +110,7 @@
             "fields": [
                 {
                     "title": "Content",
-                    "fields": ["icon", "link", "link_target"]
+                    "fields": ["icon", "link", "link_target", "link_aria_label"]
                 },
                 {
                     "title": "Settings",

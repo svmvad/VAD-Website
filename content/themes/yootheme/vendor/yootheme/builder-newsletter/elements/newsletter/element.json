@@ -236,7 +236,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-input", ".el-button"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -316,7 +317,7 @@
                 },
                 {
                     "title": "Advanced",
-                    "fields": ["name", "status", "id", "class", "css"]
+                    "fields": ["name", "status", "id", "class", "css", "transform"]
                 }
             ]
         }

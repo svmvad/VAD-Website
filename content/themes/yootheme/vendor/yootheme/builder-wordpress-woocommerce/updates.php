@@ -9,7 +9,7 @@ return [
             'pages' => 'woo_pages',
         ];
 
-        if (!empty($node->type) && $node->type === 'layout') {
+        if (($node->type ?? '') === 'layout') {
             $apply = function ($node) use (&$apply, $rename) {
                 if (isset($node->type) && !empty($rename[$node->type])) {
                     $node->type = $rename[$node->type];

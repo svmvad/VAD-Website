@@ -2,27 +2,13 @@
 
 namespace YOOtheme\Builder\Wordpress\Toolset;
 
+use YOOtheme\Builder\BuilderConfig;
 use YOOtheme\Builder\UpdateTransform;
-
-// is toolset active?
-if (
-    !in_array(
-        'types/wpcf.php',
-        apply_filters('active_plugins', (array) get_option('active_plugins', []))
-    )
-) {
-    return [];
-}
 
 return [
     'events' => [
-        'source.init' => [
-            SourceListener::class => ['initSource', -10],
-        ],
-
-        'customizer.init' => [
-            SourceListener::class => ['initCustomizer', 10],
-        ],
+        'source.init' => [Listener\LoadSourceTypes::class => ['@handle', -10]],
+        BuilderConfig::class => [Listener\LoadBuilderConfig::class => ['@handle', -10]],
     ],
 
     'extend' => [

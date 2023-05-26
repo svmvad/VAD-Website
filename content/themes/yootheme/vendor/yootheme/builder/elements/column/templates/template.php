@@ -1,16 +1,30 @@
 <?php
 
+// Initialize prop if not set
+$props['media_overlay_gradient'] = $props['media_overlay_gradient'] ?? null;
+$props['background_parallax_background'] = $props['background_parallax_background'] ?? null;
+
+// Resets
+if (str_starts_with($props['style'] ?? '', 'card-')) {
+    if ($props['padding'] == 'xsmall') {
+        $props['padding'] = 'small';
+    }
+    if ($props['padding'] == 'xlarge') {
+        $props['padding'] = 'large';
+    }
+}
+
 // New logic shortcuts
-$props['has_panel'] = $props['style'] || $props['image'] || $props['video'] || in_array($props['position_sticky'], ['row', 'section']) || $props['row_height'];
+$props['has_panel'] = $props['style'] || $props['background_color'] || $props['background_parallax_background'] || $props['image'] || $props['video'] || in_array($props['position_sticky'], ['row', 'section']) || $props['row_height'];
 $props['has_overlay'] = ($props['image'] || $props['video']) && ($props['media_overlay'] || $props['media_overlay_gradient']);
 
 // Cell
-$el = $this->el('div', [
+$el = $this->el($props['html_element'] ?: 'div', [
 
     'class' => [
 
         // Match child height
-        'uk-grid-item-match' => ($props['vertical_align'] || $props['style'] || $props['image'] || $props['video'] || !empty($props['element_absolute'])) && !in_array($props['position_sticky'], ['row', 'section']) && !$props['row_height'],
+        'uk-grid-item-match' => ($props['vertical_align'] || $props['style'] || $props['background_color'] || $props['background_parallax_background'] || $props['image'] || $props['video'] || !empty($props['element_absolute'])) && !in_array($props['position_sticky'], ['row', 'section']) && !$props['row_height'],
 
         // Vertical alignment
         'uk-flex-{vertical_align} {@!has_panel}',
@@ -37,11 +51,11 @@ $el = $this->el('div', [
 
 ]);
 
-// Panel: Tile / Image / Video / Sticky / Row Height
+// Panel: Tile / Background / Image / Video / Sticky / Row Height
 $panel = $props['has_panel'] ? $this->el('div', [
 
     'class' => [
-        'uk-tile-{style}',
+        'uk-{style} [uk-card-{!padding: |none} {@style: card-.*}]',
 
         // Match child height
         'uk-flex {@image}',
@@ -50,12 +64,13 @@ $panel = $props['has_panel'] ? $this->el('div', [
         'uk-cover-container {@video} {@!image}',
 
         // Preserve color
-        'uk-preserve-color {@style: primary|secondary}' => $props['preserve_color'] || ($props['text_color'] && ($props['image'] || $props['video'])),
+        'uk-preserve-color {@style: (card|tile)-(primary|secondary)}' => $props['preserve_color'] || ($props['text_color'] && ($props['image'] || $props['video'])),
     ],
 
     // Video Background
     'style' => [
-        'background-color: ' . $props['media_background'] . ';' => $props['media_background'] && !$props['image'] && $props['video'],
+        'background-color: {media_background};{@video}',
+        'background-color: {background_color};{@!media_background}{@!video}{@!style}'
     ],
 
     // Height Viewport
@@ -65,6 +80,10 @@ $panel = $props['has_panel'] ? $this->el('div', [
     ],
 
 ]) : null;
+
+if (!$props['style'] && $bgParallax = $this->parallaxOptions($props, 'background_', ['background'])) {
+    $panel->attr('uk-parallax', $bgParallax);
+}
 
 if (in_array($props['position_sticky'], ['row', 'section'])) {
 
@@ -89,6 +108,7 @@ if (in_array($props['position_sticky'], ['row', 'section'])) {
 $image = $props['image'] ? $this->el('div', $this->bgImage($props['image'], [
     'width' => $props['image_width'],
     'height' => $props['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'loading' => $props['image_loading'] ? 'eager' : null,
     'size' => $props['image_size'],
     'position' => $props['image_position'],
@@ -118,18 +138,21 @@ $overlay = $props['has_overlay'] ? $this->el('div', [
 
 ]) : null;
 
-if ($props['style'] || $props['image'] || $props['video']) {
+if ($props['style'] || $props['background_color'] || $props['background_parallax_background'] || $props['image'] || $props['video']) {
 
     ($props['image'] ? $image : $panel)->attr('class', [
-        // Also adds position context for the overlay
-        'uk-tile',
+        // Padding and position context for the overlay
+        'uk-tile {@!style: card-.*} [uk-tile-{!padding: |none}]',
+        'uk-card-body {@style: card-.*}',
 
         // Needed if height matches parent
         'uk-width-1-1 {@image}',
 
         // Padding
         'uk-padding-remove {@padding: none}',
-        'uk-tile-{!padding: |none}',
+
+        // Position Context for Image Overlay
+        'uk-position-relative {@image} {@!style}',
 
         // Match child height
         // 'uk-flex {@has_overlay}',
@@ -228,4 +251,4 @@ $sticky = $props['position_sticky'] == 'column' ? $this->el('div', [
     </div>
     <?php endif ?>
 
-</div>
+<?= $el->end() ?>

@@ -2,6 +2,7 @@
 
 $link = $props['link'] ? $this->el('a', [
     'href' => $props['link'],
+    'aria-label' => $props['link_aria_label'] ?: $element['link_aria_label'],
     'target' => ['_blank {@link_target}'],
     'uk-scroll' => str_contains((string) $props['link'], '#'),
 ]) : null;
@@ -18,9 +19,7 @@ if ($link && $props['title'] && $element['title_link']) {
 
 if ($link && $props['image'] && $element['image_link']) {
 
-    $props['image'] = $link($element, [
-        'aria-label' => ($props['link_text'] ?: $element['link_text']) ?: $this->striptags($props['title']),
-    ], $props['image']);
+    $props['image'] = $link($element, $props['image']);
 
 }
 

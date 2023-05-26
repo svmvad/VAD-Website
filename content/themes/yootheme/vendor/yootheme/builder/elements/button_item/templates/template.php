@@ -14,6 +14,7 @@ $button = $this->el('a', [
     ], $element),
 
     'title' => ['{link_title}'],
+    'aria-label' => ['{link_aria_label}'],
 
 ]);
 

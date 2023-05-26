@@ -88,6 +88,12 @@
             "source": true,
             "enable": "link"
         },
+        "link_aria_label": {
+            "label": "Link ARIA Label",
+            "description": "Enter a descriptive text label to make it accessible if the link has no visible text.",
+            "source": true,
+            "enable": "link"
+        },
         "panel_style": {
             "label": "Style",
             "description": "Select one of the boxed card or tile styles or a blank panel.",
@@ -130,6 +136,7 @@
             "show": "panel_style",
             "enable": "image && image_align != 'between'"
         },
+        "html_element": "${builder.html_element}",
         "title_style": {
             "label": "Style",
             "description": "Title styles differ in font-size but may also come with a predefined color, size and font.",
@@ -216,7 +223,7 @@
         },
         "title_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -245,6 +252,7 @@
             "type": "select",
             "options": {
                 "Auto": "auto",
+                "Expand": "expand",
                 "80%": "4-5",
                 "75%": "3-4",
                 "66%": "2-3",
@@ -369,7 +377,7 @@
         },
         "meta_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -479,6 +487,31 @@
                 "None": "remove"
             },
             "enable": "content"
+        },
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "image"
+        },
+        "image_loading": {
+            "label": "Loading",
+            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
+            "type": "checkbox",
+            "text": "Load image eagerly",
+            "enable": "image"
         },
         "image_border": {
             "label": "Border",
@@ -686,13 +719,6 @@
             },
             "enable": "image && image_svg_inline"
         },
-        "image_loading": {
-            "label": "Loading",
-            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
-            "type": "checkbox",
-            "text": "Load image eagerly",
-            "enable": "image"
-        },
         "link_style": {
             "label": "Style",
             "description": "Set the link style.",
@@ -782,7 +808,8 @@
                     ".el-link"
                 ]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -806,7 +833,8 @@
                         "icon",
                         "link",
                         "link_target",
-                        "link_text"
+                        "link_text",
+                        "link_aria_label"
                     ]
                 },
                 {
@@ -820,7 +848,8 @@
                                 "panel_style",
                                 "panel_link",
                                 "panel_padding",
-                                "panel_image_no_padding"
+                                "panel_image_no_padding",
+                                "html_element"
                             ]
                         },
                         {
@@ -874,6 +903,8 @@
                             "type": "group",
                             "divider": true,
                             "fields": [
+                                "image_focal_point",
+                                "image_loading",
                                 "image_border",
                                 "image_box_shadow",
                                 "image_box_decoration",
@@ -893,8 +924,7 @@
                                 "image_margin",
                                 "image_svg_inline",
                                 "image_svg_animate",
-                                "image_svg_color",
-                                "image_loading"
+                                "image_svg_color"
                             ]
                         },
                         {

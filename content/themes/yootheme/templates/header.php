@@ -93,14 +93,14 @@ if ($outside) {
     $attrs_width_container['class'][] = $config("$header.width") != 'default' ? "uk-container-{$config("$header.width")}" : '';
 }
 
-$hasPositionWithModule = array_filter([
+$hasHeader = array_filter([
     'logo',
     'header',
     'header-split',
     'navbar',
     'navbar-push',
     'navbar-split',
-], function ($position) { return is_active_sidebar($position); });
+], fn($position) => is_active_sidebar($position));
 
 $toolbar = trim($view('~theme/templates/toolbar'));
 
@@ -114,9 +114,9 @@ $toolbar = trim($view('~theme/templates/toolbar'));
 <?= $toolbar ?>
 <?php endif ?>
 
-<?php if ($hasPositionWithModule || $config("$site.toolbar_transparent") && $toolbar) : ?>
+<?php if ($hasHeader || $config("$site.toolbar_transparent") && $toolbar) : ?>
 
-<div<?= $this->attrs(['class' => $class], $attrs) ?>>
+<header<?= $this->attrs(['class' => $class], $attrs) ?>>
 
 <?php if ($config("$site.toolbar_transparent")) : ?>
 <?= $toolbar ?>
@@ -124,7 +124,7 @@ $toolbar = trim($view('~theme/templates/toolbar'));
 
 <?php
 
-if ($hasPositionWithModule) :
+if ($hasHeader) :
 
 // Horizontal layouts
 if (str_starts_with($layout, 'horizontal')) :
@@ -361,7 +361,6 @@ if ($layout == 'stacked-center-c') : ?>
 <?php
 
 // Stacked Left layout
-
 if (preg_match('/^stacked-(left|justify)/', $layout)) :
 
     $attrs_width_container['class'][] = 'uk-flex uk-flex-middle';
@@ -566,6 +565,6 @@ if (str_starts_with($config("$dialog.layout"), 'dropbar')) {
 
 <?php endif ?>
 
-</div>
+</header>
 
 <?php endif ?>

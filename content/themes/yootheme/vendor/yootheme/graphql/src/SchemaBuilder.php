@@ -83,9 +83,10 @@ class SchemaBuilder
             }
         }
 
-        return BuildSchema::build($document, function (array $config) {
-            return ['resolveField' => [$this, 'resolveField']] + $config;
-        });
+        return BuildSchema::build(
+            $document,
+            fn(array $config) => ['resolveField' => [$this, 'resolveField']] + $config
+        );
     }
 
     /**

@@ -6,11 +6,9 @@ use YOOtheme\GraphQL\Type\Introspection as BaseIntrospection;
 
 class Introspection extends BaseIntrospection
 {
-    public static function getIntrospectionQuery(array $options = [])
+    public static function getIntrospectionQuery(array $options = []): string
     {
-        $value = function ($value) {
-            return is_callable($value) ? $value() : $value;
-        };
+        $value = fn($value) => is_callable($value) ? $value() : $value;
 
         $options += [
             'defaults' => ['description'],

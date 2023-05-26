@@ -1,9 +1,4 @@
 {
-    "sections": {
-        "builder-templates": {
-            "width": 300
-        }
-    },
     "sources": {
         "postTypeOrderOptions": [
             { "text": "Date", "value": "date" },

@@ -53,4 +53,4 @@ $drop = $this->el('div', [
 <?= $marker_container->end() ?>
 <?php endif ?>
 
-<?= $drop($element, $builder->render($child)); ?>
+<?= $drop($element, $builder->render($child)) ?>

@@ -71,9 +71,9 @@ class Resolver
      */
     public function resolve($value, array $params = [])
     {
-        $resolve = function ($value) use ($params) {
-            return $value instanceof Node ? $value->resolve($params + $this->params) : $value;
-        };
+        $resolve = fn($value) => $value instanceof Node
+            ? $value->resolve($params + $this->params)
+            : $value;
 
         return $this->resolveValue($value, array_merge($this->callbacks, [$resolve]));
     }
@@ -132,11 +132,9 @@ class Resolver
      */
     public function compile($value, array $params = [])
     {
-        $compile = function ($value) use ($params) {
-            return $value instanceof Node
-                ? $value->compile($params + $this->params)
-                : var_export($value, true);
-        };
+        $compile = fn($value) => $value instanceof Node
+            ? $value->compile($params + $this->params)
+            : var_export($value, true);
 
         return $this->compileValue($this->resolveValue($value, $this->callbacks), $compile);
     }

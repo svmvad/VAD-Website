@@ -2,6 +2,7 @@
 
 $link = $props['link'] ? $this->el('a', [
     'href' => ['{link}'],
+    'aria-label' => ['{link_aria_label}'],
     'target' => ['_blank {@link_target}'],
     'uk-scroll' => str_contains((string) $props['link'], '#'),
 ]) : null;
@@ -14,8 +15,6 @@ if ($link && $props['overlay_link']) {
             // Needs to be child of `uk-light` or `uk-dark`
             'uk-link-toggle',
         ],
-
-        'aria-label' => $props['link_text'] ?: $this->striptags($props['title']),
 
     ]);
 

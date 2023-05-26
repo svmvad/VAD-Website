@@ -1,4 +1,4 @@
-/*! UIkit 3.15.25 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
+/*! UIkit 3.16.19 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -6,7 +6,32 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.UIkitUpload = factory(global.UIkit.util));
 })(this, (function (uikitUtil) { 'use strict';
 
+    var I18n = {
+      props: {
+        i18n: Object
+      },
+      data: {
+        i18n: null
+      },
+      methods: {
+        t(key, ...params) {
+          var _a, _b, _c;
+          let i = 0;
+          return ((_c = ((_a = this.i18n) == null ? void 0 : _a[key]) || ((_b = this.$options.i18n) == null ? void 0 : _b[key])) == null ? void 0 : _c.replace(
+            /%s/g,
+            () => params[i++] || ""
+          )) || "";
+        }
+      }
+    };
+
     var Component = {
+      mixins: [I18n],
+      i18n: {
+        invalidMime: "Invalid File Type: %s",
+        invalidName: "Invalid File Name: %s",
+        invalidSize: "Invalid File Size: %s Kilobytes Max"
+      },
       props: {
         allow: String,
         clsDragover: String,
@@ -14,9 +39,6 @@
         maxSize: Number,
         method: String,
         mime: String,
-        msgInvalidMime: String,
-        msgInvalidName: String,
-        msgInvalidSize: String,
         multiple: Boolean,
         name: String,
         params: Object,
@@ -30,9 +52,6 @@
         maxSize: 0,
         method: "POST",
         mime: false,
-        msgInvalidMime: "Invalid File Type: %s",
-        msgInvalidName: "Invalid File Name: %s",
-        msgInvalidSize: "Invalid File Size: %s Kilobytes Max",
         multiple: false,
         name: "files[]",
         params: {},
@@ -91,15 +110,15 @@
           uikitUtil.trigger(this.$el, "upload", [files]);
           for (const file of files) {
             if (this.maxSize && this.maxSize * 1e3 < file.size) {
-              this.fail(this.msgInvalidSize.replace("%s", this.maxSize));
+              this.fail(this.t("invalidSize", this.maxSize));
               return;
             }
             if (this.allow && !match(this.allow, file.name)) {
-              this.fail(this.msgInvalidName.replace("%s", this.allow));
+              this.fail(this.t("invalidName", this.allow));
               return;
             }
             if (this.mime && !match(this.mime, file.type)) {
-              this.fail(this.msgInvalidMime.replace("%s", this.mime));
+              this.fail(this.t("invalidMime", this.mime));
               return;
             }
           }
@@ -115,7 +134,7 @@
               data.append(key, this.params[key]);
             }
             try {
-              const xhr = await uikitUtil.ajax(this.url, {
+              const xhr = await ajax(this.url, {
                 data,
                 method: this.method,
                 responseType: this.type,
@@ -160,6 +179,50 @@
     function stop(e) {
       e.preventDefault();
       e.stopPropagation();
+    }
+    function ajax(url, options) {
+      const env = {
+        data: null,
+        method: "GET",
+        headers: {},
+        xhr: new XMLHttpRequest(),
+        beforeSend: uikitUtil.noop,
+        responseType: "",
+        ...options
+      };
+      return Promise.resolve().then(() => env.beforeSend(env)).then(() => send(url, env));
+    }
+    function send(url, env) {
+      return new Promise((resolve, reject) => {
+        const { xhr } = env;
+        for (const prop in env) {
+          if (prop in xhr) {
+            try {
+              xhr[prop] = env[prop];
+            } catch (e) {
+            }
+          }
+        }
+        xhr.open(env.method.toUpperCase(), url);
+        for (const header in env.headers) {
+          xhr.setRequestHeader(header, env.headers[header]);
+        }
+        uikitUtil.on(xhr, "load", () => {
+          if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+            resolve(xhr);
+          } else {
+            reject(
+              uikitUtil.assign(Error(xhr.statusText), {
+                xhr,
+                status: xhr.status
+              })
+            );
+          }
+        });
+        uikitUtil.on(xhr, "error", () => reject(uikitUtil.assign(Error("Network Error"), { xhr })));
+        uikitUtil.on(xhr, "timeout", () => reject(uikitUtil.assign(Error("Network Timeout"), { xhr })));
+        xhr.send(env.data);
+      });
     }
 
     if (typeof window !== "undefined" && window.UIkit) {

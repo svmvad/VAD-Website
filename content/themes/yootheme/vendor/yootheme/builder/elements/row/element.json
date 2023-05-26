@@ -34,6 +34,10 @@
                     "label": "Fifths",
                     "src": "${url:images/fifths.svg}"
                 },
+                "1-6,1-6,1-6,1-6,1-6,1-6|1-3,1-3,1-3,1-3,1-3,1-3": {
+                    "label": "Sixths",
+                    "src": "${url:images/sixths.svg}"
+                },
                 "2-3,1-3": {
                     "label": "Thirds 2-1",
                     "src": "${url:images/thirds-2-1.svg}"
@@ -98,6 +102,14 @@
                     "label": "Fifths 1-1-1-2",
                     "src": "${url:images/fifths-1-1-1-2.svg}"
                 },
+                "1-6,5-6|1-5,4-5": {
+                    "label": "Sixths 1-5",
+                    "src": "${url:images/sixths-1-5.svg}"
+                },
+                "5-6,1-6|4-5,1-5": {
+                    "label": "Sixths 5-1",
+                    "src": "${url:images/sixths-5-1.svg}"
+                },
                 "large,expand": {
                     "label": "Fixed-Left",
                     "src": "${url:images/fixed-left.svg}"
@@ -120,8 +132,7 @@
             "text": "Edit Layout",
             "description": "Customize the column widths of the selected layout and set the column order. Changing the layout will reset all customizations.",
             "type": "button-panel",
-            "panel": "builder-row-layout",
-            "show": "this.node.children.length > 1"
+            "panel": "builder-row-layout"
         },
         "columns": {
             "label": "Columns",
@@ -159,6 +170,16 @@
             "text": "Show dividers",
             "enable": "column_gap != 'collapse' && row_gap != 'collapse'"
         },
+        "alignment": {
+            "label": "Alignment",
+            "description": "Expand columns equally to always fill remaining space within the row, center them or align them to the left.",
+            "type": "select",
+            "options": {
+                "Justify": "",
+                "Left": "left",
+                "Center": "center"
+            }
+        },
         "width": {
             "label": "Max Width",
             "type": "select",
@@ -190,8 +211,8 @@
             "enable": "width && width != 'expand'"
         },
         "height": {
-            "label": "Height",
-            "description": "Enabling viewport height on a row that directly follows the header will subtract the header height from it.",
+            "label": "Column Height",
+            "description": "Set the height for all columns. They will keep their height when stacking. Setting viewport height on a row that directly follows the header will subtract the header height from it.",
             "type": "select",
             "options": {
                 "None": "",
@@ -229,9 +250,10 @@
             "type": "checkbox",
             "text": "Match height"
         },
+        "html_element": "${builder.html_element}",
         "status": {
             "label": "Status",
-            "description": "Disable your row and publish it later. It will only be shown to the editor while the customizer is open.",
+            "description": "Disable the row and publish it later.",
             "type": "checkbox",
             "text": "Disable row",
             "attrs": {
@@ -239,6 +261,7 @@
                 "false-value": ""
             }
         },
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -267,6 +290,7 @@
                         "column_gap",
                         "row_gap",
                         "divider",
+                        "alignment",
                         "width",
                         "padding_remove_horizontal",
                         "width_expand",
@@ -274,12 +298,13 @@
                         "margin",
                         "margin_remove_top",
                         "margin_remove_bottom",
-                        "match"
+                        "match",
+                        "html_element"
                     ]
                 },
                 {
                     "title": "Advanced",
-                    "fields": ["status", "id", "class", "attributes", "css"]
+                    "fields": ["status", "source", "id", "class", "attributes", "css"]
                 }
             ]
         }
@@ -433,7 +458,8 @@
                                 "options": "${builder.column_order_first_options}"
                             }
                         }
-                    ]
+                    ],
+                    "show": "this.node.children.length > 1"
                 },
                 {
                     "label": "Column 3",
@@ -586,6 +612,7 @@
                 {
                     "label": "Column 5",
                     "type": "group",
+                    "divider": true,
                     "fields": [
                         {
                             "label": "Phone Portrait",
@@ -655,6 +682,79 @@
                         }
                     ],
                     "show": "this.node.children.length > 4"
+                },
+                {
+                    "label": "Column 6",
+                    "type": "group",
+                    "fields": [
+                        {
+                            "label": "Phone Portrait",
+                            "description": "Set the column width for each breakpoint. Mix fraction widths or combine fixed widths with the <i>Expand</i> value. If no value is selected, the column width of the next smaller screen size is applied. The combination of widths should always take the full width.",
+                            "type": "child-prop",
+                            "index": 5,
+                            "field": {
+                                "name": "width_default",
+                                "type": "select",
+                                "options": "${builder.column_width_options_default}"
+                            }
+                        },
+                        {
+                            "label": "Phone Landscape",
+                            "description": "Set the column width for each breakpoint. Mix fraction widths or combine fixed widths with the <i>Expand</i> value. If no value is selected, the column width of the next smaller screen size is applied. The combination of widths should always take the full width.",
+                            "type": "child-prop",
+                            "index": 5,
+                            "field": {
+                                "name": "width_small",
+                                "type": "select",
+                                "options": "${builder.column_width_options}"
+                            }
+                        },
+                        {
+                            "label": "Tablet Landscape",
+                            "description": "Set the column width for each breakpoint. Mix fraction widths or combine fixed widths with the <i>Expand</i> value. If no value is selected, the column width of the next smaller screen size is applied. The combination of widths should always take the full width.",
+                            "type": "child-prop",
+                            "index": 5,
+                            "field": {
+                                "name": "width_medium",
+                                "type": "select",
+                                "options": "${builder.column_width_options}"
+                            }
+                        },
+                        {
+                            "label": "Desktop",
+                            "description": "Set the column width for each breakpoint. Mix fraction widths or combine fixed widths with the <i>Expand</i> value. If no value is selected, the column width of the next smaller screen size is applied. The combination of widths should always take the full width.",
+                            "type": "child-prop",
+                            "index": 5,
+                            "field": {
+                                "name": "width_large",
+                                "type": "select",
+                                "options": "${builder.column_width_options}"
+                            }
+                        },
+                        {
+                            "label": "Large Screen",
+                            "description": "Set the column width for each breakpoint. Mix fraction widths or combine fixed widths with the <i>Expand</i> value. If no value is selected, the column width of the next smaller screen size is applied. The combination of widths should always take the full width.",
+                            "type": "child-prop",
+                            "index": 5,
+                            "field": {
+                                "name": "width_xlarge",
+                                "type": "select",
+                                "options": "${builder.column_width_options}"
+                            }
+                        },
+                        {
+                            "label": "Order First",
+                            "description": "Select the breakpoint from which the column will start to appear before other columns. On smaller screen sizes, the column will appear in the natural order.",
+                            "type": "child-prop",
+                            "index": 5,
+                            "field": {
+                                "name": "order_first",
+                                "type": "select",
+                                "options": "${builder.column_order_first_options}"
+                            }
+                        }
+                    ],
+                    "show": "this.node.children.length > 5"
                 }
             ]
         }

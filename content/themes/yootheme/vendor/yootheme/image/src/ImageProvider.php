@@ -292,9 +292,10 @@ class ImageProvider
             }
 
             // set image parameters
-            $parameters = array_map(function ($val) use ($sizes) {
-                return join(',', $sizes + explode(',', $val));
-            }, static::filterParams($params));
+            $parameters = array_map(
+                fn($val) => join(',', $sizes + explode(',', $val)),
+                static::filterParams($params)
+            );
 
             $resized = $image->apply($parameters);
             $images[$resized->width] = $resized;

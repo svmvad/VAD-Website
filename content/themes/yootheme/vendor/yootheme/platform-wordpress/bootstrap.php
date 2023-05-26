@@ -56,52 +56,25 @@ return [
     },
 
     'events' => [
-        'url.route' => [
-            Router::class => 'generate',
-        ],
-
-        'app.error' => [
-            Platform::class => 'handleError',
-        ],
+        'url.route' => [Router::class => 'generate'],
+        'app.error' => [Platform::class => 'handleError'],
     ],
 
     'actions' => [
-        'wp_ajax_kernel' => [
-            Platform::class => 'handleRoute',
-        ],
-
-        'wp_ajax_nopriv_kernel' => [
-            Platform::class => 'handleRoute',
-        ],
-
-        'wp_footer' => [
-            Platform::class => 'printFooterScripts',
-        ],
-
-        'wp_head' => [
-            Platform::class => [['printStyles', 8], ['printScripts', 20]],
-        ],
-
-        'admin_print_scripts' => [
-            Platform::class => [['printStyles', 8], ['printScripts', 21]],
-        ],
-
-        'admin_print_footer_scripts' => [
-            Platform::class => 'printFooterScripts',
-        ],
+        'wp_ajax_kernel' => [Platform::class => 'handleRoute'],
+        'wp_ajax_nopriv_kernel' => [Platform::class => 'handleRoute'],
+        'wp_footer' => [Platform::class => 'printFooterScripts'],
+        'wp_head' => [Platform::class => [['printStyles', 8], ['printScripts', 20]]],
+        'admin_print_scripts' => [Platform::class => [['printStyles', 8], ['printScripts', 21]]],
+        'admin_print_footer_scripts' => [Platform::class => 'printFooterScripts'],
     ],
 
     'loaders' => [
-        'filters' => new FilterLoader(),
-        'actions' => new FilterLoader(),
+        'filters' => FilterLoader::class,
+        'actions' => FilterLoader::class,
     ],
 
     'services' => [
-        Database::class => function () {
-            global $wpdb;
-            return new Wordpress\Database($wpdb);
-        },
-
         CsrfMiddleware::class => function (Config $config) {
             return new CsrfMiddleware($config('session.token'), 'wp_verify_nonce');
         },

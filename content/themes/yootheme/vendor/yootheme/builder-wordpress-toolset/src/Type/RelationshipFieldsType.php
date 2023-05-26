@@ -90,11 +90,12 @@ class RelationshipFieldsType
             'role_to_return' => [$isParent ? 'child' : 'parent', 'intermediary'],
         ]);
 
-        return array_map(function ($role) use ($isParent) {
-            return [
+        return array_map(
+            fn($role) => [
                 'post' => $role[$isParent ? 'child' : 'parent'],
                 'intermediary' => $role['intermediary'],
-            ];
-        }, $roles);
+            ],
+            $roles
+        );
     }
 }

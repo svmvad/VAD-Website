@@ -18,6 +18,7 @@ echo $this->el('image', [
     'alt' => $props['image_alt'],
     'width' => $element['image_width'],
     'height' => $element['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'uk-svg' => $element['image_svg_inline'],
     'thumbnail' => true,
 

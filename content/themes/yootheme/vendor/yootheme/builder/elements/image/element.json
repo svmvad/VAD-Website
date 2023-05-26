@@ -43,6 +43,30 @@
             "enable": "image"
         },
         "link": "${builder.link}",
+        "link_aria_label": "${builder.link_aria_label}",
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true
+        },
+        "image_loading": {
+            "label": "Loading",
+            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
+            "type": "checkbox",
+            "text": "Load image eagerly"
+        },
         "image_border": {
             "label": "Border",
             "description": "Select the image border style.",
@@ -124,12 +148,6 @@
             },
             "enable": "image_svg_inline"
         },
-        "image_loading": {
-            "label": "Loading",
-            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
-            "type": "checkbox",
-            "text": "Load image eagerly"
-        },
         "link_target": {
             "label": "Link Target",
             "type": "select",
@@ -149,6 +167,24 @@
             "attrs": {
                 "placeholder": "auto"
             },
+            "enable": "link_target == 'modal'"
+        },
+        "lightbox_image_focal_point": {
+            "label": "Modal Image Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
             "enable": "link_target == 'modal'"
         },
         "position": "${builder.position}",
@@ -188,7 +224,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-image", ".el-link"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -206,7 +243,8 @@
                             "fields": ["image_width", "image_height"]
                         },
                         "image_alt",
-                        "link"
+                        "link",
+                        "link_aria_label"
                     ]
                 },
                 {
@@ -217,6 +255,8 @@
                             "type": "group",
                             "divider": true,
                             "fields": [
+                                "image_focal_point",
+                                "image_loading",
                                 "image_border",
                                 "image_box_shadow",
                                 "image_hover_box_shadow",
@@ -224,8 +264,7 @@
                                 "image_box_decoration_inverse",
                                 "image_svg_inline",
                                 "image_svg_animate",
-                                "image_svg_color",
-                                "image_loading"
+                                "image_svg_color"
                             ]
                         },
                         {
@@ -240,7 +279,8 @@
                                     "type": "grid",
                                     "width": "1-2",
                                     "fields": ["lightbox_width", "lightbox_height"]
-                                }
+                                },
+                                "lightbox_image_focal_point"
                             ]
                         },
                         {

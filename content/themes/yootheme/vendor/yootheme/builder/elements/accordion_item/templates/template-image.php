@@ -20,6 +20,7 @@ echo $this->el('image', [
     'loading' => $element['image_loading'] ? false : null,
     'width' => $element['image_width'],
     'height' => $element['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'uk-svg' => (bool) $element['image_svg_inline'],
     'thumbnail' => true,
 

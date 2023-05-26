@@ -17,6 +17,7 @@ $image = $this->el('image', [
     'loading' => $props['background_image_loading'] ? false : null,
     'width' => $props['background_image_width'],
     'height' => $props['background_image_height'],
+    'focal_point' => $props['background_image_focal_point'],
     'uk-svg' => $props['image_svg_inline'],
     'thumbnail' => true,
 ]);

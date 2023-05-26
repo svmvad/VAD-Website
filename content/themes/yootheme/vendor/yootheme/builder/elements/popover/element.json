@@ -46,11 +46,6 @@
             "type": "image",
             "source": true
         },
-        "background_image_loading": {
-            "type": "checkbox",
-            "text": "Load image eagerly",
-            "enable": "background_image"
-        },
         "background_image_width": {
             "label": "Image Width",
             "attrs": {
@@ -100,6 +95,29 @@
             "description": "Show or hide content fields without the need to delete the content itself.",
             "type": "checkbox",
             "text": "Show the link"
+        },
+        "background_image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true
+        },
+        "background_image_loading": {
+            "label": "Loading",
+            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
+            "type": "checkbox",
+            "text": "Load image eagerly"
         },
         "marker_color": {
             "label": "Color",
@@ -247,7 +265,7 @@
         },
         "title_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -322,7 +340,7 @@
         },
         "meta_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -459,6 +477,11 @@
             "description": "Enter the text for the link.",
             "enable": "show_link"
         },
+        "link_aria_label": {
+            "label": "ARIA Label",
+            "description": "Enter a descriptive text label to make it accessible if the link has no visible text.",
+            "enable": "show_link"
+        },
         "link_style": {
             "label": "Style",
             "description": "Set the link style.",
@@ -551,7 +574,8 @@
                     ".el-link"
                 ]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -561,7 +585,6 @@
                     "title": "Content",
                     "fields": [
                         "background_image",
-                        "background_image_loading",
                         {
                             "description": "Setting just one value preserves the original proportions. The image will be resized and cropped automatically, and where possible, high resolution images will be auto-generated.",
                             "name": "_background_image_dimension",
@@ -581,6 +604,12 @@
                 {
                     "title": "Settings",
                     "fields": [
+                        {
+                            "label": "Background Image",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["background_image_focal_point", "background_image_loading"]
+                        },
                         {
                             "label": "Marker",
                             "type": "group",
@@ -659,6 +688,7 @@
                             "fields": [
                                 "link_target",
                                 "link_text",
+                                "link_aria_label",
                                 "link_style",
                                 "link_size",
                                 "link_fullwidth",

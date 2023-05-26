@@ -197,9 +197,7 @@ class View implements \ArrayAccess
 
         return array_reduce(
             $functions,
-            function ($value, $function) {
-                return call_user_func([$this, $function], $value);
-            },
+            fn($value, $function) => call_user_func([$this, $function], $value),
             $value
         );
     }
@@ -234,12 +232,10 @@ class View implements \ArrayAccess
     public function render($name, $parameters = [])
     {
         if (is_callable($parameters)) {
-            return function () use ($name, $parameters) {
-                return $this->render(
-                    $name,
-                    call_user_func_array($parameters, func_get_args()) ?: []
-                );
-            };
+            return fn() => $this->render(
+                $name,
+                call_user_func_array($parameters, func_get_args()) ?: []
+            );
         }
 
         $next = $this->loader->top();
@@ -250,9 +246,7 @@ class View implements \ArrayAccess
             }
 
             foreach ($loaders as $loader) {
-                $next = function ($name, array $parameters = []) use ($loader, $next) {
-                    return $loader($name, $parameters, $next);
-                };
+                $next = fn($name, array $parameters = []) => $loader($name, $parameters, $next);
             }
         }
 

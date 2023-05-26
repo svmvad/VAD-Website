@@ -12,7 +12,10 @@ $link = $this->el('image', [
 
 if ($this->isImage($props['link'])) {
 
-    $lightbox = $link($element, ['thumbnail' => true]);
+    $lightbox = $link($element, [
+        'focal_point' => $props['lightbox_image_focal_point'],
+        'thumbnail' => true,
+    ]);
 
 } else {
 

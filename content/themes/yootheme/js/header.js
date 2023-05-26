@@ -15,20 +15,19 @@ import {
 
 const Section = {
     connected() {
-        this.section = getSection();
+        const selector = '.tm-header ~ * > [class*="uk-section"]';
+        this.section = $(selector);
         if (!this.section) {
-            this.registerObserver(
-                observeMutation(
-                    document.body,
-                    (records, observer) => {
-                        this.section = getSection();
-                        if (this.section) {
-                            observer.disconnect();
-                            this.$emit();
-                        }
-                    },
-                    { childList: true, subtree: true }
-                )
+            observeMutation(
+                document.body,
+                (records, observer) => {
+                    this.section = $(selector);
+                    if (this.section) {
+                        observer.disconnect();
+                        this.$emit();
+                    }
+                },
+                { childList: true, subtree: true }
             );
         }
     },
@@ -38,7 +37,7 @@ export const Header = {
     mixins: [Section],
 
     connected() {
-        this.registerObserver(observeResize(this.$el, () => this.$emit('resize')));
+        observeResize(this.$el, () => this.$emit('resize'));
     },
 
     update: [
@@ -114,12 +113,6 @@ export const Sticky = {
         events: ['resize'],
     },
 };
-
-function getSection() {
-    return $(
-        '.tm-header ~ [class*="uk-section"], .tm-header ~ :not(.tm-page) > [class*="uk-section"]'
-    );
-}
 
 function getModifier(el) {
     return attr(el, 'tm-header-transparent');

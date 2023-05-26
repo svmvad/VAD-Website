@@ -139,7 +139,7 @@
         },
         "list_element": {
             "label": "HTML Element",
-            "description": "Choose between an ordered and unordered list to fit your semantic structure.",
+            "description": "Set whether it's an ordered and unordered list.",
             "type": "select",
             "options": {
                 "ul": "ul",
@@ -270,7 +270,7 @@
         },
         "title_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -383,6 +383,7 @@
         "visibility": "${builder.visibility}",
         "name": "${builder.name}",
         "status": "${builder.status}",
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -396,7 +397,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-item", ".el-title", ".el-meta", ".el-content"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

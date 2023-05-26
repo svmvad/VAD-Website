@@ -1,4 +1,4 @@
-/*! UIkit 3.15.25 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
+/*! UIkit 3.16.19 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -6,8 +6,74 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.UIkitSortable = factory(global.UIkit.util));
 })(this, (function (uikitUtil) { 'use strict';
 
+    function resize(options) {
+      return observe(uikitUtil.observeResize, options, "resize");
+    }
+    function mutation(options) {
+      return observe(uikitUtil.observeMutation, options);
+    }
+    function observe(observe2, options, emit) {
+      return {
+        observe: observe2,
+        handler() {
+          this.$emit(emit);
+        },
+        ...options
+      };
+    }
+
+    ({
+      props: {
+        margin: String,
+        firstColumn: Boolean
+      },
+      data: {
+        margin: "uk-margin-small-top",
+        firstColumn: "uk-first-column"
+      },
+      observe: [
+        mutation({
+          options: {
+            childList: true,
+            attributes: true,
+            attributeFilter: ["style"]
+          }
+        }),
+        resize({
+          target: ({ $el }) => [$el, ...uikitUtil.children($el)]
+        })
+      ],
+      update: {
+        read() {
+          const rows = getRows(this.$el.children);
+          return {
+            rows,
+            columns: getColumns(rows)
+          };
+        },
+        write({ columns, rows }) {
+          for (const row of rows) {
+            for (const column of row) {
+              uikitUtil.toggleClass(column, this.margin, rows[0] !== row);
+              uikitUtil.toggleClass(column, this.firstColumn, columns[0].includes(column));
+            }
+          }
+        },
+        events: ["resize"]
+      }
+    });
     function getRows(items) {
       return sortBy(items, "top", "bottom");
+    }
+    function getColumns(rows) {
+      const columns = [];
+      for (const row of rows) {
+        const sorted = sortBy(row, "left", "right");
+        for (let j = 0; j < sorted.length; j++) {
+          columns[j] = columns[j] ? columns[j].concat(sorted[j]) : sorted[j];
+        }
+      }
+      return uikitUtil.isRtl ? columns.reverse() : columns;
     }
     function sortBy(items, startProp, endProp) {
       const sorted = [[]];
@@ -313,24 +379,20 @@
         items() {
           return uikitUtil.children(this.target);
         },
-        isEmpty: {
-          get() {
-            return uikitUtil.isEmpty(this.items);
-          },
-          watch(empty) {
-            uikitUtil.toggleClass(this.target, this.clsEmpty, empty);
-          },
-          immediate: true
+        isEmpty() {
+          return uikitUtil.isEmpty(this.items);
         },
-        handles: {
-          get({ handle }, el) {
-            return handle ? uikitUtil.$$(handle, el) : this.items;
-          },
-          watch(handles, prev) {
-            uikitUtil.css(prev, { touchAction: "", userSelect: "" });
-            uikitUtil.css(handles, { touchAction: uikitUtil.hasTouch ? "none" : "", userSelect: "none" });
-          },
-          immediate: true
+        handles({ handle }, el) {
+          return handle ? uikitUtil.$$(handle, el) : this.items;
+        }
+      },
+      watch: {
+        isEmpty(empty) {
+          uikitUtil.toggleClass(this.target, this.clsEmpty, empty);
+        },
+        handles(handles, prev) {
+          uikitUtil.css(prev, { touchAction: "", userSelect: "" });
+          uikitUtil.css(handles, { touchAction: uikitUtil.hasTouch ? "none" : "", userSelect: "none" });
         }
       },
       update: {

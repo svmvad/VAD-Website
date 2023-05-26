@@ -12,6 +12,7 @@
         "show_title": true,
         "show_rating": true,
         "limit": 8,
+        "paginate": "false",
         "columns": 4,
         "orderby": "date",
         "order": "desc",
@@ -70,6 +71,16 @@
             "type": "number",
             "enable": "type != 'current_query'"
         },
+        "paginate": {
+            "label": "Pagination",
+            "description": "Enable the pagination.",
+            "type": "select",
+            "options": {
+                "Show": "true",
+                "Hide": "false"
+            },
+            "enable": "type != 'current_query'"
+        },
         "orderby": {
             "label": "Order",
             "description": "Set the product ordering.",
@@ -101,9 +112,9 @@
             "description": "Display products based on visibility.",
             "type": "select",
             "options": {
-                "Visible": "visible",
+                "Shop and Search": "visible",
                 "Featured": "featured",
-                "Catalog": "catalog",
+                "Shop": "catalog",
                 "Search": "search",
                 "Hidden": "hidden"
             },
@@ -241,6 +252,7 @@
                             "divider": true,
                             "fields": [
                                 "limit",
+                                "paginate",
                                 "orderby",
                                 "order",
                                 "product_visibility",

@@ -97,6 +97,12 @@
             "source": true,
             "enable": "link"
         },
+        "link_aria_label": {
+            "label": "Link ARIA Label",
+            "description": "Enter a descriptive text label to make it accessible if the link has no visible text.",
+            "source": true,
+            "enable": "link"
+        },
         "hover_image": {
             "label": "Hover Image",
             "description": "Select an optional image that appears on hover.",
@@ -239,6 +245,32 @@
             "text": "Link overlay",
             "enable": "link"
         },
+        "html_element": "${builder.html_element}",
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "image && !video"
+        },
+        "image_loading": {
+            "label": "Loading",
+            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
+            "type": "checkbox",
+            "text": "Load image eagerly",
+            "enable": "image && !video"
+        },
         "image_transition": {
             "label": "Transition",
             "description": "Select an image transition. If the hover image is set, the transition takes place between the two images. If <i>None</i> is selected, the hover image fades in.",
@@ -316,13 +348,6 @@
             "type": "checkbox",
             "text": "Inverse style",
             "enable": "$match(image_box_decoration, '^(default|primary|secondary)$')"
-        },
-        "image_loading": {
-            "label": "Loading",
-            "description": "By default, images are loaded lazy. Enable eager loading for images in the initial viewport.",
-            "type": "checkbox",
-            "text": "Load image eagerly",
-            "enable": "image && !video"
         },
         "title_transition": {
             "label": "Transition",
@@ -434,7 +459,7 @@
         },
         "title_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -538,7 +563,7 @@
         },
         "meta_element": {
             "label": "HTML Element",
-            "description": "Choose one of the HTML elements to fit the semantic structure.",
+            "description": "Set the level for the section heading or give it no semantic meaning.",
             "type": "select",
             "options": {
                 "h1": "h1",
@@ -726,7 +751,7 @@
         "attributes": "${builder.attrs}",
         "css": {
             "label": "CSS",
-            "description": "Enter your own custom CSS. The following selectors will be prefixed automatically for this element: <code>.el-element</code>, <code>.el-image</code>, <code>.el-title</code>, <code>.el-meta</code>, <code>.el-content</code>, <code>.el-hover-image</code>, <code>.el-container</code>, <code>.el-overlay</code>",
+            "description": "Enter your own custom CSS. The following selectors will be prefixed automatically for this element: <code>.el-element</code>, <code>.el-image</code>, <code>.el-title</code>, <code>.el-meta</code>, <code>.el-content</code>, <code>.el-link</code>, <code>.el-hover-image</code>",
             "type": "editor",
             "editor": "code",
             "mode": "css",
@@ -743,7 +768,8 @@
                     ".el-overlay"
                 ]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -769,6 +795,7 @@
                         "link",
                         "link_target",
                         "link_text",
+                        "link_aria_label",
                         "hover_image"
                     ]
                 },
@@ -791,7 +818,8 @@
                                 "overlay_margin",
                                 "overlay_maxwidth",
                                 "overlay_transition",
-                                "overlay_link"
+                                "overlay_link",
+                                "html_element"
                             ]
                         },
                         {
@@ -799,6 +827,8 @@
                             "type": "group",
                             "divider": true,
                             "fields": [
+                                "image_focal_point",
+                                "image_loading",
                                 "image_transition",
                                 "image_transition_border",
                                 "image_min_height",
@@ -806,8 +836,7 @@
                                 "image_box_shadow",
                                 "image_hover_box_shadow",
                                 "image_box_decoration",
-                                "image_box_decoration_inverse",
-                                "image_loading"
+                                "image_box_decoration_inverse"
                             ]
                         },
                         {

@@ -40,7 +40,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

@@ -63,6 +63,12 @@
             "source": true,
             "enable": "link"
         },
+        "link_aria_label": {
+            "label": "Link ARIA Label",
+            "description": "Set a different link ARIA label for this item.",
+            "source": true,
+            "enable": "link"
+        },
         "hover_image": {
             "label": "Hover Image",
             "description": "Select an optional image that appears on hover.",
@@ -74,6 +80,7 @@
             "description": "Enter a comma-separated list of tags, for example, <code>blue, white, black</code>.",
             "source": true
         },
+        "item_element": "${builder.html_element_item}",
         "text_color": {
             "label": "Text Color",
             "description": "Set a different text color for this item.",
@@ -88,6 +95,59 @@
         "text_color_hover": {
             "type": "checkbox",
             "text": "Inverse the text color on hover"
+        },
+        "lightbox_image_focal_point": {
+            "label": "Image Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true
+        },
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "image"
+        },
+        "hover_image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "hover_image"
         },
         "status": "${builder.statusItem}",
         "source": "${builder.source}"
@@ -108,6 +168,7 @@
                         "content",
                         "link",
                         "link_text",
+                        "link_aria_label",
                         "hover_image",
                         "tags"
                     ]
@@ -116,9 +177,35 @@
                     "title": "Settings",
                     "fields": [
                         {
+                            "label": "Item",
+                            "type": "group",
+                            "divider": true,
+                            "fields": [
+                                "item_element"
+                            ]
+                        },
+                        {
                             "label": "Overlay",
                             "type": "group",
+                            "divider": true,
                             "fields": ["text_color", "text_color_hover"]
+                        },
+                        {
+                            "label": "Lightbox",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["lightbox_image_focal_point"]
+                        },
+                        {
+                            "label": "Image",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["image_focal_point"]
+                        },
+                        {
+                            "label": "Hover Image",
+                            "type": "group",
+                            "fields": ["hover_image_focal_point"]
                         }
                     ]
                 },

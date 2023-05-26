@@ -15,6 +15,15 @@ return [
     ],
 
     'updates' => [
+        '4.0.0-beta.9' => function ($node) {
+            if (Arr::get($node->props, 'panel_link') && Arr::get($node->props, 'css')) {
+                $node->props['css'] = str_replace(
+                    '.el-element',
+                    '.el-element > *',
+                    $node->props['css']
+                );
+            }
+        },
         '3.0.0-beta.5.1' => function ($node) {
             if (Arr::get($node->props, 'image_box_decoration') === 'border-hover') {
                 $node->props['image_transition_border'] = true;
@@ -89,12 +98,14 @@ return [
             Arr::updateKeys($node->props, [
                 'title_breakpoint' => 'title_grid_breakpoint',
                 'image_breakpoint' => 'image_grid_breakpoint',
-                'title_gutter' => function ($value) {
-                    return ['title_grid_column_gap' => $value, 'title_grid_row_gap' => $value];
-                },
-                'image_gutter' => function ($value) {
-                    return ['image_grid_column_gap' => $value, 'image_grid_row_gap' => $value];
-                },
+                'title_gutter' => fn($value) => [
+                    'title_grid_column_gap' => $value,
+                    'title_grid_row_gap' => $value,
+                ],
+                'image_gutter' => fn($value) => [
+                    'image_grid_column_gap' => $value,
+                    'image_grid_row_gap' => $value,
+                ],
             ]);
         },
 
@@ -158,7 +169,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';
@@ -200,7 +211,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['lilian'])) {
+            if ($style == 'lilian') {
                 if (Arr::get($node->props, 'title_style') === 'heading-xlarge') {
                     $node->props['title_style'] = 'heading-2xlarge';
                 }

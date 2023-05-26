@@ -15,13 +15,8 @@ return [
             RouterMiddleware::class => [['@handleRoute', 30], ['@handleStatus', 20]],
         ],
 
-        'app.error' => [
-            RouterMiddleware::class => ['@handleError', 10],
-        ],
-
-        'url.resolve' => [
-            UrlResolver::class => 'resolve',
-        ],
+        'app.error' => [RouterMiddleware::class => ['@handleError', 10]],
+        'url.resolve' => [UrlResolver::class => 'resolve'],
     ],
 
     'aliases' => [

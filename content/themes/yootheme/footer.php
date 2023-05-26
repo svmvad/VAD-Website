@@ -23,12 +23,17 @@ namespace YOOtheme;
                      <?php endif ?>
 
                 </div>
-            </div>
-            <?php endif ?>
+                <?php endif ?>
+
+            </main>
 
             <?php dynamic_sidebar("bottom:section") ?>
 
-            <?= $view->builder(json_encode($config('~theme.footer.content')), ['prefix' => 'footer']) ?>
+            <?php if ($config('~theme.footer.content')) : ?>
+            <footer>
+                <?= $view->builder(json_encode($config('~theme.footer.content')), ['prefix' => 'footer']) ?>
+            </footer>
+            <?php endif ?>
 
         </div>
 

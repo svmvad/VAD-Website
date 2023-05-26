@@ -12,9 +12,7 @@ return [
             $node->props['parallaxOptions'] =
                 $node->props['overlay_animation'] === 'parallax'
                     ? [$view, 'parallaxOptions']
-                    : function () {
-                        return false;
-                    };
+                    : fn() => false;
         },
     ],
 
@@ -33,15 +31,11 @@ return [
                     $key = "{$prefix}_parallax_{$prop}";
                     $start = implode(
                         ',',
-                        array_map(function ($value) {
-                            return trim($value);
-                        }, explode(',', Arr::get($node->props, "{$key}_start", '')))
+                        array_map('trim', explode(',', Arr::get($node->props, "{$key}_start", '')))
                     );
                     $end = implode(
                         ',',
-                        array_map(function ($value) {
-                            return trim($value);
-                        }, explode(',', Arr::get($node->props, "{$key}_end", '')))
+                        array_map('trim', explode(',', Arr::get($node->props, "{$key}_end", '')))
                     );
                     if ($start !== '' || $end !== '') {
                         $default = in_array($prop, ['scale', 'opacity']) ? 1 : 0;
@@ -63,7 +57,7 @@ return [
 
             [$style] = explode(':', $config('~theme.style'));
 
-            if (in_array($style, ['fjord'])) {
+            if ($style == 'fjord') {
                 if (Arr::get($node->props, 'overlay_container') === 'default') {
                     $node->props['overlay_container'] = 'large';
                 }
@@ -169,7 +163,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';
@@ -211,7 +205,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['lilian'])) {
+            if ($style == 'lilian') {
                 if (Arr::get($node->props, 'title_style') === 'heading-xlarge') {
                     $node->props['title_style'] = 'heading-2xlarge';
                 }

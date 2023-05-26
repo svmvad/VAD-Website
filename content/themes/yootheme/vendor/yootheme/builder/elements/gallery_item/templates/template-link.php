@@ -7,6 +7,7 @@ $imageProvider = app(ImageProvider::class);
 
 $link = $props['link'] ? $this->el('a', [
     'href' => $props['link'],
+    'aria-label' => $props['link_aria_label'] ?: $element['link_aria_label'],
 ]) : null;
 
 // Lightbox
@@ -15,7 +16,14 @@ if ($link && $element['lightbox']) {
     if ($type = $this->isImage($props['link'])) {
 
         if ($type !== 'svg' && ($element['lightbox_image_width'] || $element['lightbox_image_height'])) {
-            $props['link'] = "{$props['link']}#thumbnail={$element['lightbox_image_width']},{$element['lightbox_image_height']},{$element['lightbox_image_orientation']}";
+
+            $thumbnail = [$element['lightbox_image_width'], $element['lightbox_image_height'], $element['lightbox_image_orientation']];
+            if (!empty($props['lightbox_image_focal_point'])) {
+                [$y, $x] = explode('-', $props['lightbox_image_focal_point']);
+                $thumbnail += [3 => $x, 4 => $y];
+            }
+
+            $props['link'] = "{$props['link']}#thumbnail=" . implode(',', $thumbnail);
         }
 
         $link->attr([
@@ -68,14 +76,12 @@ if ($link && $element['lightbox']) {
 
 if ($link && $element['overlay_link']) {
 
-    $el->attr($link->attrs + [
+    $link_container->attr($link->attrs + [
 
         'class' => [
             // Needs to be child of `uk-light` or `uk-dark`
             'uk-link-toggle',
         ],
-
-        'aria-label' => $props['link_aria_label'],
 
     ]);
 

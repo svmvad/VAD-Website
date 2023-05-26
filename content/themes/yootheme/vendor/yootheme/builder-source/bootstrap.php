@@ -1,11 +1,12 @@
 <?php
 
-namespace YOOtheme\Builder;
+namespace YOOtheme\Builder\Source;
 
 use YOOtheme\Application;
 use YOOtheme\Builder;
-use YOOtheme\Builder\Source\SourceListener;
-use YOOtheme\Builder\Source\SourceTransform;
+use YOOtheme\Builder\BuilderConfig;
+use YOOtheme\Builder\Source;
+use YOOtheme\Builder\UpdateTransform;
 use YOOtheme\Event;
 use YOOtheme\GraphQL\Directive\SliceDirective;
 use YOOtheme\GraphQL\Plugin\ContainerPlugin;
@@ -13,27 +14,22 @@ use YOOtheme\GraphQL\Type\ObjectScalarType;
 
 return [
     'events' => [
-        'source.init' => [
-            SourceListener::class => ['initSource', 50],
-        ],
+        'source.init' => [Listener\LoadSourceSchema::class => ['@handle', 50]],
+        'source.error' => [Listener\LogSourceError::class => '@handle'],
+        'source.type.metadata' => [Listener\OrderSourceMetadata::class => 'handle'],
+        BuilderConfig::class => [Listener\LoadBuilderConfig::class => '@handle'],
+    ],
 
-        'source.type.metadata' => [
-            SourceListener::class => 'typeMetadataSource',
-        ],
-
-        'source.error' => [
-            SourceListener::class => 'errorSource',
-        ],
-
-        'customizer.init' => [
-            SourceListener::class => 'initCustomizer',
-        ],
+    'config' => [
+        BuilderConfig::class => __DIR__ . '/config/customizer.json',
     ],
 
     'extend' => [
-        // Before Placeholder Transform, after Normalize and Id Transform
         Builder::class => function (Builder $builder, $app) {
-            $builder->addTransform('prerender', $app(SourceTransform::class), 2);
+            $source = $app(SourceTransform::class);
+
+            $builder->addTransform('preload', [$source, 'preload']);
+            $builder->addTransform('prerender', [$source, 'prerender'], 0); // Before Placeholder Transform
         },
 
         UpdateTransform::class => function (UpdateTransform $update) {

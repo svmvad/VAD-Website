@@ -91,6 +91,17 @@
             },
             "enable": "column"
         },
+        "html_element": {
+            "label": "HTML Element",
+            "description": "Define the purpose and structure of the content or give it no semantic meaning.",
+            "type": "select",
+            "options": {
+                "div": "",
+                "address": "address",
+                "aside": "aside",
+                "footer": "footer"
+            }
+        },
         "position": "${builder.position}",
         "position_left": "${builder.position_left}",
         "position_right": "${builder.position_right}",
@@ -127,7 +138,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -150,7 +162,8 @@
                                 "text_color",
                                 "column",
                                 "column_divider",
-                                "column_breakpoint"
+                                "column_breakpoint",
+                                "html_element"
                             ]
                         },
                         {

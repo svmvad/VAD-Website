@@ -4,6 +4,7 @@ namespace YOOtheme\Builder\Wordpress\Source\Type;
 
 use YOOtheme\Arr;
 use YOOtheme\Builder\Wordpress\Source\Helper;
+use YOOtheme\Event;
 use YOOtheme\Str;
 use function YOOtheme\trans;
 
@@ -31,9 +32,10 @@ class CustomPostQueryType
                 'label' => trans('Filter by Terms'),
                 'type' => 'select',
                 'default' => [],
-                'options' => array_map(function ($taxonomy) {
-                    return ['evaluate' => "config.taxonomies.{$taxonomy}"];
-                }, array_keys($taxonomies)),
+                'options' => array_map(
+                    fn($taxonomy) => ['evaluate' => "api.builder.taxonomies['{$taxonomy}']"],
+                    array_keys($taxonomies)
+                ),
                 'attrs' => [
                     'multiple' => true,
                     'class' => 'uk-height-medium',
@@ -104,9 +106,7 @@ class CustomPostQueryType
                                 'type' => 'Boolean',
                             ],
                         ],
-                        array_map(function () {
-                            return ['type' => 'String'];
-                        }, $operators)
+                        array_map(fn() => ['type' => 'String'], $operators)
                     ),
 
                     'metadata' => [
@@ -135,16 +135,17 @@ class CustomPostQueryType
                                             'enable' => '!id',
                                         ],
                                     ] +
-                                    array_map(function ($operator) {
-                                        return $operator + ['enable' => '!id'];
-                                    }, $operators)
+                                    array_map(
+                                        fn($operator) => $operator + ['enable' => '!id'],
+                                        $operators
+                                    )
                                 : [],
                             [
                                 'users' => [
                                     'label' => trans('Filter by Authors'),
                                     'type' => 'select',
                                     'default' => [],
-                                    'options' => [['evaluate' => 'config.authors']],
+                                    'options' => [['evaluate' => 'yootheme.builder.authors']],
                                     'attrs' => [
                                         'multiple' => true,
                                         'class' => 'uk-height-small',
@@ -191,10 +192,10 @@ class CustomPostQueryType
                                             'options' => [
                                                 [
                                                     'evaluate' =>
-                                                        'config.sources.postTypeOrderOptions',
+                                                        'yootheme.builder.sources.postTypeOrderOptions',
                                                 ],
                                                 [
-                                                    'evaluate' => "config.sources.{$type->name}OrderOptions",
+                                                    'evaluate' => "yootheme.builder.sources['{$type->name}OrderOptions']",
                                                 ],
                                             ],
                                             'enable' => '!id',
@@ -204,8 +205,11 @@ class CustomPostQueryType
                                             'type' => 'select',
                                             'default' => 'DESC',
                                             'options' => [
-                                                trans('Ascending') => 'ASC',
-                                                trans('Descending') => 'DESC',
+                                                ['text' => trans('Ascending'), 'value' => 'ASC'],
+                                                ['text' => trans('Descending'), 'value' => 'DESC'],
+                                                [
+                                                    'evaluate' => "api.builder.sources['{$type->name}OrderDirectionOptions']",
+                                                ],
                                             ],
                                             'enable' => '!id',
                                         ],
@@ -266,9 +270,7 @@ class CustomPostQueryType
                                 'type' => 'Boolean',
                             ],
                         ],
-                        array_map(function () {
-                            return ['type' => 'String'];
-                        }, $operators)
+                        array_map(fn() => ['type' => 'String'], $operators)
                     ),
                     'metadata' => [
                         'label' => trans('Custom %post_types%', ['%post_types%' => $type->label]),
@@ -278,7 +280,7 @@ class CustomPostQueryType
                                 'label' => trans('Filter by Authors'),
                                 'type' => 'select',
                                 'default' => [],
-                                'options' => [['evaluate' => 'config.authors']],
+                                'options' => [['evaluate' => 'yootheme.builder.authors']],
                                 'attrs' => [
                                     'multiple' => true,
                                     'class' => 'uk-height-small',
@@ -334,9 +336,12 @@ class CustomPostQueryType
                                         'type' => 'select',
                                         'default' => 'date',
                                         'options' => [
-                                            ['evaluate' => 'config.sources.postTypeOrderOptions'],
                                             [
-                                                'evaluate' => "config.sources.{$type->name}OrderOptions",
+                                                'evaluate' =>
+                                                    'yootheme.builder.sources.postTypeOrderOptions',
+                                            ],
+                                            [
+                                                'evaluate' => "yootheme.builder.sources['{$type->name}OrderOptions']",
                                             ],
                                         ],
                                     ],
@@ -345,8 +350,11 @@ class CustomPostQueryType
                                         'type' => 'select',
                                         'default' => 'DESC',
                                         'options' => [
-                                            trans('Ascending') => 'ASC',
-                                            trans('Descending') => 'DESC',
+                                            ['text' => trans('Ascending'), 'value' => 'ASC'],
+                                            ['text' => trans('Descending'), 'value' => 'DESC'],
+                                            [
+                                                'evaluate' => "api.builder.sources['{$type->name}OrderDirectionOptions']",
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -430,7 +438,7 @@ class CustomPostQueryType
                     'terms' => $terms,
                     'operator' => Arr::get($args, "{$taxonomy}_operator", 'IN'),
                     'field' => 'term_id',
-                    'include_children' => false,
+                    'include_children' => Arr::get($args, "{$taxonomy}_include_children", false),
                 ];
             }
         }
@@ -448,6 +456,8 @@ class CustomPostQueryType
         if (!empty($args['order_alphanum']) && $args['order'] !== 'rand') {
             Helper::filterOnce('posts_orderby', Helper::orderAlphanum($query));
         }
+
+        Event::emit('source.resolve.posts', $query);
 
         return get_posts($query);
     }

@@ -49,9 +49,10 @@ return [
             }
 
             Arr::updateKeys($node->props, [
-                'gutter' => function ($value) {
-                    return ['title_grid_column_gap' => $value, 'title_grid_row_gap' => $value];
-                },
+                'gutter' => fn($value) => [
+                    'title_grid_column_gap' => $value,
+                    'title_grid_row_gap' => $value,
+                ],
                 'breakpoint' => 'title_grid_breakpoint',
                 'width' => 'title_grid_width',
                 'leader' => 'title_leader',
@@ -94,7 +95,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'h1') {
                     $node->props['title_style'] = 'h2';
                 }

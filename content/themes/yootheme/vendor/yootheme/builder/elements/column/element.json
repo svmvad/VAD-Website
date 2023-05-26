@@ -6,8 +6,7 @@
     "width": 500,
     "defaults": {
         "position_sticky_breakpoint": "m",
-        "image_position": "center-center",
-        "media_overlay_gradient": ""
+        "image_position": "center-center"
     },
     "templates": {
         "render": "./templates/template.php",
@@ -49,10 +48,14 @@
             "type": "select",
             "options": {
                 "None": "",
-                "Default": "default",
-                "Muted": "muted",
-                "Primary": "primary",
-                "Secondary": "secondary"
+                "Card Default": "card-default",
+                "Card Primary": "card-primary",
+                "Card Secondary": "card-secondary",
+                "Card Hover": "card-hover",
+                "Tile Default": "tile-default",
+                "Tile Muted": "tile-muted",
+                "Tile Primary": "tile-primary",
+                "Tile Secondary": "tile-secondary"
             }
         },
         "preserve_color": {
@@ -60,6 +63,18 @@
             "type": "checkbox",
             "text": "Preserve text color",
             "enable": "$match(style, 'primary|secondary')"
+        },
+        "background_color": {
+            "label": "Background Color",
+            "type": "color",
+            "enable": "!style && !background_parallax_background"
+        },
+        "_background_parallax_button": {
+            "description": "Define a custom background color or a color parallax animation instead of using a predefined style.",
+            "type": "button-panel",
+            "text": "Edit Parallax",
+            "panel": "background-parallax",
+            "enable": "!style"
         },
         "text_color": {
             "label": "Text Color",
@@ -85,8 +100,9 @@
                 "X-Large": "xlarge",
                 "None": "none"
             },
-            "enable": "style || image || video"
+            "enable": "style || background_color || background_parallax_background || image || video"
         },
+        "html_element": "${builder.html_element}",
         "position_sticky": {
             "label": "Position Sticky",
             "description": "Stick the column or its elements to the top of the viewport while scrolling down. They will stop being sticky when they reach the bottom of the containing column, row or section.",
@@ -100,7 +116,7 @@
         },
         "position_sticky_offset": {
             "label": "Position Sticky Offset",
-            "description": "Set the offset from the top of the viewport where the column or its elements should become sticky.",
+            "description": "Set the offset from the top of the viewport where the column or its elements should become sticky, e.g. <code>100px</code>, <code>50vh</code> or <code>50vh - 50%</code>. Percent relates to the column's height.",
             "attrs": {
                 "placeholder": "0"
             },
@@ -151,6 +167,7 @@
                         "preserve_color",
                         "text_color",
                         "padding",
+                        "html_element",
                         "position_sticky",
                         "position_sticky_offset",
                         "position_sticky_breakpoint"
@@ -179,6 +196,24 @@
                     "attrs": {
                         "placeholder": "auto"
                     }
+                },
+                "image_focal_point": {
+                    "label": "Focal Point",
+                    "description": "Set a focal point to adjust the image focus when cropping.",
+                    "type": "select",
+                    "options": {
+                        "Top Left": "top-left",
+                        "Top Center": "top-center",
+                        "Top Right": "top-right",
+                        "Center Left": "center-left",
+                        "Center Center": "",
+                        "Center Right": "center-right",
+                        "Bottom Left": "bottom-left",
+                        "Bottom Center": "bottom-center",
+                        "Bottom Right": "bottom-right"
+                    },
+                    "source": true,
+                    "show": "image && !video"
                 },
                 "image_loading": {
                     "label": "Loading",
@@ -330,6 +365,7 @@
                             "show": "image && !video",
                             "fields": ["image_width", "image_height"]
                         },
+                        "image_focal_point",
                         "image_loading",
                         "image_size",
                         "image_position",

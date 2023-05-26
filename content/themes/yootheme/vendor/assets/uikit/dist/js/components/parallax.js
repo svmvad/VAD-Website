@@ -1,47 +1,10 @@
-/*! UIkit 3.15.25 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
+/*! UIkit 3.16.19 | https://www.getuikit.com | (c) 2014 - 2023 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
     typeof define === 'function' && define.amd ? define('uikitparallax', ['uikit-util'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.UIkitParallax = factory(global.UIkit.util));
 })(this, (function (uikitUtil) { 'use strict';
-
-    var Resize = {
-      connected() {
-        var _a;
-        this.registerObserver(
-          uikitUtil.observeResize(
-            ((_a = this.$options.resizeTargets) == null ? void 0 : _a.call(this)) || this.$el,
-            () => this.$emit("resize")
-          )
-        );
-      }
-    };
-
-    var Scroll = {
-      connected() {
-        registerScrollListener(this._uid, () => this.$emit("scroll"));
-      },
-      disconnected() {
-        unregisterScrollListener(this._uid);
-      }
-    };
-    const scrollListeners = /* @__PURE__ */ new Map();
-    let unbindScrollListener;
-    function registerScrollListener(id, listener) {
-      unbindScrollListener = unbindScrollListener || uikitUtil.on(window, "scroll", () => scrollListeners.forEach((listener2) => listener2()), {
-        passive: true,
-        capture: true
-      });
-      scrollListeners.set(id, listener);
-    }
-    function unregisterScrollListener(id) {
-      scrollListeners.delete(id);
-      if (unbindScrollListener && !scrollListeners.size) {
-        unbindScrollListener();
-        unbindScrollListener = null;
-      }
-    }
 
     var Media = {
       props: {
@@ -82,22 +45,194 @@
       return value && uikitUtil.isNumeric(value) ? `(min-width: ${value}px)` : "";
     }
 
-    uikitUtil.memoize(async (src) => {
-      if (src) {
-        if (uikitUtil.startsWith(src, "data:")) {
-          return decodeURIComponent(src.split(",")[1]);
-        } else {
-          return (await fetch(src)).text();
+    function startsWith(str, search) {
+      var _a;
+      return (_a = str == null ? void 0 : str.startsWith) == null ? void 0 : _a.call(str, search);
+    }
+    const { isArray, from: toArray } = Array;
+    function isFunction(obj) {
+      return typeof obj === "function";
+    }
+    function isObject(obj) {
+      return obj !== null && typeof obj === "object";
+    }
+    function isWindow(obj) {
+      return isObject(obj) && obj === obj.window;
+    }
+    function isNode(obj) {
+      return nodeType(obj) >= 1;
+    }
+    function isElement(obj) {
+      return nodeType(obj) === 1;
+    }
+    function nodeType(obj) {
+      return !isWindow(obj) && isObject(obj) && obj.nodeType;
+    }
+    function isString(value) {
+      return typeof value === "string";
+    }
+    function isUndefined(value) {
+      return value === void 0;
+    }
+    function toNode(element) {
+      return toNodes(element)[0];
+    }
+    function toNodes(element) {
+      return isNode(element) ? [element] : Array.from(element || []).filter(isNode);
+    }
+    function memoize(fn) {
+      const cache = /* @__PURE__ */ Object.create(null);
+      return (key) => cache[key] || (cache[key] = fn(key));
+    }
+
+    function attr(element, name, value) {
+      var _a;
+      if (isObject(name)) {
+        for (const key in name) {
+          attr(element, key, name[key]);
         }
-      } else {
-        return Promise.reject();
+        return;
       }
-    });
+      if (isUndefined(value)) {
+        return (_a = toNode(element)) == null ? void 0 : _a.getAttribute(name);
+      } else {
+        for (const el of toNodes(element)) {
+          if (isFunction(value)) {
+            value = value.call(el, attr(el, name));
+          }
+          if (value === null) {
+            removeAttr(el, name);
+          } else {
+            el.setAttribute(name, value);
+          }
+        }
+      }
+    }
+    function removeAttr(element, name) {
+      toNodes(element).forEach((element2) => element2.removeAttribute(name));
+    }
+
+    function parent(element) {
+      var _a;
+      return (_a = toNode(element)) == null ? void 0 : _a.parentElement;
+    }
+    function filter(element, selector) {
+      return toNodes(element).filter((element2) => matches(element2, selector));
+    }
+    function matches(element, selector) {
+      return toNodes(element).some((element2) => element2.matches(selector));
+    }
+    function closest(element, selector) {
+      return isElement(element) ? element.closest(startsWith(selector, ">") ? selector.slice(1) : selector) : toNodes(element).map((element2) => closest(element2, selector)).filter(Boolean);
+    }
+    function children(element, selector) {
+      element = toNode(element);
+      const children2 = element ? toArray(element.children) : [];
+      return selector ? filter(children2, selector) : children2;
+    }
+    function index(element, ref) {
+      return ref ? toNodes(element).indexOf(toNode(ref)) : children(parent(element)).indexOf(element);
+    }
+
+    function findAll(selector, context) {
+      return toNodes(_query(selector, toNode(context), "querySelectorAll"));
+    }
+    const contextSelectorRe = /(^|[^\\],)\s*[!>+~-]/;
+    const isContextSelector = memoize((selector) => selector.match(contextSelectorRe));
+    const contextSanitizeRe = /([!>+~-])(?=\s+[!>+~-]|\s*$)/g;
+    const sanatize = memoize((selector) => selector.replace(contextSanitizeRe, "$1 *"));
+    function _query(selector, context = document, queryFn) {
+      if (!selector || !isString(selector)) {
+        return selector;
+      }
+      selector = sanatize(selector);
+      if (isContextSelector(selector)) {
+        const split = splitSelector(selector);
+        selector = "";
+        for (let sel of split) {
+          let ctx = context;
+          if (sel[0] === "!") {
+            const selectors = sel.substr(1).trim().split(" ");
+            ctx = closest(parent(context), selectors[0]);
+            sel = selectors.slice(1).join(" ").trim();
+            if (!sel.length && split.length === 1) {
+              return ctx;
+            }
+          }
+          if (sel[0] === "-") {
+            const selectors = sel.substr(1).trim().split(" ");
+            const prev = (ctx || context).previousElementSibling;
+            ctx = matches(prev, sel.substr(1)) ? prev : null;
+            sel = selectors.slice(1).join(" ");
+          }
+          if (ctx) {
+            selector += `${selector ? "," : ""}${domPath(ctx)} ${sel}`;
+          }
+        }
+        context = document;
+      }
+      try {
+        return context[queryFn](selector);
+      } catch (e) {
+        return null;
+      }
+    }
+    const selectorRe = /.*?[^\\](?:,|$)/g;
+    const splitSelector = memoize(
+      (selector) => selector.match(selectorRe).map((selector2) => selector2.replace(/,$/, "").trim())
+    );
+    function domPath(element) {
+      const names = [];
+      while (element.parentNode) {
+        const id = attr(element, "id");
+        if (id) {
+          names.unshift(`#${escape(id)}`);
+          break;
+        } else {
+          let { tagName } = element;
+          if (tagName !== "HTML") {
+            tagName += `:nth-child(${index(element) + 1})`;
+          }
+          names.unshift(tagName);
+          element = element.parentNode;
+        }
+      }
+      return names.join(" > ");
+    }
+    function escape(css) {
+      return isString(css) ? CSS.escape(css) : "";
+    }
+
+    const fragmentRe = /^\s*<(\w+|!)[^>]*>/;
+    const singleTagRe = /^<(\w+)\s*\/?>(?:<\/\1>)?$/;
+    function fragment(html2) {
+      const matches = singleTagRe.exec(html2);
+      if (matches) {
+        return document.createElement(matches[1]);
+      }
+      const container = document.createElement("div");
+      if (fragmentRe.test(html2)) {
+        container.insertAdjacentHTML("beforeend", html2.trim());
+      } else {
+        container.textContent = html2;
+      }
+      return unwrapSingle(container.childNodes);
+    }
+    function unwrapSingle(nodes) {
+      return nodes.length > 1 ? nodes : nodes[0];
+    }
+    function $$(selector, context) {
+      return isHtml(selector) ? toNodes(fragment(selector)) : findAll(selector, context);
+    }
+    function isHtml(str) {
+      return isString(str) && startsWith(str.trim(), "<");
+    }
+
     function getMaxPathLength(el) {
       return Math.ceil(
         Math.max(
           0,
-          ...uikitUtil.$$("[stroke]", el).map((stroke) => {
+          ...$$("[stroke]", el).map((stroke) => {
             try {
               return stroke.getTotalLength();
             } catch (e) {
@@ -162,9 +297,9 @@
         getCss(percent) {
           const css2 = { transform: "", filter: "" };
           for (const prop in this.props) {
-            this.props[prop](css2, percent);
+            this.props[prop](css2, uikitUtil.clamp(percent));
           }
-          css2.willChange = Object.keys(css2).filter((key) => css2[key] !== "").join(",");
+          css2.willChange = Object.keys(css2).filter((key) => css2[key] !== "").map(uikitUtil.propName).join(",");
           return css2;
         }
       }
@@ -336,7 +471,7 @@
       const { length } = stops;
       let nullIndex = 0;
       for (let i = 0; i < length; i++) {
-        let [value, percent] = uikitUtil.isString(stops[i]) ? stops[i].trim().split(" ") : [stops[i]];
+        let [value, percent] = uikitUtil.isString(stops[i]) ? stops[i].trim().split(/ (?![^(]*\))/) : [stops[i]];
         value = fn(value);
         percent = percent ? uikitUtil.toFloat(percent) / 100 : null;
         if (i === 0) {
@@ -403,8 +538,39 @@
       }, {});
     }
 
+    function resize(options) {
+      return observe(uikitUtil.observeResize, options, "resize");
+    }
+    function viewport() {
+      return observe((target, handler) => uikitUtil.observeViewportResize(handler));
+    }
+    function scroll(options) {
+      return observe(
+        (target, handler) => ({
+          disconnect: uikitUtil.on(target, "scroll", handler, {
+            passive: true,
+            capture: true
+          })
+        }),
+        {
+          target: () => document,
+          ...options
+        },
+        "scroll"
+      );
+    }
+    function observe(observe2, options, emit) {
+      return {
+        observe: observe2,
+        handler() {
+          this.$emit(emit);
+        },
+        ...options
+      };
+    }
+
     var Component = {
-      mixins: [Parallax, Resize, Scroll],
+      mixins: [Parallax],
       props: {
         target: String,
         viewport: Number,
@@ -427,18 +593,20 @@
         start({ start }) {
           return uikitUtil.toPx(start, "height", this.target, true);
         },
-        end({ end, viewport }) {
+        end({ end, viewport: viewport2 }) {
           return uikitUtil.toPx(
-            end || (viewport = (1 - viewport) * 100) && `${viewport}vh+${viewport}%`,
+            end || (viewport2 = (1 - viewport2) * 100) && `${viewport2}vh+${viewport2}%`,
             "height",
             this.target,
             true
           );
         }
       },
-      resizeTargets() {
-        return [this.$el, this.target];
-      },
+      observe: [
+        resize({ target: ({ $el, target }) => [$el, target, uikitUtil.scrollParent(target, true)] }),
+        scroll(),
+        viewport()
+      ],
       update: {
         read({ percent }, types) {
           if (!types.has("scroll")) {

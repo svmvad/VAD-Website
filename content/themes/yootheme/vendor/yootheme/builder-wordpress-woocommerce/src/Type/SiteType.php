@@ -18,6 +18,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('My Account Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
                 'login' => [
@@ -25,6 +26,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('Login Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
                 'lost_password' => [
@@ -32,6 +34,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('Lost Password Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
                 'reset_link_sent' => [
@@ -39,6 +42,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('Reset Link Sent Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
                 'lost_password_confirmation' => [
@@ -46,6 +50,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('Lost Password Confirmation Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
                 'checkout' => [
@@ -53,6 +58,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('Checkout Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
                 'order_received' => [
@@ -60,6 +66,7 @@ class SiteType
                     'metadata' => [
                         'label' => trans('Order Received Page'),
                         'group' => 'WooCommerce',
+                        'condition' => true,
                     ],
                 ],
             ],

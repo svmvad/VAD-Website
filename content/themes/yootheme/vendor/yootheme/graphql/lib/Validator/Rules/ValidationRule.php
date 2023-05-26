@@ -1,51 +1,40 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace YOOtheme\GraphQL\Validator\Rules;
 
+use YOOtheme\GraphQL\Language\Visitor;
+use YOOtheme\GraphQL\Validator\QueryValidationContext;
 use YOOtheme\GraphQL\Validator\SDLValidationContext;
-use YOOtheme\GraphQL\Validator\ValidationContext;
-use function class_alias;
 
+/**
+ * @phpstan-import-type VisitorArray from Visitor
+ */
 abstract class ValidationRule
 {
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    public function getName()
+    public function getName(): string
     {
-        return $this->name === '' || $this->name === null  ? static::class : $this->name;
-    }
-
-    public function __invoke(ValidationContext $context)
-    {
-        return $this->getVisitor($context);
+        return $this->name ?? static::class;
     }
 
     /**
-     * Returns structure suitable for GraphQL\Language\Visitor
+     * Returns structure suitable for @see \GraphQL\Language\Visitor.
      *
-     * @see \GraphQL\Language\Visitor
-     *
-     * @return mixed[]
+     * @phpstan-return VisitorArray
      */
-    public function getVisitor(ValidationContext $context)
+    public function getVisitor(QueryValidationContext $context): array
     {
         return [];
     }
 
     /**
-     * Returns structure suitable for GraphQL\Language\Visitor
+     * Returns structure suitable for @see \GraphQL\Language\Visitor.
      *
-     * @see \GraphQL\Language\Visitor
-     *
-     * @return mixed[]
+     * @phpstan-return VisitorArray
      */
-    public function getSDLVisitor(SDLValidationContext $context)
+    public function getSDLVisitor(SDLValidationContext $context): array
     {
         return [];
     }
 }
-
-class_alias(ValidationRule::class, 'GraphQL\Validator\Rules\AbstractValidationRule');

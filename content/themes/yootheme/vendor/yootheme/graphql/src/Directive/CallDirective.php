@@ -54,9 +54,12 @@ class CallDirective extends Directive
 
         // merge additional arguments
         if (isset($params['args']) && is_array($arguments = json_decode($params['args'], true))) {
-            return function ($value, $args, $context, $info, $next) use ($arguments) {
-                return $next($value, $args + $arguments, $context, $info);
-            };
+            return fn($value, $args, $context, $info, $next) => $next(
+                $value,
+                $args + $arguments,
+                $context,
+                $info
+            );
         }
     }
 }

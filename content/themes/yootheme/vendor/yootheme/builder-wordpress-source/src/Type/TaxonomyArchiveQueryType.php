@@ -23,76 +23,119 @@ class TaxonomyArchiveQueryType
             'view' => ["taxonomy-{$taxonomy->name}"],
         ];
 
-        $fields = [
-            $field => [
-                'type' => $name,
-                'metadata' => $metadata + [
-                    'label' => $taxonomy->labels->singular_name,
-                ],
-                'extensions' => [
-                    'call' => __CLASS__ . '::resolve',
-                ],
-            ],
+        return [
+            'fields' =>
+                [
+                    $field => [
+                        'type' => $name,
+                        'metadata' => $metadata + [
+                            'label' => $taxonomy->labels->singular_name,
+                        ],
+                        'extensions' => [
+                            'call' => __CLASS__ . '::resolve',
+                        ],
+                    ],
+                ] + static::configPostTypes($taxonomy, $metadata),
         ];
+    }
 
-        foreach (static::getTaxonomyPostTypes($taxonomy) as $name => $type) {
+    public static function configPostTypes($taxonomy, $metadata)
+    {
+        $fields = [];
+        foreach (Helper::getTaxonomyPostTypes($taxonomy) as $name => $type) {
             $field = Str::camelCase([$taxonomy->name, $name]);
 
-            $fields[$field] = [
-                'type' => [
-                    'listOf' => Str::camelCase($name, true),
-                ],
+            $fields += [
+                Str::camelCase([$field, 'Single']) => [
+                    'type' => Str::camelCase($name, true),
 
-                'args' => [
-                    'offset' => [
-                        'type' => 'Int',
+                    'args' => [
+                        'offset' => [
+                            'type' => 'Int',
+                        ],
                     ],
-                    'limit' => [
-                        'type' => 'Int',
-                    ],
-                ],
 
-                'metadata' => $metadata + [
-                    'label' => $type->label,
-                    'fields' => [
-                        '_offset' => [
-                            'description' => trans(
-                                'Set the starting point and limit the number of %post_type%.',
-                                ['%post_type%' => $type->label]
-                            ),
-                            'type' => 'grid',
-                            'width' => '1-2',
-                            'fields' => [
-                                'offset' => [
-                                    'label' => trans('Start'),
-                                    'type' => 'number',
-                                    'default' => 0,
-                                    'modifier' => 1,
-                                    'attrs' => [
-                                        'min' => 1,
-                                        'required' => true,
-                                    ],
+                    'metadata' => $metadata + [
+                        'label' => $type->labels->singular_name,
+                        'fields' => [
+                            'offset' => [
+                                'label' => trans('Start'),
+                                'description' => trans(
+                                    'Set the starting point to specify which %post_type% is loaded.',
+                                    ['%post_type%' => $type->labels->singular_name]
+                                ),
+                                'type' => 'number',
+                                'default' => 0,
+                                'modifier' => 1,
+                                'attrs' => [
+                                    'min' => 1,
+                                    'required' => true,
                                 ],
-                                'limit' => [
-                                    'label' => trans('Quantity'),
-                                    'type' => 'limit',
-                                    'attrs' => [
-                                        'placeholder' => trans('No limit'),
-                                        'min' => 0,
+                            ],
+                        ],
+                    ],
+
+                    'extensions' => [
+                        'call' => __CLASS__ . '::resolvePostsSingle',
+                    ],
+                ],
+
+                $field => [
+                    'type' => [
+                        'listOf' => Str::camelCase($name, true),
+                    ],
+
+                    'args' => [
+                        'offset' => [
+                            'type' => 'Int',
+                        ],
+                        'limit' => [
+                            'type' => 'Int',
+                        ],
+                    ],
+
+                    'metadata' => $metadata + [
+                        'label' => $type->label,
+                        'fields' => [
+                            '_offset' => [
+                                'description' => trans(
+                                    'Set the starting point and limit the number of %post_type%.',
+                                    ['%post_type%' => $type->label]
+                                ),
+                                'type' => 'grid',
+                                'width' => '1-2',
+                                'fields' => [
+                                    'offset' => [
+                                        'label' => trans('Start'),
+                                        'type' => 'number',
+                                        'default' => 0,
+                                        'modifier' => 1,
+                                        'attrs' => [
+                                            'min' => 1,
+                                            'required' => true,
+                                        ],
+                                    ],
+                                    'limit' => [
+                                        'label' => trans('Quantity'),
+                                        'type' => 'limit',
+                                        'attrs' => [
+                                            'placeholder' => trans('No limit'),
+                                            'min' => 0,
+                                        ],
                                     ],
                                 ],
                             ],
                         ],
                     ],
-                ],
 
-                'extensions' => [
-                    'call' => __CLASS__ . '::resolvePosts',
+                    'extensions' => [
+                        'call' => __CLASS__ . '::resolvePosts',
+                    ],
                 ],
             ];
         }
 
-        return compact('fields');
+        return $fields;
     }
 
     public static function resolve()
@@ -120,10 +163,10 @@ class TaxonomyArchiveQueryType
         return $wp_query->posts;
     }
 
-    protected static function getTaxonomyPostTypes(\WP_Taxonomy $taxonomy)
+    public static function resolvePostsSingle($root, array $args)
     {
-        return array_filter(Helper::getPostTypes(), function ($type) use ($taxonomy) {
-            return in_array($type->name, $taxonomy->object_type ?: []);
-        });
+        global $wp_query;
+
+        return $wp_query->posts[$args['offset'] ?? 0] ?? null;
     }
 }

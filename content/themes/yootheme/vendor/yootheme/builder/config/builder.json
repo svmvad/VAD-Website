@@ -2,7 +2,7 @@
     "@import": ["../../builder-source/config/builder.json"],
     "advanced": {
         "title": "Advanced",
-        "fields": ["name", "status", "source", "id", "class", "attributes", "css"]
+        "fields": ["name", "status", "source", "id", "class", "attributes", "css", "transform"]
     },
     "advancedItem": {
         "title": "Advanced",
@@ -14,7 +14,7 @@
     },
     "status": {
         "label": "Status",
-        "description": "Disable the element and publish it later. It will only be shown to the editor while the customizer is open.",
+        "description": "Disable the element and publish it later.",
         "type": "checkbox",
         "text": "Disable element",
         "attrs": {
@@ -24,7 +24,7 @@
     },
     "statusItem": {
         "label": "Status",
-        "description": "Disable the item and publish it later. It will only be shown to the editor while the customizer is open.",
+        "description": "Disable the item and publish it later.",
         "type": "checkbox",
         "text": "Disable item",
         "attrs": {
@@ -34,7 +34,8 @@
     },
     "id": {
         "label": "ID",
-        "description": "Define a unique identifier for the element."
+        "description": "Define a unique identifier for the element.",
+        "source": true
     },
     "cls": {
         "label": "Classes",
@@ -47,6 +48,40 @@
         "editor": "code",
         "attrs": {
             "debounce": 500
+        }
+    },
+    "transform": {
+        "label": "Transform",
+        "description": "Transform the element into another element while keeping its content and settings. Unused content and settings are removed. Transforming into a preset only keeps the content but adopts all preset settings.",
+        "type": "button",
+        "text": "Select Element",
+        "event": "transformBuilderElement"
+    },
+    "html_element": {
+        "label": "HTML Element",
+        "description": "Define the purpose and structure of the content or give it no semantic meaning.",
+        "type": "select",
+        "options": {
+            "div": "",
+            "address": "address",
+            "article": "article",
+            "aside": "aside",
+            "footer": "footer",
+            "header": "header",
+            "hgroup": "hgroup",
+            "nav": "nav",
+            "section": "section"
+        }
+    },
+    "html_element_item": {
+        "label": "HTML Element",
+        "description": "Define the purpose and structure of the content or give it no semantic meaning.",
+        "type": "select",
+        "options": {
+            "div": "",
+            "address": "address",
+            "article": "article",
+            "section": "section"
         }
     },
     "position": {
@@ -267,36 +302,42 @@
         "label": "Animation",
         "description": "Override the section animation setting. This option won't have any effect unless animations are enabled for this section.",
         "type": "select",
-        "options": {
-            "Inherit": "",
-            "None": "none",
-            "Fade": "fade",
-            "Scale Up": "scale-up",
-            "Scale Down": "scale-down",
-            "Slide Top Small": "slide-top-small",
-            "Slide Bottom Small": "slide-bottom-small",
-            "Slide Left Small": "slide-left-small",
-            "Slide Right Small": "slide-right-small",
-            "Slide Top Medium": "slide-top-medium",
-            "Slide Bottom Medium": "slide-bottom-medium",
-            "Slide Left Medium": "slide-left-medium",
-            "Slide Right Medium": "slide-right-medium",
-            "Slide Top 100%": "slide-top",
-            "Slide Bottom 100%": "slide-bottom",
-            "Slide Left 100%": "slide-left",
-            "Slide Right 100%": "slide-right",
-            "Parallax": "parallax"
-        }
+        "options": [
+            { "text": "Inherit", "value": "" },
+            { "text": "None", "value": "none" },
+            { "text": "Parallax", "value": "parallax" },
+            {
+                "label": "Animations",
+                "options": [
+                    { "text": "Fade", "value": "fade" },
+                    { "text": "Scale Up", "value": "scale-up" },
+                    { "text": "Scale Down", "value": "scale-down" },
+                    { "text": "Slide Top Small", "value": "slide-top-small" },
+                    { "text": "Slide Bottom Small", "value": "slide-bottom-small" },
+                    { "text": "Slide Left Small", "value": "slide-left-small" },
+                    { "text": "Slide Right Small", "value": "slide-right-small" },
+                    { "text": "Slide Top Medium", "value": "slide-top-medium" },
+                    { "text": "Slide Bottom Medium", "value": "slide-bottom-medium" },
+                    { "text": "Slide Left Medium", "value": "slide-left-medium" },
+                    { "text": "Slide Right Medium", "value": "slide-right-medium" },
+                    { "text": "Slide Top 100%", "value": "slide-top" },
+                    { "text": "Slide Bottom 100%", "value": "slide-bottom" },
+                    { "text": "Slide Left 100%", "value": "slide-left" },
+                    { "text": "Slide Right 100%", "value": "slide-right" }
+                ]
+            }
+        ]
     },
     "item_animation": {
         "type": "checkbox",
-        "text": "Animate items"
+        "text": "Animate items",
+        "show": "!$match(animation, 'none|parallax')"
     },
     "_parallax_button": {
         "type": "button-panel",
-        "text": "Edit Settings",
+        "text": "Edit Parallax",
         "panel": "builder-parallax",
-        "show": "animation == 'parallax' || item_animation == 'parallax'"
+        "enable": "animation == 'parallax'"
     },
     "visibility": {
         "label": "Visibility",
@@ -366,6 +407,11 @@
         "description": "Enter an optional text for the title attribute of the link, which will appear on hover.",
         "source": true
     },
+    "link_aria_label": {
+        "label": "Link ARIA Label",
+        "description": "Enter a descriptive text label to make it accessible if the link has no visible text.",
+        "source": true
+    },
     "column_width_options_default": {
         "Fraction Layouts": {
             "1/1": "",
@@ -377,7 +423,9 @@
             "1/5": "1-5",
             "2/5": "2-5",
             "3/5": "3-5",
-            "4/5": "4-5"
+            "4/5": "4-5",
+            "1/6": "1-6",
+            "5/6": "5-6"
         },
         "Fixed Layouts": {
             "Expand": "expand",
@@ -401,7 +449,9 @@
             "1/5": "1-5",
             "2/5": "2-5",
             "3/5": "3-5",
-            "4/5": "4-5"
+            "4/5": "4-5",
+            "1/6": "1-6",
+            "5/6": "5-6"
         },
         "Fixed Layouts": {
             "Expand": "expand",

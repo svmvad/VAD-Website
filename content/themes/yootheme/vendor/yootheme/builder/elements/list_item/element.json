@@ -33,6 +33,24 @@
             "source": true,
             "enable": "!image"
         },
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "image"
+        },
         "icon_color": {
             "label": "Icon Color",
             "description": "Set the icon color.",
@@ -60,14 +78,22 @@
             "fields": [
                 {
                     "title": "Content",
+                    "fields": ["content", "image", "image_alt", "icon", "link", "link_target"]
+                },
+                {
+                    "title": "Settings",
                     "fields": [
-                        "content",
-                        "image",
-                        "image_alt",
-                        "icon",
-                        "icon_color",
-                        "link",
-                        "link_target"
+                        {
+                            "label": "Image",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["image_focal_point"]
+                        },
+                        {
+                            "label": "Icon",
+                            "type": "group",
+                            "fields": ["icon_color"]
+                        }
                     ]
                 },
                 "${builder.advancedItem}"

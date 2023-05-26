@@ -18,7 +18,7 @@ class AliasLoader
 
         foreach ($config as $id => $aliases) {
             foreach ((array) $aliases as $alias) {
-                $container->setAlias($alias, $id);
+                $container->setAlias($id, $alias);
             }
         }
     }

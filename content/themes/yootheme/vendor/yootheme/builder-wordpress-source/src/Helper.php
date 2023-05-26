@@ -6,13 +6,13 @@ use YOOtheme\Event;
 
 class Helper
 {
-    protected static $arguments = [
+    protected static array $arguments = [
         'public' => true,
         'show_ui' => true,
         'show_in_nav_menus' => true,
     ];
 
-    public static function getBase($type)
+    public static function getBase($type): string
     {
         if (!$type->rest_base || $type->rest_base === $type->name) {
             return strtr($type->name . 's', '-', '_');
@@ -21,7 +21,7 @@ class Helper
         return strtr($type->rest_base, '-', '_');
     }
 
-    public static function getPostTypes(array $arguments = [])
+    public static function getPostTypes(array $arguments = []): array
     {
         return get_post_types($arguments + static::$arguments, 'objects');
     }
@@ -29,6 +29,14 @@ class Helper
     public static function getTaxonomies(array $arguments = [])
     {
         return get_taxonomies($arguments + static::$arguments, 'objects');
+    }
+
+    public static function getTaxonomyPostTypes(\WP_Taxonomy $taxonomy): array
+    {
+        return array_filter(
+            static::getPostTypes(),
+            fn($type) => in_array($type->name, $taxonomy->object_type ?: [])
+        );
     }
 
     public static function getObjectTaxonomies($object, array $arguments = [])
@@ -39,7 +47,7 @@ class Helper
         return Event::emit('source.object.taxonomies|filter', $taxonomies, $object);
     }
 
-    public static function orderAlphanum(array $query)
+    public static function orderAlphanum(array $query): \Closure
     {
         return function ($orderby) use ($query) {
             if (!str_contains((string) $orderby, ',')) {
@@ -66,7 +74,7 @@ class Helper
         );
     }
 
-    public static function isPageSource($post)
+    public static function isPageSource($post): bool
     {
         return get_the_ID() === $post->ID;
     }

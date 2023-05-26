@@ -7,6 +7,7 @@ return [
         '2.8.0-beta.0.3' => function ($node) {
             Arr::del($node->props, 'gap');
         },
+
         '2.4.14.1' => function ($node) {
             Arr::updateKeys($node->props, ['gap' => 'grid_gap']);
         },

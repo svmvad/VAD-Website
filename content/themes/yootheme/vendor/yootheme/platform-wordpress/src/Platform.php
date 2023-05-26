@@ -36,7 +36,7 @@ class Platform
     public static function handleError(Request $request, $response, $exception)
     {
         if ($exception instanceof Exception) {
-            if (str_contains($request->getHeaderLine('Accept'), 'application/json')) {
+            if (str_starts_with($request->getHeaderLine('Content-Type'), 'application/json')) {
                 return $response->withJson($exception->getMessage());
             }
 

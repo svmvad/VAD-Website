@@ -3,7 +3,6 @@
 namespace YOOtheme\Theme\Wordpress;
 
 use YOOtheme\Config;
-use YOOtheme\Path;
 use YOOtheme\Theme\SystemCheck as BaseSystemCheck;
 use YOOtheme\Theme\Updater;
 use YOOtheme\View;
@@ -13,133 +12,71 @@ require __DIR__ . '/functions.php';
 
 return [
     'config' => [
-        'app' => [
-            'isCustomizer' => is_customize_preview(),
-        ],
+        'app' => ['isCustomizer' => is_customize_preview()],
     ],
 
     'theme' => function (Config $config) {
-        return $config->loadFile(Path::get('./config/theme.json'));
+        return $config->loadFile(__DIR__ . '/config/theme.json');
     },
 
     'events' => [
-        'app.request' => [
-            SystemListener::class => 'checkPermission',
-        ],
-
-        'url.resolve' => [
-            UrlListener::class => 'routeQueryParams',
-        ],
-
-        'theme.init' => [
-            ThemeListener::class => 'themeInit',
-        ],
+        'app.request' => [Listener\CheckUserCapability::class => 'handle'],
+        'url.resolve' => [Listener\AddCustomizeParameter::class => '@handle'],
     ],
 
     'actions' => [
-        // @link https://developer.wordpress.org/reference/hooks/after_setup_theme/
-        'after_setup_theme' => [
-            ThemeLoader::class => 'setupTheme',
-        ],
+        'admin_menu' => [Listener\AddAdminMenuButton::class => '@handle'],
+        'after_setup_theme' => [ThemeLoader::class => 'setupTheme'],
+        'after_switch_theme' => [Listener\CopyThemeConfig::class => '@handle'],
+        'comment_form_after' => [Listener\FilterCommentHtml::class => 'form'],
+        'customize_controls_init' => [Listener\LoadCustomizer::class => '@handle'],
+        'customize_register' => [Listener\LoadThemeConfig::class => '@handle'],
+        'get_header' => [Listener\LoadThemeHead::class => '@handle'],
+        'init' => [Listener\LoadChildTheme::class => '@handle'],
+        'template_include' => [Listener\AddPageLayout::class => '@handle'],
+        'wp_head' => [Listener\LoadCustomScript::class => ['@handle', 20]],
+        'wp_prepare_themes_for_js' => [Listener\DisableAutoUpdate::class => 'handle'],
 
-        // @link https://developer.wordpress.org/reference/hooks/wp_loaded/
         'wp_loaded' => [
             ThemeLoader::class => 'initTheme',
-            UpgradeListener::class => 'initUpdate',
-        ],
-
-        'wp_head' => [
-            ThemeListener::class => ['addScript', 20],
-        ],
-
-        'get_header' => [
-            ThemeListener::class => 'onHeader',
+            Listener\LoadThemeUpdate::class => '@handle',
         ],
 
         'wp_enqueue_scripts' => [
-            ThemeListener::class => 'addJQuery',
-            CommentListener::class => 'addScript',
-        ],
-
-        'customize_register' => [
-            CustomizerListener::class => 'initConfig',
-        ],
-
-        'customize_controls_init' => [
-            CustomizerListener::class => 'addAssets',
-        ],
-
-        'init' => [
-            ChildThemeListener::class => 'initConfig',
-        ],
-
-        'after_switch_theme' => [
-            ChildThemeListener::class => 'copyConfig',
-        ],
-
-        'template_include' => [
-            ThemeListener::class => 'includeTemplate',
-        ],
-
-        'comment_form_after' => [
-            CommentListener::class => 'removeNovalidate',
-        ],
-
-        'wp_prepare_themes_for_js' => [
-            UpgradeListener::class => 'disableAutoUpdate',
+            Listener\LoadjQueryScript::class => '@handle',
+            Listener\FilterCommentHtml::class => 'script',
         ],
     ],
 
     'filters' => [
-        'upload_mimes' => [
-            ThemeListener::class => 'addSvg',
-        ],
-
-        'wp_check_filetype_and_ext' => [
-            ThemeListener::class => ['addSvgType', 10, 4],
-        ],
-
-        'site_icon_meta_tags' => [
-            ThemeListener::class => 'filterMetaTags',
-        ],
-
-        'post_gallery' => [
-            PostListener::class => ['filterGallery', 10, 3],
-        ],
-
-        'comment_reply_link' => [
-            CommentListener::class => 'filterReplyLink',
-        ],
-
-        'cancel_comment_reply_link' => [
-            CommentListener::class => 'filterCancelLink',
-        ],
-
-        'get_comment_author_link' => [
-            CommentListener::class => 'filterAuthorLink',
-        ],
+        'cancel_comment_reply_link' => [Listener\FilterCommentHtml::class => 'cancelReplyLink'],
+        'comment_reply_link' => [Listener\FilterCommentHtml::class => 'replyLink'],
+        'get_comment_author_link' => [Listener\FilterCommentHtml::class => 'authorLink'],
+        'get_site_icon_url' => [Listener\FilterIconUrl::class => '@handle'],
+        'post_gallery' => [Listener\FilterPostGallery::class => ['handle', 10, 3]],
+        'site_icon_meta_tags' => [Listener\FilterIconMetaTags::class => '@handle'],
+        'upload_mimes' => [Listener\AddSvgMimeType::class => 'handle'],
+        'wp_check_filetype_and_ext' => [Listener\AddSvgFileType::class => ['handle', 10, 4]],
     ],
 
     'extend' => [
         View::class => function (View $view) {
-            $view->addLoader([UrlListener::class, 'resolveRelativeUrl']);
-
-            $view->addFunction('trans', function ($id) {
-                return __($id, 'yootheme');
-            });
-
-            $view->addFunction('formatBytes', function ($bytes, $precision = 0) {
-                return size_format($bytes, $precision);
-            });
+            $view->addLoader([UrlLoader::class, 'resolveRelativeUrl']);
+            $view->addFunction('trans', fn($id) => __($id, 'yootheme'));
+            $view->addFunction(
+                'formatBytes',
+                fn($bytes, $precision = 0) => size_format($bytes, $precision)
+            );
         },
 
         Updater::class => function (Updater $updater) {
-            $updater->add(Path::get('./updates.php'));
+            $updater->add(__DIR__ . '/updates.php');
         },
     ],
 
     'services' => [
         BaseSystemCheck::class => SystemCheck::class,
+        Listener\AddCustomizeParameter::class => '',
     ],
 
     'loaders' => [

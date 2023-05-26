@@ -41,9 +41,10 @@ class FileHelper
         $files = File::glob($pattern, GLOB_NOSORT);
 
         // filter out any dir
-        $files = array_filter($files, function ($file) {
-            return File::isFile($file) && str_starts_with($file, $this->rootDir);
-        });
+        $files = array_filter(
+            $files,
+            fn($file) => File::isFile($file) && str_starts_with($file, $this->rootDir)
+        );
 
         // order
         if ($args['order'] === 'rand') {

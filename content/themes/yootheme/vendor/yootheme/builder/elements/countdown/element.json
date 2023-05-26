@@ -23,7 +23,8 @@
         "date": {
             "label": "Date",
             "description": "Enter a date for the countdown to expire. Use the <a href=\"https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date/parse#ECMAScript_5_ISO-8601_format_support\" target=\"_blank\">ISO 8601 format</a>: <code>YYYY-MM-DDThh:mm:ssTZD</code>, e.g. <code>2017-05-01T22:00:00+00:00</code> (UTC time).",
-            "attrs": {}
+            "attrs": {},
+            "source": true
         },
         "label_days": {
             "label": "Labels",
@@ -110,6 +111,7 @@
         "visibility": "${builder.visibility}",
         "name": "${builder.name}",
         "status": "${builder.status}",
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -123,7 +125,8 @@
                 "debounce": 500,
                 "hints": [".el-element"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

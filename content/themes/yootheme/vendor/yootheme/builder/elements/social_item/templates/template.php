@@ -9,7 +9,7 @@ if ($props['image']) {
         'loading' => $element['image_loading'] ? false : null,
         'width' => $element['icon_width'] ?: 20,
         'height' => $element['icon_width'] ?: 20,
-        'uk-svg' => true,
+        'uk-svg' => $element['image_svg_inline'],
         'thumbnail' => true,
     ]);
 
@@ -39,6 +39,7 @@ $link = $this->el('a', [
     ],
 
     'href' => $props['link'],
+    'aria-label' => $props['link_aria_label'] ?: $element['link_aria_label'],
     'target' => ['_blank {@link_target}'],
     'rel' => 'noreferrer',
 

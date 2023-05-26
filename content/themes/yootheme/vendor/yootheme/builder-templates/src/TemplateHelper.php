@@ -32,7 +32,7 @@ class TemplateHelper
     public function match(array $template)
     {
         foreach ($this->templates as $id => $templ) {
-            if (!empty($templ['status']) && $templ['status'] === 'disabled' && !$this->customizer) {
+            if (($templ['status'] ?? '') === 'disabled' && !$this->customizer) {
                 continue;
             }
 
@@ -62,6 +62,10 @@ class TemplateHelper
         foreach ($query as $key => $value) {
             if (empty($templ['query'][$key])) {
                 continue;
+            }
+
+            if (is_callable($value)) {
+                return $value($templ['query'][$key]);
             }
 
             if (!array_intersect((array) $value, (array) $templ['query'][$key])) {

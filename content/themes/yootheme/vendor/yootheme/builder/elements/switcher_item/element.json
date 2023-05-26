@@ -54,6 +54,43 @@
             "type": "image",
             "source": true
         },
+        "item_element": "${builder.html_element_item}",
+        "image_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "image"
+        },
+        "thumbnail_focal_point": {
+            "label": "Focal Point",
+            "description": "Set a focal point to adjust the image focus when cropping.",
+            "type": "select",
+            "options": {
+                "Top Left": "top-left",
+                "Top Center": "top-center",
+                "Top Right": "top-right",
+                "Center Left": "center-left",
+                "Center Center": "",
+                "Center Right": "center-right",
+                "Bottom Left": "bottom-left",
+                "Bottom Center": "bottom-center",
+                "Bottom Right": "bottom-right"
+            },
+            "source": true,
+            "enable": "thumbnail"
+        },
         "status": "${builder.statusItem}",
         "source": "${builder.source}"
     },
@@ -73,6 +110,30 @@
                         "link_text",
                         "label",
                         "thumbnail"
+                    ]
+                },
+                {
+                    "title": "Settings",
+                    "fields": [
+                        {
+                            "label": "Item",
+                            "type": "group",
+                            "divider": true,
+                            "fields": [
+                                "item_element"
+                            ]
+                        },
+                        {
+                            "label": "Image",
+                            "type": "group",
+                            "divider": true,
+                            "fields": ["image_focal_point"]
+                        },
+                        {
+                            "label": "Thumbnail",
+                            "type": "group",
+                            "fields": ["thumbnail_focal_point"]
+                        }
                     ]
                 },
                 "${builder.advancedItem}"

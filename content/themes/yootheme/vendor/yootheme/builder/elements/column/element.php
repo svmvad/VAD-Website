@@ -9,6 +9,17 @@ return [
         },
     ],
     'updates' => [
+        '4.0.0-beta.9.1' => function ($node) {
+            $style = Arr::get($node->props, 'style') ?: '';
+            if (preg_match('/^tile-(tile|card)-/', $style)) {
+                $node->props['style'] = substr($style, 5);
+            }
+        },
+        '4.0.0-beta.9' => function ($node) {
+            if (Arr::get($node->props, 'style')) {
+                $node->props['style'] = "tile-{$node->props['style']}";
+            }
+        },
         '3.0.5.1' => function ($node) {
             if (
                 Arr::get($node->props, 'image_effect') == 'parallax' &&

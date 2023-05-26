@@ -2,7 +2,10 @@
 
 // Resets
 if ($props['icon'] && !$props['image']) { $props['panel_image_no_padding'] = ''; }
-if ($props['panel_style'] || !$props['image']) { $props['image_box_decoration'] = ''; }
+if ($props['panel_style'] || !$props['image']) {
+    $props['image_box_decoration'] = '';
+    $props['image_transition_border'] = '';
+}
 if ($props['panel_link']) {
     $props['title_link'] = '';
     $props['image_link'] = '';
@@ -12,20 +15,20 @@ if ($props['panel_link']) {
 $props['image'] = $this->render("{$__dir}/template-image", compact('props'));
 
 // New logic shortcuts
+$props['has_link'] = $props['link'] && $props['panel_link'];
 $props['has_panel_image_no_padding'] = $props['image'] && (!$props['panel_style'] || $props['panel_image_no_padding']) && $props['image_align'] != 'between';
 $props['has_no_padding'] = !$props['panel_style'] && (!$props['image'] || ($props['image'] && $props['image_align'] == 'between'));
 
 // Transition
-if ($props['image_transition'] || $props['image_transition_border']) {
+if ($props['image'] && $props['image_transition']) {
 
     $transition_toggle = $this->el('div', [
         'class' => [
             'uk-inline-clip [uk-transition-toggle {@image_link}]',
-            'tm-transition-border {@image_transition_border}',
             'uk-border-{image_border}' => !$props['panel_style'] || ($props['panel_style'] && (!$props['panel_image_no_padding'] || $props['image_align'] == 'between')),
             'uk-box-shadow-{image_box_shadow} {@!panel_style}',
             'uk-box-shadow-hover-{image_hover_box_shadow} {@!panel_style} {@link}' => $props['image_link'] || $props['panel_link'],
-            'uk-margin[-{image_margin}]-top {@!image_margin: remove} {@!image_box_decoration}' => $props['image_align'] == 'between' || ($props['image_align'] == 'bottom' && !($props['panel_style'] && $props['panel_image_no_padding'])),
+            'uk-margin[-{image_margin}]-top {@!image_margin: remove} {@!image_box_decoration} {@!image_transition_border}' => $props['image_align'] == 'between' || ($props['image_align'] == 'bottom' && !($props['panel_style'] && $props['panel_image_no_padding'])),
         ],
     ]);
     $props['image'] = $transition_toggle($props, $props['image']);
@@ -33,7 +36,7 @@ if ($props['image_transition'] || $props['image_transition_border']) {
 }
 
 // Decoration
-if ($props['image_box_decoration']) {
+if ($props['image'] && ($props['image_box_decoration'] || $props['image_transition_border'])) {
 
     $decoration = $this->el('div', [
 
@@ -42,7 +45,8 @@ if ($props['image_box_decoration']) {
             'tm-mask-default {@image_box_decoration: mask}',
             'tm-box-decoration-{image_box_decoration: default|primary|secondary}',
             'tm-box-decoration-inverse {@image_box_decoration_inverse} {@image_box_decoration: default|primary|secondary}',
-            'uk-inline {@!image_box_decoration: |shadow}',
+            'tm-transition-border {@image_transition_border} [uk-transition-toggle {@image_link}]',
+            'uk-inline',
             'uk-margin[-{image_margin}]-top {@!image_margin: remove}' => $props['image_align'] == 'between' || ($props['image_align'] == 'bottom' && !($props['panel_style'] && $props['panel_image_no_padding'])),
         ],
 
@@ -51,8 +55,21 @@ if ($props['image_box_decoration']) {
     $props['image'] = $decoration($props, $props['image']);
 }
 
+
 // Panel/Card/Tile
-$el = $this->el($props['link'] && $props['panel_link'] ? 'a' : 'div', [
+$el = $this->el($props['html_element'] ?: 'div', [
+
+    'class' => [
+        // Match link container height
+        'uk-grid-item-match {@has_link}',
+    ],
+
+]);
+
+// Link Container
+$link_container = $props['has_link'] ? $this->el('a') : null;
+
+($props['has_link'] ? $link_container : $el)->attr([
 
     'class' => [
         'uk-panel [uk-{panel_style: tile-.*}] {@panel_style: |tile-.*}',
@@ -65,6 +82,7 @@ $el = $this->el($props['link'] && $props['panel_link'] ? 'a' : 'div', [
         'uk-flex {@panel_style} {@has_panel_image_no_padding} {@image_align: left|right}', // Let images cover the card/tile height if they have different heights
         'uk-transition-toggle {@image} {@panel_link}' => $props['image_transition'] || $props['image_transition_border'],
     ],
+    
 ]);
 
 // Image align
@@ -135,6 +153,10 @@ if ($props['panel_style'] && $props['has_panel_image_no_padding']) {
 
 <?= $el($props, $attrs) ?>
 
+    <?php if ($link_container) : ?>
+    <?= $link_container($props) ?>
+    <?php endif ?>
+
     <?php if ($props['image'] && in_array($props['image_align'], ['left', 'right'])) : ?>
 
         <?= $grid($props) ?>
@@ -166,6 +188,10 @@ if ($props['panel_style'] && $props['has_panel_image_no_padding']) {
         <?= $props['image'] ?>
         <?php endif ?>
 
+    <?php endif ?>
+
+    <?php if ($link_container) : ?>
+    <?= $link_container->end() ?>
     <?php endif ?>
 
 <?= $el->end() ?>

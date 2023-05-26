@@ -24,6 +24,7 @@
 //
 
 @theme-box-decoration-secondary-background: lighten(@global-secondary-background, 8%);
+@internal-theme-transition-border-border-gradient: linear-gradient(135deg, @global-primary-background, #17816b);
 
 //
 // Alert
@@ -134,8 +135,9 @@
 // Marker
 //
 
-@marker-color: @global-emphasis-color;
-@marker-hover-color: @global-emphasis-color;
+@marker-background: @global-emphasis-color;
+@marker-color: @global-background;
+@marker-hover-color: @global-background;
 
 //
 // Nav

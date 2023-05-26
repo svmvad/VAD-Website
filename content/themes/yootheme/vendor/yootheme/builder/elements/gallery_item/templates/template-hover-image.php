@@ -12,6 +12,7 @@ $hover_image = $this->el('image', [
     'alt' => true,
     'width' => $element['image_width'],
     'height' => $element['image_height'],
+    'focal_point' => $props['hover_image_focal_point'],
     'thumbnail' => [$element['image_width'], $element['image_height'], $element['image_orientation']],
     'uk-cover' => true,
 

@@ -54,7 +54,7 @@ $attrs_width_container['class'][] = 'uk-container uk-container-expand';
 
 <?php if (is_active_sidebar('logo-mobile') || is_active_sidebar('navbar-mobile') || is_active_sidebar('header-mobile')) :?>
 
-<div<?= $this->attrs(['class' => $class], $attrs) ?>>
+<header<?= $this->attrs(['class' => $class], $attrs) ?>>
 
 <?php
 
@@ -124,7 +124,6 @@ if (str_starts_with($layout, 'horizontal')) :
     <?php endif ?>
 
 <?php endif ?>
-
 
 <?php
 
@@ -268,7 +267,7 @@ if (str_starts_with($config("$dialog.layout"), 'dropbar')) {
 
 <?php endif ?>
 
-</div>
+</header>
 
 <?php endif ?>
 

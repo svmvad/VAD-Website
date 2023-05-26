@@ -215,7 +215,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-title"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {

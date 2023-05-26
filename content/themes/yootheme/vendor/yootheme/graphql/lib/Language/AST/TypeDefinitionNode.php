@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace YOOtheme\GraphQL\Language\AST;
 
@@ -10,8 +8,9 @@ namespace YOOtheme\GraphQL\Language\AST;
  * | InterfaceTypeDefinitionNode
  * | UnionTypeDefinitionNode
  * | EnumTypeDefinitionNode
- * | InputObjectTypeDefinitionNode
+ * | InputObjectTypeDefinitionNode.
  */
 interface TypeDefinitionNode extends TypeSystemDefinitionNode
 {
+    public function getName(): NameNode;
 }

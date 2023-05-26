@@ -124,14 +124,11 @@ return [
                 }
             }
 
-            $node->options = array_filter($node->options, function ($value) {
-                return isset($value);
-            });
+            $node->options = array_filter($node->options, fn($value) => isset($value));
 
             $node->props['metadata'] = [];
 
             // add scripts, styles
-            $cdnBase = 'https://cdn.jsdelivr.net/npm';
             if ($key = $config('~theme.google_maps')) {
                 $node->options['library'] = 'google';
 
@@ -141,17 +138,16 @@ return [
                 ];
 
                 if ($node->props['clustering']) {
-                    $baseUrl = "{$cdnBase}/@googlemaps/markerclusterer@2.0.7";
                     $node->props['metadata']['script:google-maps-clusterer'] = [
-                        'src' => "{$baseUrl}/dist/index.umd.min.js",
+                        'src' => '~assets/@googlemaps/markerclusterer/dist/index.min.js',
                         'defer' => true,
                     ];
                 }
             } else {
                 $node->options['library'] = 'leaflet';
 
-                $baseUrl = "{$cdnBase}/leaflet@1.9.2/dist";
-                $node->options['baseUrl'] = $baseUrl;
+                $baseUrl = '~assets/leaflet/leaflet/dist';
+                $node->options['baseUrl'] = Url::to($baseUrl);
                 $node->props['metadata']['script:leaflet'] = [
                     'src' => "{$baseUrl}/leaflet.js",
                     'defer' => true,
@@ -162,7 +158,7 @@ return [
                 ];
 
                 if ($node->props['clustering']) {
-                    $baseUrl = "{$cdnBase}/leaflet.markercluster@1.5.3/dist";
+                    $baseUrl = '~assets/leaflet/markercluster/dist';
                     $node->options['clusterBaseUrl'] = $baseUrl;
                     $node->props['metadata'] += [
                         'script:leaflet-clusterer' => [

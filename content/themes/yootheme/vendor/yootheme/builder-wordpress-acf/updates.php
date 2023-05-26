@@ -4,10 +4,7 @@ namespace YOOtheme;
 
 return [
     '2.6.3' => function ($node) {
-        if (
-            !empty($node->source->query->field->name) &&
-            str_contains($node->source->query->field->name, 'field.')
-        ) {
+        if (str_contains($node->source->query->field->name ?? '', 'field.')) {
             $node->source->query->field->name = implode(
                 '.',
                 array_map(
@@ -17,14 +14,12 @@ return [
             );
         }
 
-        if (!empty($node->source->props)) {
-            foreach ((array) $node->source->props as $prop) {
-                if (!empty($prop->name) && str_contains($prop->name, 'field.')) {
-                    $prop->name = implode(
-                        '.',
-                        array_map([Str::class, 'snakeCase'], explode('.', $prop->name))
-                    );
-                }
+        foreach ($node->source->props ?? [] as $prop) {
+            if (str_contains($prop->name ?? '', 'field.')) {
+                $prop->name = implode(
+                    '.',
+                    array_map([Str::class, 'snakeCase'], explode('.', $prop->name))
+                );
             }
         }
     },

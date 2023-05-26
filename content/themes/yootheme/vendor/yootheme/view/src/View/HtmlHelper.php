@@ -74,9 +74,7 @@ class HtmlHelper
         $params = $url
             ? '#' .
                 http_build_query(
-                    array_map(function ($value) {
-                        return is_array($value) ? implode(',', $value) : $value;
-                    }, $url),
+                    array_map(fn($value) => is_array($value) ? implode(',', $value) : $value, $url),
                     '',
                     '&'
                 )
@@ -102,9 +100,10 @@ class HtmlHelper
         return HtmlElement::tag(
             'form',
             $attrs,
-            array_map(function ($tag) {
-                return HtmlElement::tag($tag['tag'], array_diff_key($tag, ['tag' => null]));
-            }, $tags)
+            array_map(
+                fn($tag) => HtmlElement::tag($tag['tag'], array_diff_key($tag, ['tag' => null])),
+                $tags
+            )
         );
     }
 

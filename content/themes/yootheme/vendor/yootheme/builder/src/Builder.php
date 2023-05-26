@@ -85,13 +85,23 @@ class Builder
      */
     public function load($data, array $params = [])
     {
+        $params += $this->params + ['context' => null];
+
         if (is_object($node = json_decode($data))) {
             // Workaround for layouts with {type: ""}
             if (empty($node->type)) {
                 $node->type = 'layout';
             }
 
-            return $this->applyTransforms($node, array_merge($this->params, $params));
+            // Apply (pre)load transforms
+            $node = $this->applyTransforms('load', $node, $params);
+
+            // Apply (pre)context transforms
+            if ($params['context']) {
+                $node = $this->applyTransforms($params['context'], $node, $params);
+            }
+
+            return $node;
         }
     }
 
@@ -105,7 +115,7 @@ class Builder
      */
     public function render($node, array $params = [])
     {
-        $params = array_merge(['context' => 'render'], $this->params, $params);
+        $params += $this->params + ['context' => 'render'];
 
         if (is_string($node)) {
             $node = $this->load($node, $params);
@@ -218,12 +228,13 @@ class Builder
     /**
      * Applies node transforms.
      *
+     * @param string $context
      * @param object $node
      * @param array  $params
      *
      * @return object|void
      */
-    protected function applyTransforms($node, array $params)
+    protected function applyTransforms($context, $node, array $params)
     {
         $node->props = isset($node->props) ? (array) $node->props : [];
 
@@ -238,20 +249,13 @@ class Builder
                 $params['parent'] = null;
             }
 
-            $contexts = ['preload'];
-
-            if (isset($params['context'])) {
-                $contexts[] = "pre{$params['context']}";
-            }
-
-            foreach ($this->resolveTransforms($params['type'], $contexts) as $transform) {
+            foreach ($this->resolveTransforms($params['type'], "pre{$context}") as $transform) {
                 if ($transform($node, $params) === false) {
                     return;
                 }
             }
 
             if (!empty($node->children)) {
-                $index = -1;
                 $children = [];
                 $childParams = $params;
 
@@ -259,14 +263,11 @@ class Builder
 
                 // use for-loop to allow adding nodes in transform
                 for ($i = 0; $i < count($node->children); $i++) {
-                    if (empty($node->children[$i]->transient)) {
-                        $index++;
-                    }
-
                     if (
                         $child = $this->applyTransforms(
+                            $context,
                             $node->children[$i],
-                            compact('i', 'index') + $childParams
+                            ['i' => $i] + $childParams
                         )
                     ) {
                         $children[] = $child;
@@ -276,13 +277,7 @@ class Builder
                 $node->children = $children;
             }
 
-            $contexts = ['load'];
-
-            if (isset($params['context'])) {
-                $contexts[] = $params['context'];
-            }
-
-            foreach ($this->resolveTransforms($params['type'], $contexts) as $transform) {
+            foreach ($this->resolveTransforms($params['type'], $context) as $transform) {
                 if ($transform($node, $params) === false) {
                     return;
                 }
@@ -293,28 +288,26 @@ class Builder
     }
 
     /**
-     * Resolves transforms for a type and contexts.
+     * Resolves transforms for a type and context.
      *
      * @param object $type
-     * @param array  $contexts
+     * @param string $context
      *
      * @return array
      */
-    protected function resolveTransforms($type, array $contexts)
+    protected function resolveTransforms($type, $context)
     {
-        $key = "{$type->name}:" . join('.', $contexts);
+        $key = "{$type->name}:{$context}";
 
         if (!isset($this->resolved[$key])) {
             $resolved = [];
 
-            foreach ($contexts as $context) {
-                if (isset($this->transforms[$context])) {
-                    $resolved = array_merge($resolved, $this->transforms[$context]);
-                }
+            if (isset($this->transforms[$context])) {
+                $resolved = array_merge($resolved, $this->transforms[$context]);
+            }
 
-                if (isset($type->transforms[$context])) {
-                    $resolved[] = $type->transforms[$context];
-                }
+            if (isset($type->transforms[$context])) {
+                $resolved[] = $type->transforms[$context];
             }
 
             $this->resolved[$key] = $resolved;

@@ -11,13 +11,12 @@ use function YOOtheme\app;
 
 class Helper
 {
-    /**
-     * @param string $domain
-     * @param string $name
-     *
-     * @return array
-     */
-    public static function groups($domain, $name = null)
+    public static function isActive(): bool
+    {
+        return is_plugin_active('types/wpcf.php');
+    }
+
+    public static function groups(string $domain, string $name = null): array
     {
         if (!class_exists('\Toolset_Field_Group_Factory')) {
             return [];
@@ -27,26 +26,23 @@ class Helper
         $factory = \Toolset_Field_Group_Factory::get_factory_by_domain($domain);
 
         if ($domain === \Toolset_Element_Domain::POSTS) {
+            /** @var \Toolset_Field_Group_Post_Factory $factory */
             $fieldGroups = $factory->get_groups_by_post_type($name);
         } elseif ($domain === \Toolset_Element_Domain::TERMS) {
+            /** @var \Toolset_Field_Group_Term_Factory $factory */
             $fieldGroups = $factory->get_groups_by_taxonomy($name);
         } elseif ($domain === \Toolset_Element_Domain::USERS) {
+            /** @var \Toolset_Field_Group_User_Factory $factory */
             $fieldGroups = array_merge(...array_values($factory->get_groups_by_roles()));
         }
 
-        return array_map(function ($fieldGroup) use ($factory) {
-            return $factory->load_field_group($fieldGroup->get_slug());
-        }, $fieldGroups);
+        return array_map(
+            fn($fieldGroup) => $factory->load_field_group($fieldGroup->get_slug()),
+            $fieldGroups
+        );
     }
 
-    /**
-     * @param string $domain
-     * @param array  $fieldSlugs
-     * @param bool   $loadRFG
-     *
-     * @return array
-     */
-    public static function fields($domain, $fieldSlugs, $loadRFG = true)
+    public static function fields(string $domain, array $fieldSlugs, bool $loadRFG = true): array
     {
         $rfg_service = new \Types_Field_Group_Repeatable_Service();
         $factory = \Toolset_Field_Definition_Factory::get_factory_by_domain($domain);
@@ -77,7 +73,7 @@ class Helper
         return $fields;
     }
 
-    public static function fieldsGroups($domain, $name = null)
+    public static function fieldsGroups(string $domain, string $name = null): array
     {
         $fields = [];
         foreach (static::groups($domain, $name) as $group) {
@@ -108,7 +104,7 @@ class Helper
         ]);
     }
 
-    public static function loadFields($field, array $config)
+    public static function loadFields($field, array $config): array
     {
         $fields = [];
 
@@ -184,9 +180,7 @@ class Helper
 
         if (in_array($fieldType, ['checkboxes', 'radio', 'select'])) {
             $options = $fieldInstance->get_options();
-            $value = array_map(function ($option) {
-                return $option->get_value();
-            }, $options);
+            $value = array_map(fn($option) => $option->get_value(), $options);
 
             // filter unchecked radio, select options
             $value = array_values(array_filter($value));
@@ -201,9 +195,7 @@ class Helper
 
         // convert image urls in attachment ids
         if ($fieldType === 'image' && is_array($value)) {
-            $value = array_map(function ($src) {
-                return \Toolset_Utils::get_attachment_id_by_url($src);
-            }, $value);
+            $value = array_map(fn($src) => \Toolset_Utils::get_attachment_id_by_url($src), $value);
 
             if (self::isMultiple($field)) {
                 return $value;
@@ -211,9 +203,7 @@ class Helper
         }
 
         if ($value && self::isMultiple($field)) {
-            return array_map(function ($value) {
-                return compact('value');
-            }, $value);
+            return array_map(fn($value) => ['value' => $value], $value);
         }
 
         return $value[0] ?? null;
@@ -226,7 +216,7 @@ class Helper
         return $postTypes[$post_type] ?? null;
     }
 
-    public static function isMultiple($field)
+    public static function isMultiple($field): bool
     {
         if (in_array($field['type'], ['checkboxes', 'relationship'])) {
             return count(Arr::get($field, 'data.options', [])) > 1;

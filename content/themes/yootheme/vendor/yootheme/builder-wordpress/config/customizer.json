@@ -1,5 +1,4 @@
 {
-    "@import": "../../builder-wordpress-source/config/customizer.json",
     "sections": {
         "builder": {
             "help": {
@@ -34,15 +33,15 @@
                     },
                     {
                         "title": "Managing Sections, Rows and Elements",
-                        "src": "https://www.youtube-nocookie.com/watch?v=ddaftLmdcy4&amp;list=PLrqT0WH0HPdM3qcWFqRRj_SOZ80ze0nKj",
-                        "duration": "0:52",
+                        "src": "https://www.youtube-nocookie.com/watch?v=LMxsBGkNCyQ&amp;list=PLrqT0WH0HPdM3qcWFqRRj_SOZ80ze0nKj",
+                        "duration": "1:04",
                         "documentation": "support/yootheme-pro/wordpress/page-builder#action-icons",
                         "support": "support/search?tags=125&q=builder"
                     },
                     {
                         "title": "Using the Element Finder",
-                        "src": "https://www.youtube-nocookie.com/watch?v=gbXg21h0ZsY&amp;list=PLrqT0WH0HPdM3qcWFqRRj_SOZ80ze0nKj",
-                        "duration": "0:38",
+                        "src": "https://www.youtube-nocookie.com/watch?v=xWGyboP17Uo&amp;list=PLrqT0WH0HPdM3qcWFqRRj_SOZ80ze0nKj",
+                        "duration": "0:42",
                         "documentation": "support/yootheme-pro/wordpress/page-builder#element-finder",
                         "support": "support/search?tags=125&q=builder%20element%20finder"
                     },
@@ -327,8 +326,8 @@
                     },
                     {
                         "title": "The Nav Element",
-                        "src": "https://www.youtube-nocookie.com/watch?v=UPCwvjjnfbk&amp;list=PLrqT0WH0HPdM3qcWFqRRj_SOZ80ze0nKj",
-                        "duration": "0:36",
+                        "src": "https://www.youtube-nocookie.com/watch?v=IFZXYB3AfD0&amp;list=PLrqT0WH0HPdM3qcWFqRRj_SOZ80ze0nKj",
+                        "duration": "1:32",
                         "documentation": "support/yootheme-pro/wordpress/multiple-items-elements#nav-element",
                         "support": "support/search?tags=125&q=nav%20element"
                     },
@@ -771,6 +770,9 @@
                     }
                 ]
             }
+        },
+        "builder-templates": {
+            "width": 300
         }
     }
 }

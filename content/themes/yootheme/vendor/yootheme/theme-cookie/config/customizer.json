@@ -112,7 +112,7 @@
                 },
                 "cookie.custom_js": {
                     "label": "Cookie Scripts",
-                    "description": "Add custom JavaScript which sets cookies. It will be loaded after consent is given. The &lt;script&gt; tag is not needed.",
+                    "description": "Add custom JavaScript which sets cookies. It will be loaded after consent is given. The <code>&lt;script&gt;</code> tag is not needed.",
                     "type": "editor",
                     "editor": "code",
                     "mode": "javascript",

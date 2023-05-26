@@ -5,35 +5,36 @@ if ($props['overlay_link']) { $props['title_link'] = ''; }
 
 // New logic shortcuts
 $props['overlay_cover'] = $props['overlay_style'] && $props['overlay_mode'] == 'cover';
+$props['has_link'] = $props['link'] && $props['overlay_link'];
+$props['has_transition'] = $props['overlay_hover'] || $props['image_transition'] || $props['image_transition_border'] || $props['hover_image'];
+$props['text_color_inverse'] = $props['text_color'] === 'light' ? 'dark' : 'light';
 
-$el = $this->el('div', [
+$el = $this->el($props['html_element'] ?: 'div', [
 
-    // Needs to be parent of `uk-link-toggle`
     'class' => [
+        // Needs to be parent of `uk-link-toggle`
         'uk-{text_color}' => !$props['overlay_style'] || $props['overlay_cover'],
     ],
 
 ]);
 
-// Container
-$container = $this->el($isLink = $props['link'] && $props['overlay_link'] ? 'a' : 'div', [
+// Container (Needed for link and to make text alignment work set on parent)
+$container = $this->el($props['has_link'] ? 'a' : 'div', [
 
     'class' => [
-        'el-container',
-
         'uk-box-shadow-{image_box_shadow}',
         'uk-box-shadow-hover-{image_hover_box_shadow}',
 
-        'uk-border-{image_border} {@!image_transition_border} {@!image_box_decoration}',
+        'uk-border-{image_border} {@!image_box_decoration} {@!image_transition_border}',
         'uk-box-shadow-bottom {@image_box_decoration: shadow}',
         'tm-mask-default {@image_box_decoration: mask}',
         'tm-box-decoration-{image_box_decoration: default|primary|secondary}',
         'tm-box-decoration-inverse {@image_box_decoration_inverse} {@image_box_decoration: default|primary|secondary}',
-        'uk-inline {@!image_box_decoration: |shadow}',
-        'uk-inline-clip {@!image_box_decoration}',
+        'tm-transition-border {@image_transition_border}',
+        'uk-inline' => $props['image_box_decoration'] || $props['image_transition_border'],
+        'uk-inline-clip {@!image_box_decoration} {@!image_transition_border}',
 
-        'uk-transition-toggle' => $isTransition = $props['overlay_hover'] || $props['image_transition'] || $props['image_transition_border'] || $props['hover_image'],
-
+        'uk-transition-toggle {@has_transition}',
     ],
 
     'style' => [
@@ -41,22 +42,22 @@ $container = $this->el($isLink = $props['link'] && $props['overlay_link'] ? 'a' 
         'background-color: ' . $props['media_background'] . ';' => $props['media_background'],
     ],
 
-    'tabindex' => $isTransition && !$isLink ? 0 : null,
+    'tabindex' => $props['has_transition'] && !$props['has_link'] ? 0 : null,
+
+    // Needs to be on anchor to have just one focusable toggle when using keyboard navigation
+    'uk-toggle' => $props['text_color_hover'] && ((!$props['overlay_style'] && $props['hover_image']) || ($props['overlay_cover'] && $props['overlay_hover'] && $props['overlay_transition_background'])) ? [
+        'cls: uk-{text_color_inverse} [uk-{text_color}];',
+        'mode: hover;',
+        'target: !*;',
+    ] : false,
 
 ]);
-
-// Inverse text color on hover
-if ($props['text_color_hover'] && ((!$props['overlay_style'] && $props['hover_image']) || ($props['overlay_cover'] && $props['overlay_hover'] && $props['overlay_transition_background']))) {
-    $inverse = $props['text_color'] === 'light' ? 'dark' : 'light';
-    $container->attr('uk-toggle', "cls: uk-{$inverse} uk-{$props['text_color']}; mode: hover; target: !*");
-}
 
 // Box Decoration / Transition Border
 $image_container = $props['image_box_decoration'] || $props['image_transition_border'] ? $this->el('div', [
 
     'class' => [
-        'uk-inline-clip {@image_box_decoration}',
-        'tm-transition-border {@image_transition_border}',
+        'uk-inline-clip',
     ],
 
     'style' => [
@@ -69,9 +70,9 @@ $overlay = $this->el('div', [
 
     'class' => [
         'uk-{overlay_style}',
-        'uk-transition-{overlay_transition} {@overlay_hover}',
+        'uk-transition-{overlay_transition} {@overlay_hover} {@overlay_cover}',
 
-        'el-overlay uk-position-cover {@overlay_cover}',
+        'uk-position-cover {@overlay_cover}',
         'uk-position-{overlay_margin} {@overlay_cover}',
     ],
 
@@ -109,6 +110,7 @@ $link = include "{$__dir}/template-link.php";
 ?>
 
 <?= $el($props, $attrs) ?>
+
     <?= $container($props) ?>
 
         <?php if ($image_container) : ?>
@@ -134,4 +136,5 @@ $link = include "{$__dir}/template-link.php";
         <?php endif ?>
 
     <?= $container->end() ?>
-</div>
+
+<?= $el->end() ?>

@@ -1,6 +1,6 @@
 <?php
 
-namespace YOOtheme\Theme\Wordpress;
+namespace YOOtheme\Theme\Wordpress\WooCommerce;
 
 use YOOtheme\Str;
 
@@ -16,9 +16,7 @@ class ReviewWalker extends \Walker_Comment
         // Workaround for the woocommerce singe-product/review-meta.php template
         $output = preg_replace_callback(
             '/\((' . preg_quote(esc_attr__('verified owner', 'woocommerce')) . ')\)/',
-            function ($matches) {
-                return Str::titleCase($matches[1]);
-            },
+            fn($matches) => Str::titleCase($matches[1]),
             $output
         );
     }

@@ -27,29 +27,25 @@ return [
                     $filters[] = Helper::removeFilter('woocommerce_after_shop_loop_item_title', 5);
                 }
 
-                $filters[] = Helper::addFilter('woocommerce_upsells_columns', function () use (
-                    $node
-                ) {
-                    return $node->props['columns'];
-                });
+                $filters[] = Helper::addFilter(
+                    'woocommerce_upsells_columns',
+                    fn() => $node->props['columns']
+                );
 
-                $filters[] = Helper::addFilter('woocommerce_upsells_orderby', function () use (
-                    $node
-                ) {
-                    return $node->props['orderby'];
-                });
+                $filters[] = Helper::addFilter(
+                    'woocommerce_upsells_orderby',
+                    fn() => $node->props['orderby']
+                );
 
-                $filters[] = Helper::addFilter('woocommerce_upsells_order', function () use (
-                    $node
-                ) {
-                    return $node->props['order'];
-                });
+                $filters[] = Helper::addFilter(
+                    'woocommerce_upsells_order',
+                    fn() => $node->props['order']
+                );
 
-                $filters[] = Helper::addFilter('woocommerce_upsells_total', function () use (
-                    $node
-                ) {
-                    return $node->props['posts_per_page'];
-                });
+                $filters[] = Helper::addFilter(
+                    'woocommerce_upsells_total',
+                    fn() => $node->props['posts_per_page']
+                );
 
                 /**
                  * Hook: woocommerce_after_single_product_summary.

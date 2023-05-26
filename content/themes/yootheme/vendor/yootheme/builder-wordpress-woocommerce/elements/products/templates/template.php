@@ -66,7 +66,11 @@ if ($props['type'] === 'current_query') {
         ]);
     }
 
-    $args = Arr::pick($props, ['limit', 'columns', 'orderby', 'order', 'category', 'cat_operator', 'tag', 'tag_operator', 'attribute', 'terms', 'terms_operator', 'skus', 'ids']);
+    $args = Arr::pick($props, ['limit', 'paginate', 'columns', 'orderby', 'order', 'category', 'cat_operator', 'tag', 'tag_operator', 'attribute', 'terms', 'terms_operator', 'skus', 'ids']);
+
+    /*
+     * @link https://woocommerce.com/document/woocommerce-shortcodes/#products
+     */
     $shortcode = new \WC_Shortcode_Products($args + ['visibility' => $props['product_visibility']], $props['type']);
 
     echo $el($props, $attrs, $shortcode->get_content());

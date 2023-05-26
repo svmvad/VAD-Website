@@ -390,14 +390,20 @@ class Image
     /**
      * Thumbnail the image.
      *
-     * @param int|string $width
-     * @param int|string $height
-     * @param bool       $flip
-     *
+     * @param int|string    $width
+     * @param int|string    $height
+     * @param bool   $flip
+     * @param string $x
+     * @param string $y
      * @return static
      */
-    public function thumbnail($width = null, $height = null, $flip = false)
-    {
+    public function thumbnail(
+        $width = null,
+        $height = null,
+        $flip = false,
+        $x = 'center',
+        $y = 'center'
+    ) {
         if ($flip) {
             $width = strpos($width, '%') ? $this->parseValue($width, $this->width) : $width;
             $height = strpos($height, '%') ? $this->parseValue($height, $this->height) : $height;
@@ -410,7 +416,7 @@ class Image
         }
 
         return is_numeric($width) && is_numeric($height)
-            ? $this->crop($width, $height)
+            ? $this->crop($width, $height, $x, $y)
             : $this->resize($width, $height);
     }
 

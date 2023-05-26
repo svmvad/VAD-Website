@@ -2,7 +2,7 @@
 
 use YOOtheme\Arr;
 
-$el = $this->el('div');
+$el = $this->el($props['html_element'] ?: 'div');
 
 // Nav
 $nav = $this->el('ul', [

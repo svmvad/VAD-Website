@@ -54,7 +54,7 @@ return [
 
             [$style] = explode(':', $config('~theme.style'));
 
-            if (in_array($style, ['fjord'])) {
+            if ($style == 'fjord') {
                 if (Arr::get($node->props, 'width') === 'default') {
                     $node->props['width'] = 'large';
                 }

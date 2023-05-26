@@ -43,7 +43,9 @@ class CustomTaxonomyQueryType
                                 'type' => 'select',
                                 'defaultIndex' => 0,
                                 'options' => [
-                                    ['evaluate' => "config.taxonomies.{$taxonomy->name}.options"],
+                                    [
+                                        'evaluate' => "api.builder.taxonomies['{$taxonomy->name}'].options",
+                                    ],
                                 ],
                             ],
                         ],
@@ -100,7 +102,7 @@ class CustomTaxonomyQueryType
                                     'options' => [
                                         ['value' => 0, 'text' => trans('Root')],
                                         [
-                                            'evaluate' => "config.taxonomies.{$taxonomy->name}.options",
+                                            'evaluate' => "api.builder.taxonomies['{$taxonomy->name}'].options",
                                         ],
                                     ],
                                 ],
@@ -199,7 +201,7 @@ class CustomTaxonomyQueryType
         ];
 
         if (is_taxonomy_hierarchical($args['taxonomy'])) {
-            $query['parent'] = !empty($args['id']) ? $args['id'] : 0;
+            $query['parent'] = $args['id'] ?? 0;
 
             // There is a bug in WordPress (introduced in 6.0) where terms are added to cache without the 'hide_empty' filter being applied first
             // TODO: remove once fixed in WordPress 6+

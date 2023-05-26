@@ -1,40 +1,36 @@
 <?php
 
-namespace YOOtheme;
+namespace YOOtheme\Theme\Styler;
 
-use YOOtheme\Theme\StyleFontLoader;
-use YOOtheme\Theme\StylerController;
-use YOOtheme\Theme\StylerListener;
+use YOOtheme\Config;
+use YOOtheme\Path;
 
 return [
-    'theme' => function (Config $config) {
-        return $config->loadFile(Path::get('./config/theme.json'));
-    },
+    'theme' => fn(Config $config) => $config->loadFile(__DIR__ . '/config/theme.json'),
+
+    'config' => [
+        StylerConfig::class => __DIR__ . '/config/styler.json',
+    ],
 
     'routes' => [
-        ['get', '/theme/style', [StylerController::class, 'loadStyle']],
-        ['post', '/theme/style', [StylerController::class, 'saveStyle']],
-        ['get', '/styler/library', [StylerController::class, 'index']],
-        ['post', '/styler/library', [StylerController::class, 'addStyle']],
-        ['delete', '/styler/library', [StylerController::class, 'removeStyle']],
+        ['get', '/theme/styles', [StyleController::class, 'index']],
+        ['get', '/theme/style', [StyleController::class, 'get']],
+        ['post', '/theme/style', [StyleController::class, 'save']],
+        ['get', '/styler/library', [LibraryController::class, 'index']],
+        ['post', '/styler/library', [LibraryController::class, 'save']],
+        ['delete', '/styler/library', [LibraryController::class, 'delete']],
     ],
 
     'events' => [
-        'customizer.init' => [
-            StylerListener::class => 'initCustomizer',
-        ],
-
-        'styler.imports' => [
-            StylerListener::class => ['stylerImports', 10],
-        ],
+        'customizer.init' => [Listener\LoadStylerData::class => '@handle'],
+        'styler.imports' => [Listener\LoadStylerImports::class => ['@handle', 10]],
     ],
 
     'services' => [
+        StylerConfig::class => '',
         StyleFontLoader::class => [
             'arguments' => [
-                '$cache' => function () {
-                    return Path::get('~theme/fonts');
-                },
+                '$cache' => fn() => Path::get('~theme/fonts'),
             ],
         ],
     ],

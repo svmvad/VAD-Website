@@ -2,7 +2,7 @@
 
 
 // Toggle
-$attrs_toggle = ['uk-toggle' => true, 'aria-label' => __('Open Menu', 'yootheme')];
+$attrs_toggle = ['uk-toggle' => true];
 
 if (in_array($position, ['navbar', 'navbar-push', 'header', 'header-push'])) {
 

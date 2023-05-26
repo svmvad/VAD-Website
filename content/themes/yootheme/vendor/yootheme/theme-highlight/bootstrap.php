@@ -1,13 +1,13 @@
 <?php
 
-namespace YOOtheme;
-
-use YOOtheme\Theme\HighlightListener;
+namespace YOOtheme\Theme\Highlight;
 
 return [
     'filters' => [
-        'builder_content' => [
-            HighlightListener::class => 'checkContent',
-        ],
+        'builder_content' => [Listener\LoadHighlightScript::class => '@handle'],
+    ],
+
+    'actions' => [
+        'onBeforeRender' => [Listener\LoadHighlightScript::class => '@beforeRender'],
     ],
 ];

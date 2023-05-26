@@ -6,4 +6,12 @@ if (!empty($props['css'])) {
     echo "<style class=\"uk-margin-remove-adjacent\">{$css}</style>";
 }
 
-echo $builder->render($children);
+$content = $builder->render($children);
+
+if (!$props['root']) {
+    $content = $this->el($props['html_element'] ?: 'div', [
+        'class' => ['uk-panel']
+    ])($props, $attrs, $content);
+}
+
+echo $content;

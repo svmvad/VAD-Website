@@ -14,7 +14,7 @@ if (!($props['image'] || $props['video'])) {
 if (!in_array($props['height'], ['full', 'percent', 'section'])) { $props['vertical_align'] = false; }
 if ($props['image']) { $props['video'] = false; }
 
-$el = $this->el('div', $attrs);
+$el = $this->el($props['html_element'] ?: 'div', $attrs);
 
 $el->attr([
 
@@ -23,15 +23,22 @@ $el->attr([
         'uk-section-overlap {@overlap}',
         'uk-position-z-index-negative {@sticky}',
         'uk-preserve-color {@style: primary|secondary}' => $props['preserve_color'] || ($props['text_color'] && ($props['image'] || $props['video'])),
-        'uk-{text_color}' => $props['image'] || $props['video'],
+        'uk-{text_color}' => !$props['style'] || $props['image'] || $props['video'],
         'uk-position-relative {@image} {@!sticky}' => $props['media_overlay'] || $props['media_overlay_gradient'], // uk-sticky already sets a position context
         'uk-cover-container {@video}',
     ],
 
-    'style' => ['background-color: {media_background};{@video}'],
+    'style' => [
+        'background-color: {media_background};{@video}',
+        'background-color: {background_color};{@!media_background}{@!video}{@!style}'
+    ],
 
     'tm-header-transparent' => ['{header_transparent}'],
 ]);
+
+if (!$props['style'] && $bgParallax = $this->parallaxOptions($props, 'background_', ['background'])) {
+    $el->attr('uk-parallax', $bgParallax);
+}
 
 if ($props['sticky']) {
     $el->attr('uk-sticky', [
@@ -75,6 +82,7 @@ $attrs_section = [
 $image = $props['image'] ? $this->el('div', $this->bgImage($props['image'], [
     'width' => $props['image_width'],
     'height' => $props['image_height'],
+    'focal_point' => $props['image_focal_point'],
     'loading' => $props['image_loading'] ? 'eager' : null,
     'size' => $props['image_size'],
     'position' => $props['image_position'],
@@ -180,4 +188,4 @@ $placeholder = $props['header_transparent'] && !$props['header_transparent_nopla
     </div>
     <?php endif ?>
 
-</div>
+<?= $el->end() ?>

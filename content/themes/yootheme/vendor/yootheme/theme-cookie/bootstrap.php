@@ -1,17 +1,13 @@
 <?php
 
-namespace YOOtheme;
+namespace YOOtheme\Theme\Cookie;
 
-use YOOtheme\Theme\CookieListener;
+use YOOtheme\Config;
 
 return [
     'theme' => function (Config $config) {
-        return $config->loadFile(Path::get('./config/theme.json'));
+        return $config->loadFile(__DIR__ . '/config/theme.json');
     },
 
-    'events' => [
-        'theme.head' => [
-            CookieListener::class => 'initHead',
-        ],
-    ],
+    'events' => ['theme.head' => [Listener\LoadThemeHead::class => '@handle']],
 ];

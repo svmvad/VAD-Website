@@ -15,7 +15,7 @@ class DefaultTransform
         $type = $params['type'];
 
         // Defaults
-        if ($type->defaults) {
+        if ($type->defaults && !empty($params['parent'])) {
             $node->props += $type->defaults;
         }
     }

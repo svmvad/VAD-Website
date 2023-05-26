@@ -64,7 +64,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'content_style') === 'h1') {
                     $node->props['content_style'] = 'h2';
                 }

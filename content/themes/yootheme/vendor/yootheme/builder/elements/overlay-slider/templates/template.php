@@ -43,7 +43,6 @@ $slider_items = $this->el('ul', [
 $slider_item = $this->el('li', [
 
     'class' => [
-        'el-item',
         'uk-width-{slider_width_default} {@slider_width}',
         'uk-width-{slider_width_small}@s {@slider_width}',
         'uk-width-{slider_width_medium}@m {@slider_width}',

@@ -4,14 +4,10 @@ namespace YOOtheme\Theme\Wordpress;
 
 return [
     'events' => [
-        'customizer.init' => [
-            EditorListener::class => 'enqueueEditor',
-        ],
+        'customizer.init' => [Listener\LoadEditor::class => 'handle'],
     ],
 
     'actions' => [
-        'wp_tiny_mce_init' => [
-            EditorListener::class => 'enqueueEditorJs',
-        ],
+        'wp_tiny_mce_init' => [Listener\LoadEditorScript::class => 'handle'],
     ],
 ];

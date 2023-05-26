@@ -15,19 +15,14 @@ class EventLoader
 
     /**
      * Constructor.
-     *
-     * @param EventDispatcher $dispatcher
      */
-    public function __construct($dispatcher = null)
+    public function __construct()
     {
-        $this->dispatcher = $dispatcher ?: Event::getDispatcher();
+        $this->dispatcher = Event::getDispatcher();
     }
 
     /**
      * Load event listeners.
-     *
-     * @param Container $container
-     * @param array     $configs
      */
     public function __invoke(Container $container, array $configs)
     {
@@ -50,26 +45,20 @@ class EventLoader
 
     /**
      * Adds a listener.
-     *
-     * @param Container $container
-     * @param string    $event
-     * @param string    $class
-     * @param string    $method
-     * @param mixed     $params
      */
-    public function addListener(Container $container, $event, $class, $method, ...$params)
-    {
+    public function addListener(
+        Container $container,
+        string $event,
+        string $class,
+        string $method,
+        ...$params
+    ): void {
         $this->dispatcher->addListener(
             $event,
-            static function (...$arguments) use ($container, $class, $method) {
-                $callback = [$class, $method];
-
-                if ($method[0] === '@') {
-                    $callback = join($callback);
-                }
-
-                return $container->call($callback, $arguments);
-            },
+            fn(...$arguments) => $container->call(
+                $method[0] === '@' ? $class . $method : [$class, $method],
+                $arguments
+            ),
             ...$params
         );
     }

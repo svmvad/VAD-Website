@@ -45,11 +45,10 @@ class Update
             // @link https://developer.wordpress.org/reference/hooks/plugins_api/
             add_filter(
                 "{$types}_api",
-                function ($result, $action, $args) use ($type, $types) {
-                    return $action == "{$type}_information" && isset($this->{$types}[$args->slug])
-                        ? $this->fetchData($this->{$types}[$args->slug])
-                        : false;
-                },
+                fn($result, $action, $args) => $action == "{$type}_information" &&
+                isset($this->{$types}[$args->slug])
+                    ? $this->fetchData($this->{$types}[$args->slug])
+                    : false,
                 10,
                 3
             );
@@ -180,9 +179,7 @@ class Update
         }
 
         // sort versions, the newest first
-        usort($versions, function ($a, $b) {
-            return version_compare($a->version, $b->version) * -1;
-        });
+        usort($versions, fn($a, $b) => version_compare($a->version, $b->version) * -1);
 
         // get the latest version with preferred stability
         foreach ($versions as $version) {

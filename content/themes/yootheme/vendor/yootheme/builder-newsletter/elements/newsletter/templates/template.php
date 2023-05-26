@@ -3,7 +3,7 @@
 $el = $this->el('div');
 
 // Layout
-$grid = $this->el('div', [
+$grid = ($props['show_name'] || $props['button_mode'] == 'button') ? $this->el('div', [
 
     'class' => [
         'uk-grid-{gap}',
@@ -12,7 +12,7 @@ $grid = $this->el('div', [
     ],
 
     'uk-grid' => true,
-]);
+]) : null;
 
 // Input
 $input = $this->el('input', [
@@ -49,7 +49,9 @@ $button = $this->el('button', [
 
     <form class="uk-form uk-panel js-form-newsletter" method="post"<?= $this->attrs($form) ?>>
 
+        <?php if ($grid) : ?>
         <?= $grid($props) ?>
+        <?php endif ?>
 
             <?php if ($props['show_name']) : ?>
 
@@ -58,8 +60,8 @@ $button = $this->el('button', [
                     <div class="uk-child-width-1-2@s <?= $props['gap'] ? "uk-grid-{$props['gap']}" : '' ?>" uk-grid>
                 <?php endif ?>
 
-                <div><?= $input($props, ['name' => 'first_name', 'placeholder' => ['{label_first_name}']]) ?></div>
-                <div><?= $input($props, ['name' => 'last_name', 'placeholder' => ['{label_last_name}']]) ?></div>
+                <div><?= $input($props, ['name' => 'first_name', 'placeholder' => ['{label_first_name}'], 'aria-label' => ['{label_first_name}']]) ?></div>
+                <div><?= $input($props, ['name' => 'last_name', 'placeholder' => ['{label_last_name}'], 'aria-label' => ['{label_last_name}']]) ?></div>
 
                 <?php if ($props['layout'] == 'stacked-name') : ?>
                     </div>
@@ -70,7 +72,7 @@ $button = $this->el('button', [
 
             <?php if ($props['button_mode'] == 'button') : ?>
 
-                <div><?= $input($props, ['type' => 'email', 'name' => 'email', 'placeholder' => ['{label_email}'], 'required' => true]) ?></div>
+                <div><?= $input($props, ['type' => 'email', 'name' => 'email', 'placeholder' => ['{label_email}'], 'aria-label' => ['{label_email}'], 'required' => true]) ?></div>
                 <?= $this
                     ->el('div', ['class' => ['uk-width-auto@s {@layout: grid} [uk-flex {@button_style: text}]']], $button($props, ['type' => 'submit'], $props['label_button'] ?: ''))
                     ->render($props) ?>
@@ -80,11 +82,13 @@ $button = $this->el('button', [
             <?php if ($props['button_mode'] == 'icon') : ?>
             <div class="uk-position-relative">
                 <?= $button($props, ['title' => ['{label_button}']], '') ?>
-                <?= $input($props, ['type' => 'email', 'name' => 'email', 'placeholder' => ['{label_email}'], 'required' => true]) ?>
+                <?= $input($props, ['type' => 'email', 'name' => 'email', 'placeholder' => ['{label_email}'], 'aria-label' => ['{label_email}'], 'required' => true]) ?>
             </div>
             <?php endif ?>
 
-        </div>
+        <?php if ($grid) : ?>
+        <?= $grid->end() ?>
+        <?php endif ?>
 
         <input type="hidden" name="settings" value="<?= $settings ?>">
         <div class="message uk-margin uk-hidden"></div>

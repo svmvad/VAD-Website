@@ -3,15 +3,17 @@
 namespace YOOtheme\Builder\Wordpress\Source;
 
 use YOOtheme\Builder;
+use YOOtheme\Builder\BuilderConfig;
 use YOOtheme\Builder\Source\SourceTransform;
 use YOOtheme\Builder\UpdateTransform;
-use YOOtheme\Path;
 
 return [
     'config' => [
         'source' => [
             'id' => get_current_blog_id(),
         ],
+
+        BuilderConfig::class => __DIR__ . '/config/customizer.json',
     ],
 
     'routes' => [
@@ -20,32 +22,19 @@ return [
     ],
 
     'events' => [
-        'source.init' => [
-            SourceListener::class => 'initSource',
-        ],
-
-        'customizer.init' => [
-            SourceListener::class => ['initCustomizer', 10],
-        ],
-
-        'builder.template' => [
-            TemplateListener::class => 'matchTemplate',
-        ],
+        'source.init' => [Listener\LoadSourceTypes::class => '@handle'],
+        'builder.template' => [Listener\MatchTemplate::class => '@handle'],
+        BuilderConfig::class => [Listener\LoadBuilderConfig::class => ['@handle', 10]],
     ],
 
     'filters' => [
-        'template_include' => [
-            TemplateListener::class => ['includeTemplate', 20],
-        ],
-
-        'wp_link_query_args' => [
-            SourceListener::class => 'addPostTypeFilter',
-        ],
+        'template_include' => [Listener\LoadTemplate::class => ['@handle', 20]],
+        'wp_link_query_args' => [Listener\AddPostType::class => '@handle'],
     ],
 
     'extend' => [
         Builder::class => function (Builder $builder) {
-            $builder->addTypePath(Path::get('./elements/*/element.json'));
+            $builder->addTypePath(__DIR__ . '/elements/*/element.json');
         },
 
         UpdateTransform::class => function (UpdateTransform $update) {

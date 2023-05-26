@@ -61,8 +61,8 @@ define( 'WPLANG', '' );
 // Theme
 // set the default theme
 // ================================
-define('WP_DEFAULT_THEME', 'ntdstheme');
-define('DISALLOW_FILE_EDIT', true);
+//define('WP_DEFAULT_THEME', 'ntdstheme');
+//define('DISALLOW_FILE_EDIT', true);
 //define('DISALLOW_FILE_MODS', true);
 
 // ================================

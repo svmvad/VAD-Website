@@ -218,11 +218,12 @@ class PostType
                                     trans('Hide Term List') => '',
                                 ] +
                                 array_combine(
-                                    array_map(function ($taxonomy) {
-                                        return trans('Show %taxonomy%', [
+                                    array_map(
+                                        fn($taxonomy) => trans('Show %taxonomy%', [
                                             '%taxonomy%' => $taxonomy->label,
-                                        ]);
-                                    }, $taxonomies),
+                                        ]),
+                                        $taxonomies
+                                    ),
                                     array_keys($taxonomies)
                                 ),
                         ],
@@ -280,6 +281,16 @@ class PostType
                 ],
                 'extensions' => [
                     'call' => __CLASS__ . '::author',
+                ],
+            ],
+
+            'id' => [
+                'type' => 'String',
+                'metadata' => [
+                    'label' => trans('ID'),
+                ],
+                'extensions' => [
+                    'call' => __CLASS__ . '::id',
                 ],
             ],
         ];
@@ -425,12 +436,7 @@ class PostType
             ];
         }
 
-        $taxonomyList = implode(
-            ', ',
-            array_map(function ($taxonomy) {
-                return $taxonomy->label;
-            }, $taxonomies)
-        );
+        $taxonomyList = implode(', ', array_map(fn($taxonomy) => $taxonomy->label, $taxonomies));
 
         return [
             Str::camelCase(['related', $base]) => [
@@ -520,8 +526,13 @@ class PostType
                                     'type' => 'select',
                                     'default' => 'date',
                                     'options' => [
-                                        ['evaluate' => 'config.sources.postTypeOrderOptions'],
-                                        ['evaluate' => "config.sources.{$type->name}OrderOptions"],
+                                        [
+                                            'evaluate' =>
+                                                'yootheme.builder.sources.postTypeOrderOptions',
+                                        ],
+                                        [
+                                            'evaluate' => "api.builder.sources['{$type->name}OrderOptions']",
+                                        ],
                                     ],
                                 ],
                                 'order_direction' => [
@@ -529,8 +540,11 @@ class PostType
                                     'type' => 'select',
                                     'default' => 'DESC',
                                     'options' => [
-                                        trans('Ascending') => 'ASC',
-                                        trans('Descending') => 'DESC',
+                                        ['text' => trans('Ascending'), 'value' => 'ASC'],
+                                        ['text' => trans('Descending'), 'value' => 'DESC'],
+                                        [
+                                            'evaluate' => "api.builder.sources['{$type->name}OrderDirectionOptions']",
+                                        ],
                                     ],
                                 ],
                             ],
@@ -551,6 +565,11 @@ class PostType
                 ],
             ],
         ];
+    }
+
+    public static function id($post)
+    {
+        return $post->ID;
     }
 
     public static function title($post)
@@ -682,12 +701,7 @@ class PostType
         $terms = get_the_terms($post->ID, $args['taxonomy']);
 
         return $terms
-            ? implode(
-                $args['separator'],
-                array_map(function ($term) {
-                    return $term->name;
-                }, $terms)
-            )
+            ? implode($args['separator'], array_map(fn($term) => $term->name, $terms))
             : null;
     }
 
@@ -695,15 +709,10 @@ class PostType
     {
         $args += ['post_type' => $post->post_type, 'terms' => []];
 
-        $args['exclude'] = array_merge(
-            [$post->ID],
-            !empty($args['exclude']) ? $args['exclude'] : []
-        );
+        $args['exclude'] = [$post->ID, ...$args['exclude'] ?? []];
 
         $taxonomyNames = get_taxonomies();
-        $taxonomies = Arr::pick($args, function ($arg, $name) use ($taxonomyNames) {
-            return in_array($name, $taxonomyNames);
-        });
+        $taxonomies = Arr::pick($args, fn($arg, $name) => in_array($name, $taxonomyNames));
 
         foreach (array_filter($taxonomies) as $taxonomy => $operator) {
             $args['terms'] = array_merge(

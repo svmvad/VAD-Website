@@ -226,17 +226,14 @@
         height: @internal-section-overlap-height;
     }
 
+    // :not(style, #system-message-container)
     & + [class*='uk-section'],
-    & + style + [class*='uk-section'] { position: relative; }
+    *:has( > &:last-child) + * > [class*='uk-section']:first-child,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + [class*='uk-section'] { position: relative; }
 
-    & + .uk-section-default::before,
-    & + style + .uk-section-default::before,
-    & + .uk-section-muted::before,
-    & + style + .uk-section-muted::before,
-    & + .uk-section-primary::before,
-    & + style + .uk-section-primary::before,
-    & + .uk-section-secondary::before,
-    & + style + .uk-section-secondary::before {
+    & + [class*='uk-section']::before,
+    *:has( > &:last-child) + * > [class*='uk-section']:first-child::before,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + [class*='uk-section']::before {
         content: "";
         display: block;
         position: absolute;
@@ -250,14 +247,9 @@
     &-flip.uk-section::after,
     &-flip > .uk-section::after { height: 0; }
 
-    &-flip + .uk-section-default::before,
-    &-flip + style + .uk-section-default::before,
-    &-flip + .uk-section-muted::before,
-    &-flip + style + .uk-section-muted::before,
-    &-flip + .uk-section-primary::before,
-    &-flip + style + .uk-section-primary::before,
-    &-flip + .uk-section-secondary::before,
-    &-flip + style + .uk-section-secondary::before {
+    &-flip + [class*='uk-section']::before,
+    *:has( > &-flip:last-child) + * > [class*='uk-section']:first-child::before,
+    *:has( > &-flip:last-child) + * > :not([class*='uk-section']):first-child + [class*='uk-section']::before {
         top: 0;
         transform: rotate(180deg);
     }
@@ -266,14 +258,9 @@
 
 .hook-section-overlap() when not (@internal-section-overlap-height = 0) and not (@internal-section-overlap-background-size = ~'') {
 
-    & + .uk-section-default::before,
-    & + style + .uk-section-default::before,
-    & + .uk-section-muted::before,
-    & + style + .uk-section-muted::before,
-    & + .uk-section-primary::before,
-    & + style + .uk-section-primary::before,
-    & + .uk-section-secondary::before,
-    & + style + .uk-section-secondary::before { background-size: @internal-section-overlap-background-size; }
+    & + [class*='uk-section']::before,
+    *:has( > &:last-child) + * > [class*='uk-section']:first-child::before,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + [class*='uk-section']::before { background-size: @internal-section-overlap-background-size; }
 
 }
 
@@ -281,7 +268,8 @@
 .hook-section-overlap() when not (@internal-section-default-overlap-image = ~'') {
 
     & + .uk-section-default::before,
-    & + style + .uk-section-default::before {
+    *:has( > &:last-child) + * > .uk-section-default:first-child::before,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + .uk-section-default::before {
         .svg-fill(@internal-section-default-overlap-image, "#000", @section-default-background);
     }
 
@@ -290,7 +278,8 @@
 .hook-section-overlap() when not (@internal-section-muted-overlap-image = ~'') {
 
     & + .uk-section-muted::before,
-    & + style + .uk-section-muted::before {
+    *:has( > &:last-child) + * > .uk-section-muted:first-child::before,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + .uk-section-muted::before {
         .svg-fill(@internal-section-muted-overlap-image, "#000", @section-muted-background);
     }
 
@@ -299,7 +288,8 @@
 .hook-section-overlap() when not (@internal-section-primary-overlap-image = ~'') {
 
     & + .uk-section-primary::before,
-    & + style + .uk-section-primary::before {
+    *:has( > &:last-child) + * > .uk-section-primary:first-child::before,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + .uk-section-primary::before {
         .svg-fill(@internal-section-primary-overlap-image, "#000", @section-primary-background);
     }
 
@@ -308,7 +298,8 @@
 .hook-section-overlap() when not (@internal-section-secondary-overlap-image = ~'') {
 
     & + .uk-section-secondary::before,
-    & + style + .uk-section-secondary::before {
+    *:has( > &:last-child) + * > .uk-section-secondary:first-child::before,
+    *:has( > &:last-child) + * > :not([class*='uk-section']):first-child + .uk-section-secondary::before {
         .svg-fill(@internal-section-secondary-overlap-image, "#000", @section-secondary-background);
     }
 

@@ -1,35 +1,24 @@
 <?php
 
-namespace YOOtheme;
+namespace YOOtheme\Builder\Wordpress\Woocommerce;
 
+use YOOtheme\Builder;
+use YOOtheme\Builder\BuilderConfig;
 use YOOtheme\Builder\UpdateTransform;
-use YOOtheme\Builder\Wordpress\Woocommerce\RenderTransform;
-use YOOtheme\Builder\Wordpress\Woocommerce\SourceListener;
-use YOOtheme\Builder\Wordpress\Woocommerce\TemplateListener;
 
 if (!class_exists('WooCommerce', false)) {
     return [];
 }
 
 return [
-    'filters' => [
-        'template_include' => [
-            TemplateListener::class => ['onTemplateInclude', 80],
-        ],
+    'events' => [
+        'source.init' => [Listener\LoadSourceTypes::class => ['@handle', -10]],
+        'source.object.taxonomies' => [Listener\FilterTaxonomies::class => '@handle'],
+        BuilderConfig::class => [Listener\LoadBuilderConfig::class => '@handle'],
     ],
 
-    'events' => [
-        'source.init' => [
-            SourceListener::class => ['initSource', -10],
-        ],
-
-        'source.object.taxonomies' => [
-            SourceListener::class => 'filterTaxonomy',
-        ],
-
-        'customizer.init' => [
-            SourceListener::class => 'initCustomizer',
-        ],
+    'filters' => [
+        'template_include' => [Listener\LoadTemplate::class => ['@handle', 80]],
     ],
 
     'extend' => [
@@ -39,7 +28,7 @@ return [
                 $builder->addTransform('render', new RenderTransform());
             }
 
-            $builder->addTypePath(Path::get('./elements/*/element.json'));
+            $builder->addTypePath(__DIR__ . '/elements/*/element.json');
         },
 
         UpdateTransform::class => function (UpdateTransform $transform) {

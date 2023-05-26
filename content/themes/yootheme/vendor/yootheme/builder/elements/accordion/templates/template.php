@@ -13,26 +13,8 @@ $el = $this->el('div', [
 
 <?= $el($props, $attrs) ?>
 
-    <?php foreach ($children as $child) :
-
-        $content = $this->el('div', [
-
-            'class' => [
-                'uk-accordion-content',
-            ],
-
-        ]);
-
-    ?>
-    <div class="el-item">
-
-        <a class="el-title uk-accordion-title" href="#"><?= $child->props['title'] ?></a>
-
-        <?= $content($props) ?>
-            <?= $builder->render($child, ['element' => $props]) ?>
-        <?= $content->end() ?>
-
-    </div>
+    <?php foreach ($children as $child) : ?>
+    <?= $builder->render($child, ['element' => $props]) ?>
     <?php endforeach ?>
 
 </div>

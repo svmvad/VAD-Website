@@ -27,33 +27,40 @@ class TemplateController
 
         return $response->withJson($library);
     }
-    public static function saveTemplate(Request $request, Response $response, Storage $storage)
-    {
+    public static function saveTemplate(
+        Request $request,
+        Response $response,
+        Storage $storage,
+        Builder $builder
+    ) {
         // Can't name 'tpl' request param 'template' because of conflict when PECL extension "json_post" is enabled
-        $id = $request->getParam('id');
-        $tpl = $request->getParam('tpl');
+        $request
+            ->abortIf(!($id = $request->getParam('id')), 400)
+            ->abortIf(!($tpl = $request->getParam('tpl')), 400);
 
-        if ($id && $tpl) {
-            $storage->set("templates.{$id}", $tpl);
+        if (isset($tpl['layout'])) {
+            $tpl['layout'] = $builder
+                ->withParams(['context' => 'save'])
+                ->load(json_encode($tpl['layout']));
         }
+
+        $storage->set("templates.{$id}", $tpl);
 
         return $response->withJson(['message' => 'success']);
     }
 
     public static function deleteTemplate(Request $request, Response $response, Storage $storage)
     {
-        $id = $request->getQueryParam('id');
+        $request->abortIf(!($id = $request->getParam('id')), 400);
 
-        if ($id) {
-            $storage->del("templates.{$id}");
-        }
+        $storage->del("templates.{$id}");
 
         return $response->withJson(['message' => 'success']);
     }
 
     public static function reorderTemplates(Request $request, Response $response, Storage $storage)
     {
-        $sorting = $request->getParam('templates');
+        $request->abortIf(!($sorting = $request->getParam('templates')), 400);
         $templates = $storage->get('templates');
 
         $storage->set(

@@ -2,28 +2,20 @@
 
 $link = $props['link'] ? $this->el('a', [
     'href' => $props['link'],
+    'aria-label' => $props['link_aria_label'] ?: $element['link_aria_label'],
+    'target' => ['_blank {@link_target}'],
+    'uk-scroll' => str_contains((string) $props['link'], '#'),
 ]) : null;
-
-if ($link) {
-
-    $link->attr([
-        'target' => ['_blank {@link_target}'],
-        'uk-scroll' => str_contains((string) $props['link'], '#'),
-    ]);
-
-}
 
 if ($link && $element['panel_link']) {
 
-    $el->attr($link->attrs + [
+    $link_container->attr($link->attrs + [
 
         'class' => [
             'uk-link-toggle',
             // Only if `uk-flex` is not already set in `template.php` to let images cover the card height if the cards have different heights
             'uk-display-block' => !($element['panel_style'] && $element['has_panel_image_no_padding'] && in_array($element['image_align'], ['left', 'right'])),
         ],
-
-        'aria-label' => $props['link_aria_label'],
 
     ]);
 
@@ -58,7 +50,6 @@ if ($link && $props['image'] && $element['image_link']) {
         'class' => [
             'uk-display-block' => $element['panel_style'] && $element['has_panel_image_no_padding'] && in_array($element['image_align'], ['left', 'right']),
         ],
-        'aria-label' => $props['link_aria_label'],
     ], $props['image']);
 
 }

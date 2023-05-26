@@ -4,6 +4,11 @@ namespace YOOtheme;
 
 return [
     'updates' => [
+        '4.0.0-beta.9' => function ($node) {
+            if (Arr::get($node->props, 'panel_link') && Arr::get($node->props, 'css')) {
+                $node->props['css'] = str_replace('.el-item', '.el-item > *', $node->props['css']);
+            }
+        },
         '2.8.0-beta.0.13' => function ($node) {
             foreach (['title_style', 'meta_style', 'content_style'] as $prop) {
                 if (in_array(Arr::get($node->props, $prop), ['meta', 'lead'])) {

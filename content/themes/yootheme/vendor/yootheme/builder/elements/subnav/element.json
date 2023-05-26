@@ -37,6 +37,15 @@
                 "Tab": "tab"
             }
         },
+        "html_element": {
+            "label": "HTML Element",
+            "description": "Define a navigation menu or give it no semantic meaning.",
+            "type": "select",
+            "options": {
+                "div": "",
+                "nav": "nav"
+            }
+        },
         "position": "${builder.position}",
         "position_left": "${builder.position_left}",
         "position_right": "${builder.position_right}",
@@ -59,6 +68,7 @@
         "visibility": "${builder.visibility}",
         "name": "${builder.name}",
         "status": "${builder.status}",
+        "source": "${builder.source}",
         "id": "${builder.id}",
         "class": "${builder.cls}",
         "attributes": "${builder.attrs}",
@@ -72,7 +82,8 @@
                 "debounce": 500,
                 "hints": [".el-element", ".el-item", ".el-content", ".el-link"]
             }
-        }
+        },
+        "transform": "${builder.transform}"
     },
     "fieldset": {
         "default": {
@@ -89,7 +100,7 @@
                             "label": "Subnav",
                             "type": "group",
                             "divider": true,
-                            "fields": ["subnav_style"]
+                            "fields": ["subnav_style", "html_element"]
                         },
                         {
                             "label": "General",

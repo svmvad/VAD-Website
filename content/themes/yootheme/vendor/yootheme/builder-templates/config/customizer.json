@@ -17,7 +17,7 @@
                         },
                         "status": {
                             "label": "Status",
-                            "description": "Disable your template and publish it later. It will only be shown to the editor while the customizer is open.",
+                            "description": "Disable the template and publish it later.",
                             "type": "checkbox",
                             "text": "Disable template",
                             "attrs": {
@@ -30,9 +30,10 @@
                             "description": "Choose the page to which the template is assigned.",
                             "type": "select",
                             "default": "",
-                            "options": {
-                                "None": ""
-                            }
+                            "options": [
+                                { "text": "None", "value": "" },
+                                { "evaluate": "yootheme.builder.templateOptions" }
+                            ]
                         }
                     }
                 }

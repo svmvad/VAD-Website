@@ -38,7 +38,6 @@ class ElementTransform
         ];
 
         $this->parallax($node);
-        $this->visibility($node, $params);
         $this->position($node, $params);
         $this->margin($node);
         $this->maxWidth($node);
@@ -118,30 +117,6 @@ class ElementTransform
      * @param object $node
      * @param array  $params
      */
-    public function visibility($node, array $params)
-    {
-        $parent = $params['parent'];
-
-        $visibility = $this->toShowRange(
-            !empty($node->props['visibility']) ? $node->props['visibility'] : ''
-        );
-
-        $node->attrs['class']['uk-visible@{0}'] = $visibility[0];
-        $node->attrs['class']['uk-hidden@{0}'] = $visibility[1];
-
-        if (empty($parent)) {
-            return;
-        }
-
-        $parent->props['visibility'] = !empty($parent->props['visibility'])
-            ? $this->mergeShowRange($visibility, $parent->props['visibility'])
-            : $visibility;
-    }
-
-    /**
-     * @param object $node
-     * @param array  $params
-     */
     public function position($node, array $params)
     {
         if (empty($node->props['position'])) {
@@ -150,7 +125,7 @@ class ElementTransform
 
         foreach (['left', 'right', 'top', 'bottom'] as $pos) {
             if (
-                isset($node->props["position_{$pos}"]) &&
+                !empty($node->props["position_{$pos}"]) &&
                 is_numeric($node->props["position_{$pos}"])
             ) {
                 $node->props["position_{$pos}"] .= 'px';
@@ -165,8 +140,7 @@ class ElementTransform
         $node->attrs['style'][] = 'z-index: {position_z_index};';
 
         if ($node->props['position'] == 'absolute') {
-            $parent = $params['parent'];
-            $parent->props['element_absolute'] = true;
+            $params['parent']->props['element_absolute'] = true;
         }
     }
 
@@ -175,18 +149,18 @@ class ElementTransform
      */
     public function margin($node)
     {
-        if (!empty($node->props['position']) && $node->props['position'] === 'absolute') {
+        if (($node->props['position'] ?? '') === 'absolute') {
             return;
         }
 
         if ($node->type !== 'row') {
             $node->attrs['class'][] = 'uk-margin {@margin: default}';
             $node->attrs['class'][] = 'uk-margin-{!margin: |default}';
-        }
 
-        if (empty($node->props['margin']) || $node->props['margin'] !== 'remove-vertical') {
-            $node->attrs['class'][] = 'uk-margin-remove-top {@margin_remove_top}';
-            $node->attrs['class'][] = 'uk-margin-remove-bottom {@margin_remove_bottom}';
+            if (empty($node->props['margin']) || $node->props['margin'] !== 'remove-vertical') {
+                $node->attrs['class'][] = 'uk-margin-remove-top {@margin_remove_top}';
+                $node->attrs['class'][] = 'uk-margin-remove-bottom {@margin_remove_bottom}';
+            }
         }
     }
 
@@ -297,7 +271,7 @@ class ElementTransform
     {
         if (
             empty($node->props['container_padding_remove']) ||
-            (!empty($node->props['position']) && $node->props['position'] === 'absolute')
+            ($node->props['position'] ?? '') === 'absolute'
         ) {
             return;
         }
@@ -385,59 +359,5 @@ class ElementTransform
         }
 
         return $css;
-    }
-
-    /**
-     * Convert to show range.
-     *
-     * @param string|array $visibility
-     *
-     * @return array
-     */
-    protected function toShowRange($visibility)
-    {
-        if (is_array($visibility)) {
-            return $visibility;
-        }
-
-        $hidden = str_starts_with($visibility, 'hidden-');
-
-        return [$hidden ? '' : $visibility, $hidden ? substr($visibility, 7) : ''];
-    }
-
-    /**
-     * Merge show ranges.
-     *
-     * @param string[] $rangeA
-     * @param string[] $rangeB
-     *
-     * @return string[]
-     */
-    protected function mergeShowRange($rangeA, $rangeB)
-    {
-        $visibilities = ['s', 'm', 'l', 'xl'];
-
-        return [
-            $rangeA[0] && $rangeB[0] && !$rangeA[1] && !$rangeB[1]
-                ? ($rangeA[0] !== $rangeB[0]
-                    ? $visibilities[
-                        min(
-                            array_search($rangeA[0], $visibilities),
-                            array_search($rangeB[0], $visibilities)
-                        )
-                    ]
-                    : $rangeA[0])
-                : '',
-            $rangeA[1] && $rangeB[1] && !$rangeA[0] && !$rangeB[0]
-                ? ($rangeA[1] !== $rangeB[1]
-                    ? $visibilities[
-                        max(
-                            array_search($rangeA[1], $visibilities),
-                            array_search($rangeB[1], $visibilities)
-                        )
-                    ]
-                    : $rangeA[1])
-                : '',
-        ];
     }
 }

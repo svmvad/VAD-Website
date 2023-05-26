@@ -19,6 +19,7 @@ $el = $this->el('div', [
 $grid = $this->el('div', [
 
     'class' => [
+        'uk-grid',
         'js-filter' => $tags,
         'uk-child-width-[1-{@!grid_default: auto}]{grid_default}',
         'uk-child-width-[1-{@!grid_small: auto}]{grid_small}@s',
@@ -28,13 +29,13 @@ $grid = $this->el('div', [
         'uk-flex-center {@grid_column_align} {@!grid_masonry}',
         'uk-flex-middle {@grid_row_align} {@!grid_masonry}',
         $props['grid_column_gap'] == $props['grid_row_gap'] ? 'uk-grid-{grid_column_gap}' : '[uk-grid-column-{grid_column_gap}] [uk-grid-row-{grid_row_gap}]',
-        'uk-grid-divider {@grid_divider} {@!grid_column_gap:collapse} {@!grid_row_gap:collapse}',
+        'uk-grid-divider {@grid_divider} {@!grid_column_gap:collapse} {@!grid_row_gap:collapse}'
     ],
 
     'uk-grid' => $this->expr([
         'masonry: {grid_masonry};',
         'parallax: {grid_parallax};',
-    ], $props) ?: true,
+    ], $props) ?: count($children) > 1,
 
     'uk-lightbox' => [
         'toggle: a[data-type];' => $props['lightbox'],
@@ -55,11 +56,12 @@ $cell = $this->el('div', [
 $filter_grid = $this->el('div', [
 
     'class' => [
+        'uk-grid',
         'uk-child-width-expand',
         $props['filter_grid_column_gap'] == $props['filter_grid_row_gap'] ? 'uk-grid-{filter_grid_column_gap}' : '[uk-grid-column-{filter_grid_column_gap}] [uk-grid-row-{filter_grid_row_gap}]',
     ],
 
-    'uk-grid' => true,
+    'uk-grid' => count($children) > 1,
 ]);
 
 $filter_cell = $this->el('div', [

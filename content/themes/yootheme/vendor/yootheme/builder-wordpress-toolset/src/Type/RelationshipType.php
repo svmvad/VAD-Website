@@ -30,23 +30,21 @@ class RelationshipType
                 array_filter(
                     array_reduce(
                         $intermediary,
-                        function ($fields, $field) {
-                            return $fields +
-                                Helper::loadFields($field, [
-                                    'type' => 'String',
-                                    'name' => Str::snakeCase($field['slug']),
-                                    'metadata' => [
-                                        'label' => $field['name'],
-                                        'group' => $field['group'],
+                        fn($fields, $field) => $fields +
+                            Helper::loadFields($field, [
+                                'type' => 'String',
+                                'name' => Str::snakeCase($field['slug']),
+                                'metadata' => [
+                                    'label' => $field['name'],
+                                    'group' => $field['group'],
+                                ],
+                                'extensions' => [
+                                    'call' => [
+                                        'func' => __CLASS__ . '::resolveIntermediaryField',
+                                        'args' => ['slug' => $field['slug']],
                                     ],
-                                    'extensions' => [
-                                        'call' => [
-                                            'func' => __CLASS__ . '::resolveIntermediaryField',
-                                            'args' => ['slug' => $field['slug']],
-                                        ],
-                                    ],
-                                ]);
-                        },
+                                ],
+                            ]),
                         []
                     )
                 )

@@ -33,9 +33,7 @@ class SinglePostQueryType
                     'options' =>
                         [trans('None') => ''] +
                         array_combine(
-                            array_map(function ($taxonomy) {
-                                return $taxonomy->label;
-                            }, $taxonomies),
+                            array_map(fn($taxonomy) => $taxonomy->label, $taxonomies),
                             array_keys($taxonomies)
                         ),
                 ],

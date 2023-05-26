@@ -15,9 +15,10 @@ class CampaignMonitorProvider extends AbstractProvider
             throw new \Exception($result['data']);
         }
 
-        $clients = array_map(function ($client) {
-            return ['value' => $client['ClientID'], 'text' => $client['Name']];
-        }, $result['data']);
+        $clients = array_map(
+            fn($client) => ['value' => $client['ClientID'], 'text' => $client['Name']],
+            $result['data']
+        );
 
         if (!($clientId = $provider['client_id'] ?: $clients[0]['value'])) {
             throw new \Exception('Invalid client id.');
@@ -27,9 +28,10 @@ class CampaignMonitorProvider extends AbstractProvider
             throw new \Exception($result['data']);
         }
 
-        $lists = array_map(function ($list) {
-            return ['value' => $list['ListID'], 'text' => $list['Name']];
-        }, $result['data']);
+        $lists = array_map(
+            fn($list) => ['value' => $list['ListID'], 'text' => $list['Name']],
+            $result['data']
+        );
 
         return compact('clients', 'lists');
     }

@@ -40,4 +40,29 @@ class Helper
     {
         return absint(get_the_ID()) === $product->get_id();
     }
+
+    public static function renderWidget($type, $options)
+    {
+        global $wp_widget_factory;
+
+        $widget = $wp_widget_factory->widgets[$type];
+
+        if (!$widget) {
+            return '';
+        }
+
+        ob_start();
+
+        $widget->widget(
+            [
+                'before_widget' => '',
+                'after_widget' => '',
+                'before_title' => '',
+                'after_title' => '',
+            ],
+            $options + ['title' => '']
+        );
+
+        return ob_get_clean();
+    }
 }

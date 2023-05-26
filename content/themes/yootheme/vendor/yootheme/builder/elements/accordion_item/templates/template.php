@@ -1,5 +1,22 @@
 <?php
 
+$el = $this->el($props['item_element'] ?: 'div', [
+
+    'class' => [
+        'el-item',
+    ],
+
+]);
+
+// Content
+$content = $this->el('div', [
+
+    'class' => [
+        'uk-accordion-content',
+    ],
+    
+]);
+
 // Image
 $image = $this->render("{$__dir}/template-image");
 
@@ -34,21 +51,31 @@ $cell_content = $this->el('div', [
 
 ?>
 
-<?php if ($image && in_array($element['image_align'], ['left', 'right'])) : ?>
+<?= $el($element, $attrs) ?>
 
-    <?= $grid($element) ?>
-        <?= $cell_image($element, $image) ?>
-        <?= $cell_content($element) ?>
-            <?= $this->render("{$__dir}/template-content") ?>
-            <?= $this->render("{$__dir}/template-link") ?>
-        <?= $cell_content->end() ?>
-    </div>
+    <a class="el-title uk-accordion-title" href><?= $props['title'] ?></a>
 
-<?php else : ?>
+    <?= $content($element) ?>
 
-    <?= $element['image_align'] == 'top' ? $image : '' ?>
-    <?= $this->render("{$__dir}/template-content") ?>
-    <?= $this->render("{$__dir}/template-link") ?>
-    <?= $element['image_align'] == 'bottom' ? $image : '' ?>
+    <?php if ($image && in_array($element['image_align'], ['left', 'right'])) : ?>
 
-<?php endif ?>
+        <?= $grid($element) ?>
+            <?= $cell_image($element, $image) ?>
+            <?= $cell_content($element) ?>
+                <?= $this->render("{$__dir}/template-content") ?>
+                <?= $this->render("{$__dir}/template-link") ?>
+            <?= $cell_content->end() ?>
+        </div>
+
+    <?php else : ?>
+
+        <?= $element['image_align'] == 'top' ? $image : '' ?>
+        <?= $this->render("{$__dir}/template-content") ?>
+        <?= $this->render("{$__dir}/template-link") ?>
+        <?= $element['image_align'] == 'bottom' ? $image : '' ?>
+
+    <?php endif ?>
+
+    <?= $content->end() ?>
+
+<?= $el->end() ?>

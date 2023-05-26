@@ -6,9 +6,7 @@ return [
     'updates' => [
         '1.22.0-beta.0.1' => function ($node) {
             Arr::updateKeys($node->props, [
-                'gutter' => function ($value) {
-                    return ['grid_column_gap' => $value, 'grid_row_gap' => $value];
-                },
+                'gutter' => fn($value) => ['grid_column_gap' => $value, 'grid_row_gap' => $value],
             ]);
         },
 

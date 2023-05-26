@@ -88,13 +88,11 @@ class Source extends SchemaBuilder
     {
         $metadata = [
             'type' => $this->getType('Object'),
-            'resolve' => function ($type) {
-                return Event::emit(
-                    'source.type.metadata|filter',
-                    $type->config['metadata'] ?? null,
-                    $type
-                );
-            },
+            'resolve' => fn($type) => Event::emit(
+                'source.type.metadata|filter',
+                $type->config['metadata'] ?? null,
+                $type
+            ),
         ];
 
         $options += [

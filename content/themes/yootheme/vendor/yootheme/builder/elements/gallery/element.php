@@ -12,7 +12,7 @@ return [
                 foreach ($node->children as $child) {
                     $child->tags = [];
 
-                    foreach (explode(',', Arr::get($child->props, 'tags', '') ?: '') as $tag) {
+                    foreach (explode(',', $child->props['tags'] ?? '') as $tag) {
                         // Strip tags as precaution if tags are mapped dynamically
                         $tag = strip_tags($tag);
 
@@ -24,7 +24,28 @@ return [
                     $node->tags += $child->tags;
                 }
 
-                natsort($node->tags);
+                if (
+                    $node->props['filter_order'] === 'manual' &&
+                    $node->props['filter_order_manual']
+                ) {
+                    $order = array_map(
+                        'strtolower',
+                        array_map('trim', explode(',', $node->props['filter_order_manual']))
+                    );
+                    uasort($node->tags, function ($a, $b) use ($order) {
+                        $iA = array_search(strtolower($a), $order);
+                        $iB = array_search(strtolower($b), $order);
+                        return $iA !== false && $iB !== false
+                            ? $iA - $iB
+                            : ($iA !== false
+                                ? -1
+                                : ($iB !== false
+                                    ? 1
+                                    : strnatcmp($a, $b)));
+                    });
+                } else {
+                    natsort($node->tags);
+                }
 
                 if ($node->props['filter_reverse']) {
                     $node->tags = array_reverse($node->tags, true);
@@ -34,6 +55,11 @@ return [
     ],
 
     'updates' => [
+        '4.0.0-beta.9' => function ($node) {
+            if (Arr::get($node->props, 'overlay_link') && Arr::get($node->props, 'css')) {
+                $node->props['css'] = str_replace('.el-item', '.el-item > *', $node->props['css']);
+            }
+        },
         '2.8.0-beta.0.13' => function ($node) {
             foreach (['title_style', 'meta_style', 'content_style'] as $prop) {
                 if (in_array(Arr::get($node->props, $prop), ['meta', 'lead'])) {
@@ -79,12 +105,11 @@ return [
             Arr::updateKeys($node->props, [
                 'divider' => 'grid_divider',
                 'filter_breakpoint' => 'filter_grid_breakpoint',
-                'gutter' => function ($value) {
-                    return ['grid_column_gap' => $value, 'grid_row_gap' => $value];
-                },
-                'filter_gutter' => function ($value) {
-                    return ['filter_grid_column_gap' => $value, 'filter_grid_row_gap' => $value];
-                },
+                'gutter' => fn($value) => ['grid_column_gap' => $value, 'grid_row_gap' => $value],
+                'filter_gutter' => fn($value) => [
+                    'filter_grid_column_gap' => $value,
+                    'filter_grid_row_gap' => $value,
+                ],
             ]);
         },
 
@@ -144,7 +169,7 @@ return [
                 }
             }
 
-            if (in_array($style, ['copper-hill'])) {
+            if ($style == 'copper-hill') {
                 if (Arr::get($node->props, 'title_style') === 'heading-medium') {
                     $node->props['title_style'] =
                         Arr::get($node->props, 'title_element') === 'h1' ? '' : 'h1';

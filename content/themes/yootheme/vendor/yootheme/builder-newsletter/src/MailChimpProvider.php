@@ -34,9 +34,10 @@ class MailChimpProvider extends AbstractProvider
         $clients = [];
 
         if (($result = $this->get('lists', ['count' => '100'])) && $result['success']) {
-            $lists = array_map(function ($list) {
-                return ['value' => $list['id'], 'text' => $list['name']];
-            }, $result['data']['lists']);
+            $lists = array_map(
+                fn($list) => ['value' => $list['id'], 'text' => $list['name']],
+                $result['data']['lists']
+            );
         } else {
             throw new \Exception($result['data']);
         }

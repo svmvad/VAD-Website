@@ -1,6 +1,6 @@
 <?php
 
-$el = $this->el('div', [
+$el = $this->el($props['html_element'] ?: 'div', [
 
     'class' => [
         'uk-panel',

@@ -72,9 +72,7 @@ class Router
         return '#^' .
             preg_replace_callback(
                 '#\{(\w+)\}#',
-                function ($matches) {
-                    return '(?P<' . $matches[1] . '>[^/]+)';
-                },
+                fn($matches) => '(?P<' . $matches[1] . '>[^/]+)',
                 $route->getPath()
             ) .
             '$#';

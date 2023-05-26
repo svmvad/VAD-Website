@@ -3,7 +3,6 @@
 namespace YOOtheme;
 
 use Psr\Http\Message\ResponseInterface;
-use YOOtheme\Application\LoaderTrait;
 use YOOtheme\Configuration\Configuration;
 use YOOtheme\Http\Request;
 use YOOtheme\Http\Response;
@@ -14,12 +13,15 @@ use YOOtheme\Http\Response;
  */
 class Application extends Container
 {
-    use LoaderTrait;
-
     /**
      * @var Config
      */
     protected $config;
+
+    /**
+     * @var array
+     */
+    protected $loaders = [];
 
     /**
      * @var static|null
@@ -36,10 +38,10 @@ class Application extends Container
         $this->config = new Configuration($cache);
 
         $this->set(static::class, $this);
-        $this->setAlias('app', static::class);
+        $this->setAlias(static::class, 'app');
 
         $this->set(Config::class, $this->config);
-        $this->setAlias('config', Config::class);
+        $this->setAlias(Config::class, 'config');
     }
 
     /**
@@ -51,7 +53,7 @@ class Application extends Container
      */
     public static function getInstance($cache = null)
     {
-        return static::$instance ?: (static::$instance = new static($cache));
+        return static::$instance ?? (static::$instance = new static($cache));
     }
 
     /**
@@ -97,5 +99,76 @@ class Application extends Container
         }
 
         return $this->response;
+    }
+
+    /**
+     * Loads a bootstrap file.
+     *
+     * @param string $files
+     *
+     * @return $this
+     */
+    public function load($files)
+    {
+        $configs = [];
+
+        foreach (File::glob($files, GLOB_NOSORT) as $file) {
+            $configs = static::loadFile($file, $configs, ['app' => $this]);
+        }
+
+        if (isset($configs['loaders'])) {
+            $this->loaders = array_merge($this->loaders, ...$configs['loaders']);
+        }
+
+        foreach (array_intersect_key($this->loaders, $configs) as $name => $loader) {
+            if (is_string($loader) && class_exists($loader)) {
+                $loader = $this->loaders[$name] = $this->resolveLoader($loader);
+            }
+
+            $loader($this, $configs[$name]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Resolves a service instance.
+     *
+     * @param string $id
+     *
+     * @throws \Exception
+     * @throws \ReflectionException
+     *
+     * @return mixed
+     */
+    protected function resolveService($id)
+    {
+        return Hook::call([$id, 'app.resolve'], fn($id) => parent::resolveService($id), $id, $this);
+    }
+
+    /**
+     * Resolves a loader instance.
+     */
+    protected function resolveLoader(string $loader): callable
+    {
+        return new $loader($this);
+    }
+
+    /**
+     * Loads a bootstrap config.
+     */
+    protected static function loadFile(string $file, array $configs, array $parameters = []): array
+    {
+        extract($parameters, EXTR_SKIP);
+
+        if (!is_array($config = require $file)) {
+            throw new \RuntimeException("Unable to load file '{$file}'");
+        }
+
+        foreach ($config as $key => $value) {
+            $configs[$key][] = $value;
+        }
+
+        return $configs;
     }
 }

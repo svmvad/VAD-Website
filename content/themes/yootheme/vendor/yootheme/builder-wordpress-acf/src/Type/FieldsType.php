@@ -21,26 +21,24 @@ class FieldsType
             'fields' => array_filter(
                 array_reduce(
                     $fields,
-                    function ($fields, $field) use ($source) {
-                        return $fields +
-                            static::configFields(
-                                $field,
-                                [
-                                    'type' => 'String',
-                                    'metadata' => [
-                                        'label' => $field['label'] ?: $field['name'],
-                                        'group' => $field['group']['title'],
-                                    ],
-                                    'extensions' => [
-                                        'call' => [
-                                            'func' => __CLASS__ . '::resolve',
-                                            'args' => ['field' => $field['name']],
-                                        ],
+                    fn($fields, $field) => $fields +
+                        static::configFields(
+                            $field,
+                            [
+                                'type' => 'String',
+                                'metadata' => [
+                                    'label' => $field['label'] ?: $field['name'],
+                                    'group' => $field['group']['title'],
+                                ],
+                                'extensions' => [
+                                    'call' => [
+                                        'func' => __CLASS__ . '::resolve',
+                                        'args' => ['field' => $field['name']],
                                     ],
                                 ],
-                                $source
-                            );
-                    },
+                            ],
+                            $source
+                        ),
                     []
                 )
             ),
@@ -58,9 +56,10 @@ class FieldsType
             $fields += static::configGenericField($field, $config, $source);
         }
 
-        return array_map(function ($config) use ($field, $source) {
-            return Event::emit('source.acf.field|filter', $config, $field, $source);
-        }, $fields);
+        return array_map(
+            fn($config) => Event::emit('source.acf.field|filter', $config, $field, $source),
+            $fields
+        );
     }
 
     protected static function configGenericField($field, array $config, Source $source)
@@ -308,9 +307,7 @@ class FieldsType
         }
 
         if (static::isMultiple($field)) {
-            return array_map(function ($value) {
-                return compact('value');
-            }, $value);
+            return array_map(fn($value) => ['value' => $value], $value);
         }
 
         return $value;
@@ -328,7 +325,7 @@ class FieldsType
         return array_pop($postTypes);
     }
 
-    protected static function isMultiple(array $field)
+    protected static function isMultiple(array $field): bool
     {
         return !empty($field['multiple']) ||
             in_array($field['type'], ['checkbox', 'gallery', 'relationship']) ||

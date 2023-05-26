@@ -9,26 +9,20 @@ class FilterLoader extends EventLoader
 {
     /**
      * Adds a listener.
-     *
-     * @param Container $container
-     * @param string    $event
-     * @param string    $class
-     * @param string    $method
-     * @param mixed     $params
      */
-    public function addListener(Container $container, $event, $class, $method, ...$params)
-    {
+    public function addListener(
+        Container $container,
+        string $event,
+        string $class,
+        string $method,
+        ...$params
+    ): void {
         add_filter(
             $event,
-            function (...$arguments) use ($container, $class, $method) {
-                $callback = [$class, $method];
-
-                if ($method[0] === '@') {
-                    $callback = join($callback);
-                }
-
-                return $container->call($callback, $arguments);
-            },
+            fn(...$arguments) => $container->call(
+                $method[0] === '@' ? $class . $method : [$class, $method],
+                $arguments
+            ),
             ...$params
         );
     }

@@ -60,7 +60,20 @@
         "overlap": {
             "description": "Preserve the text color, for example when using cards. Section overlap is not supported by all styles and may have no visual effect.",
             "type": "checkbox",
-            "text": "Overlap the following section"
+            "text": "Overlap the following section",
+            "enable": "style"
+        },
+        "background_color": {
+            "label": "Background Color",
+            "type": "color",
+            "enable": "!style && !background_parallax_background"
+        },
+        "_background_parallax_button": {
+            "description": "Define a custom background color or a color parallax animation instead of using a predefined style.",
+            "type": "button-panel",
+            "text": "Edit Parallax",
+            "panel": "background-parallax",
+            "enable": "!style"
         },
         "text_color": {
             "label": "Text Color",
@@ -72,7 +85,7 @@
                 "Dark": "dark"
             },
             "source": true,
-            "enable": "image || video"
+            "enable": "!style || image || video"
         },
         "width": {
             "label": "Max Width",
@@ -106,7 +119,7 @@
         },
         "height": {
             "label": "Height",
-            "description": "Enabling viewport height on a section that directly follows the header will subtract the header height from it. On short pages, a section can be expanded to fill the viewport.",
+            "description": "Setting viewport height on a section that directly follows the header will subtract the header height from it. On short pages, a section can be expanded to fill the viewport.",
             "type": "select",
             "options": {
                 "None": "",
@@ -153,6 +166,7 @@
             "text": "Remove bottom padding",
             "enable": "padding != 'none'"
         },
+        "html_element": "${builder.html_element}",
         "sticky": {
             "label": "Sticky Effect",
             "description": "Sticky section will be covered by the following section while scrolling. Reveal section by previous section.",
@@ -250,7 +264,7 @@
         },
         "status": {
             "label": "Status",
-            "description": "Disable your section and publish it later. It will only be shown to the editor while the customizer is open.",
+            "description": "Disable the section and publish it later.",
             "type": "checkbox",
             "text": "Disable section",
             "attrs": {
@@ -281,7 +295,12 @@
             "fields": [
                 {
                     "title": "Content",
-                    "fields": ["image", "video", "_media", "title"]
+                    "fields": [
+                        "image",
+                        "video",
+                        "_media",
+                        "title"
+                    ]
                 },
                 {
                     "title": "Settings",
@@ -298,6 +317,7 @@
                         "padding",
                         "padding_remove_top",
                         "padding_remove_bottom",
+                        "html_element",
                         "sticky",
                         "header_transparent",
                         "header_transparent_noplaceholder",
@@ -330,6 +350,24 @@
                     "attrs": {
                         "placeholder": "auto"
                     }
+                },
+                "image_focal_point": {
+                    "label": "Focal Point",
+                    "description": "Set a focal point to adjust the image focus when cropping.",
+                    "type": "select",
+                    "options": {
+                        "Top Left": "top-left",
+                        "Top Center": "top-center",
+                        "Top Right": "top-right",
+                        "Center Left": "center-left",
+                        "Center Center": "",
+                        "Center Right": "center-right",
+                        "Bottom Left": "bottom-left",
+                        "Bottom Center": "bottom-center",
+                        "Bottom Right": "bottom-right"
+                    },
+                    "source": true,
+                    "show": "image && !video"
                 },
                 "image_loading": {
                     "label": "Loading",
@@ -397,6 +435,11 @@
                         "max": 600,
                         "step": 10
                     },
+                    "show": "image_effect == 'parallax' && image && !video"
+                },
+                "_image_parallax_description": {
+                    "description": "Animate properties to specific values. Add multiple stops to define start, intermediate and end values along the animation sequence. Optionally, specify percentage to position the stops along the animation sequence. Translate can have optional <code>%</code>, <code>vw</code> and <code>vh</code> units.",
+                    "type": "description",
                     "show": "image_effect == 'parallax' && image && !video"
                 },
                 "image_parallax_easing": {
@@ -487,12 +530,14 @@
                             "show": "image && !video",
                             "fields": ["image_width", "image_height"]
                         },
+                        "image_focal_point",
                         "image_loading",
                         "image_size",
                         "image_position",
                         "image_effect",
                         "image_parallax_bgx",
                         "image_parallax_bgy",
+                        "_image_parallax_description",
                         "image_parallax_easing",
                         "image_parallax_breakpoint",
                         {

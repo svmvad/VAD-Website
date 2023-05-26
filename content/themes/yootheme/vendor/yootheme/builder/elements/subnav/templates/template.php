@@ -1,6 +1,6 @@
 <?php
 
-$el = $this->el('div');
+$el = $this->el($props['html_element'] ?: 'div');
 
 // Subnav
 $subnav = $this->el('ul', [
@@ -12,7 +12,7 @@ $subnav = $this->el('ul', [
         'uk-flex-{text_align}[@{text_align_breakpoint} [uk-flex-{text_align_fallback}]]',
     ],
 
-    'uk-margin' => true,
+    'uk-margin' => count($children) > 1,
 ]);
 
 ?>
@@ -25,4 +25,4 @@ $subnav = $this->el('ul', [
     <?php endforeach ?>
     </ul>
 
-</div>
+<?= $el->end() ?>

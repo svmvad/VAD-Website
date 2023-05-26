@@ -32,6 +32,7 @@ $search = $this->el('input', [
         'uk-form-{search_size} {@!search_style}',
     ],
     'required' => true,
+    'aria-label' => _x('Search', 'aria-label', 'yootheme'),
 
 ]);
 

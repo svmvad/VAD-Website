@@ -2,86 +2,115 @@
 
 namespace YOOtheme\Builder\Source;
 
-use function YOOtheme\app;
 use YOOtheme\Arr;
 use YOOtheme\Builder\Source;
 use YOOtheme\Event;
-use YOOtheme\Str;
+use function YOOtheme\app;
 
 class SourceTransform
 {
-    /**
-     * @var array
-     */
-    public $filters;
+    use SourceFilter;
 
     /**
-     * Constructor.
+     * Transform callback "preload".
      *
-     * @param array $filters
+     * @param object $node
+     * @param array  $params
+     *
+     * @return void
      */
-    public function __construct(array $filters = [])
+    public function preload($node, array &$params)
     {
-        $this->filters = array_merge(
-            [
-                'date' => [$this, 'applyDate'],
-                'limit' => [$this, 'applyLimit'],
-                'search' => [$this, 'applySearch'],
-                'before' => [$this, 'applyBefore'],
-                'after' => [$this, 'applyAfter'],
-                'condition' => [$this, 'applyCondition'],
-            ],
-            $filters
-        );
+        if ($params['context'] !== 'render') {
+            return;
+        }
+
+        if (empty($node->source->query->name)) {
+            return;
+        }
+
+        if ($node->source->query->name === SourceQuery::PARENT) {
+            if (!empty($params['source'])) {
+                $params['source']->source->children[] = $node;
+            }
+            if (!empty($node->source->query->field->name)) {
+                $params['source'] = $node;
+            }
+        } else {
+            $params['source'] = $node;
+        }
     }
 
     /**
-     * Adds a filter.
-     *
-     * @param string   $name
-     * @param callable $filter
-     * @param int      $offset
-     */
-    public function addFilter($name, callable $filter, $offset = null)
-    {
-        Arr::splice($this->filters, $offset, 0, [$name => $filter]);
-    }
-
-    /**
-     * Transform callback.
+     * Transform callback "prerender".
      *
      * @param object $node
      * @param array  $params
      *
      * @return bool|void
      */
-    public function __invoke($node, array $params)
+    public function prerender($node, array &$params)
     {
-        if (!($result = $this->querySource($node, $params))) {
+        if (isset($node->source->data)) {
+            $params['data'] = $node->source->data;
+        }
+
+        if (empty($node->source->query->name)) {
             return;
         }
 
-        $name = $node->source->query->name;
-
-        // add field name
-        if (isset($node->source->query->field)) {
-            $name .= ".{$node->source->query->field->name}";
-        }
-
-        // get source data
-        if (is_array($data = Arr::get($result, "data.{$name}"))) {
-            // map source properties
-            if ($data && empty($data[0])) {
-                return $this->mapSource($node, $params + compact('data'));
+        if ($node->source->query->name === SourceQuery::PARENT) {
+            if (!isset($params['data'])) {
+                return;
             }
 
-            // map source array
-            if ($data) {
-                return $this->repeatSource($node, $params + compact('data'));
-            }
+            return $this->resolveSource($node, $params);
         }
 
-        return false;
+        if ($result = $this->querySource($node, $params)) {
+            $params['data'] = $result['data'];
+            return $this->resolveSource($node, $params);
+        }
+    }
+
+    /**
+     * Create source query.
+     *
+     * @param object $node
+     *
+     * @return ?object
+     */
+    public function createQuery($node)
+    {
+        $query = new SourceQuery();
+        $parent = $query->create($node);
+        $children = $node->source->children ?? [];
+        $props = !empty($node->source->props);
+
+        // extend source query
+        foreach ($children as $child) {
+            $props = $props || !empty($child->source->props);
+            $this->createChildQuery($query, $parent, $child);
+        }
+
+        return $props ? $query->document : null;
+    }
+
+    /**
+     * Add child queries
+     *
+     * @param SourceQuery $query
+     * @param Query\Node  $parent
+     * @param object      $node
+     *
+     * @return void
+     */
+    protected function createChildQuery($query, $parent, $node)
+    {
+        $p = $query->querySource($node->source, $parent);
+        foreach ($node->source->children ?? [] as $child) {
+            $this->createChildQuery($query, $p, $child);
+        }
     }
 
     /**
@@ -94,12 +123,11 @@ class SourceTransform
      */
     public function querySource($node, array $params)
     {
-        if (empty($node->source->query->name) || empty($node->source->props)) {
+        if (!($query = $this->createQuery($node))) {
             return;
         }
 
         // execute query without validation rules
-        $query = (new SourceQuery())->create($node);
         $result = app(Source::class)->query(
             $query->toAST(),
             $params,
@@ -123,7 +151,7 @@ class SourceTransform
      * @param object $node
      * @param array  $params
      *
-     * @return object|bool
+     * @return ?object
      */
     public function mapSource($node, array $params)
     {
@@ -138,7 +166,7 @@ class SourceTransform
 
             // check condition value
             if ($name === '_condition' && $value === false) {
-                return false;
+                return null;
             }
 
             // set filtered value
@@ -154,182 +182,90 @@ class SourceTransform
      * @param object $node
      * @param array  $params
      *
-     * @return bool
+     * @return array
      */
     public function repeatSource($node, array $params)
     {
         $nodes = [];
 
-        // clone node for each item
-        foreach ($params['data'] as $data) {
-            $clone = clone $node;
-            $clone->transient = true;
-            $clone->source = (object) [
-                'props' => $node->source->props,
-            ];
+        // clone and map node for each item
+        foreach ($params['data'] as $index => $data) {
+            $data = (array) $data;
+            $data['#index'] = $index;
+            $data['#first'] = $index === 0;
+            $data['#last'] = $index === array_key_last($params['data']);
 
-            if ($this->mapSource($clone, compact('data') + $params)) {
+            if ($clone = $this->mapSource($this->cloneNode($node), ['data' => $data] + $params)) {
+                $clone->source = (object) ['data' => $data];
                 $nodes[] = $clone;
             }
         }
 
-        // insert all cloned nodes after current node
-        if ($nodes) {
-            array_splice($params['parent']->children, $params['i'] + 1, 0, $nodes);
+        // insert cloned nodes after current node
+        array_splice($params['parent']->children, $params['i'] + 1, 0, $nodes);
+
+        return $nodes;
+    }
+
+    /**
+     * Resolve source data.
+     *
+     * @param object $node
+     * @param array  $params
+     *
+     * @return bool
+     */
+    public function resolveSource($node, array &$params)
+    {
+        $name = 'data';
+
+        // add query name
+        if ($node->source->query->name !== SourceQuery::PARENT) {
+            $name .= ".{$node->source->query->name}";
+        }
+
+        // add field name
+        if (isset($node->source->query->field)) {
+            $name .= ".{$node->source->query->field->name}";
+        }
+
+        // get source data
+        $params['data'] = Arr::get($params, $name);
+
+        if ($params['data'] && is_array($params['data'])) {
+            if (!array_is_list($params['data'])) {
+                return (bool) $this->mapSource($node, $params);
+            }
+
+            $this->repeatSource($node, $params);
         }
 
         return false;
     }
 
     /**
-     * Apply "before" filter.
+     * Clone node recursively.
      *
-     * @param mixed $value
-     * @param mixed $before
+     * @param object $node
      *
-     * @return string
+     * @return object
      */
-    public function applyBefore($value, $before)
+    protected function cloneNode($node)
     {
-        return $value != '' ? $before . $value : $value;
+        $clone = clone $node;
+
+        // recursively clone children
+        if (isset($node->children)) {
+            $clone->children = array_map(fn($child) => $this->cloneNode($child), $node->children);
+        }
+
+        return $clone;
     }
 
-    /**
-     * Apply "after" filter.
-     *
-     * @param mixed $value
-     * @param mixed $after
-     *
-     * @return string
-     */
-    public function applyAfter($value, $after)
+    protected function toString($value)
     {
-        return $value != '' ? $value . $after : $value;
-    }
-
-    /**
-     * Apply "limit" filter.
-     *
-     * @param mixed $value
-     * @param mixed $limit
-     *
-     * @return string
-     */
-    public function applyLimit($value, $limit)
-    {
-        return $limit ? Str::limit(strip_tags($value), intval($limit)) : $value;
-    }
-
-    /**
-     * Apply "date" filter.
-     *
-     * @param mixed $value
-     * @param mixed $format
-     *
-     * @return false|string
-     */
-    public function applyDate($value, $format)
-    {
-        if (!$value) {
-            return $value;
-        }
-
-        if (is_string($value) && !is_numeric($value)) {
-            $value = strtotime($value);
-        }
-
-        return date($format ?: 'd/m/Y', intval($value) ?: time());
-    }
-
-    /**
-     * Apply "search" filter.
-     *
-     * @param mixed $value
-     * @param mixed $search
-     * @param array $filters
-     *
-     * @return false|string
-     */
-    public function applySearch($value, $search, array $filters)
-    {
-        $replace = $filters['replace'] ?? '';
-
-        if ($search && $search[0] === '/') {
-            return @preg_replace($search, $replace, $value);
-        }
-
-        return str_replace($search, $replace, $value);
-    }
-
-    /**
-     * Apply "condition" filter.
-     *
-     * @param mixed $value
-     * @param mixed $operator
-     * @param array $filters
-     *
-     * @return bool
-     */
-    public function applyCondition($value, $operator, array $filters)
-    {
-        $propertyValue = html_entity_decode($value);
-        $conditionValue = $filters['condition_value'] ?? '';
-
-        if ($operator === '!') {
-            return empty($propertyValue);
-        }
-
-        if ($operator === '!!') {
-            return !empty($propertyValue);
-        }
-
-        if ($operator === '=') {
-            return $propertyValue == $conditionValue;
-        }
-
-        if ($operator === '!=') {
-            return $propertyValue != $conditionValue;
-        }
-
-        if ($operator === '<') {
-            return $propertyValue < $conditionValue;
-        }
-
-        if ($operator === '>') {
-            return $propertyValue > $conditionValue;
-        }
-
-        if ($operator === '~=') {
-            return str_contains($propertyValue, $conditionValue);
-        }
-
-        if ($operator === '!~=') {
-            return !str_contains($propertyValue, $conditionValue);
-        }
-
-        if ($operator === '^=') {
-            return str_starts_with($propertyValue, $conditionValue);
-        }
-
-        if ($operator === '!^=') {
-            return !str_starts_with($propertyValue, $conditionValue);
-        }
-
-        if ($operator === '$=') {
-            return str_ends_with($propertyValue, $conditionValue);
-        }
-
-        if ($operator === '!$=') {
-            return !str_ends_with($propertyValue, $conditionValue);
-        }
-
-        return !!$propertyValue;
-    }
-
-    protected function toString($str)
-    {
-        if (is_scalar($str) || is_callable([$str, '__toString'])) {
-            return (string) $str;
+        if (is_scalar($value) || is_callable([$value, '__toString'])) {
+            return (string) $value;
         }
 
         return '';

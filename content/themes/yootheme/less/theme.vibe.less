@@ -150,6 +150,15 @@ Preview: https://yootheme.com/api/style/vibe/dark-green.jpg
 }
 
 //
+// Transition Border
+//
+
+@theme-transition-border-hover-border-width:             12px;
+
+@internal-theme-transition-border-border-gradient:       linear-gradient(135deg, @global-primary-background, desaturate(darken(spin(@global-primary-background, -45%), 15%), 25%));
+@internal-theme-transition-border-hover-border-gradient: @internal-theme-transition-border-border-gradient;
+
+//
 // WooCommerce
 //
 
