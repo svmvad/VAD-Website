@@ -1,0 +1,84 @@
+body.login {
+    background-color: #FAFBFD;
+    background-image: url(./pexels/background_b.svg) !important;
+    background-repeat: no-repeat;
+    background-size: 70%;
+}
+
+.login-split {
+    background-image: url(./pexels/Group_78.svg) !important;
+    background-size: 75% !important;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+.login-split-page {
+    height: auto !important;
+}
+
+.login-split-page .login-split {
+    height: 80% !important;
+}
+
+.login-split-page #primary {
+    position: static !important;
+    margin-left: 50% !important;
+    min-height: 650px;
+}
+
+body.login {
+    background-color: #f1f1f1;
+}
+
+body.login div#login h1 a {
+    background-image: url(" http://staging.vormingen.vad-host.be/wp-content/uploads/2020/03/logo_baseline.png ");
+}
+
+#login form#loginform, #login form#registerform, #login form#lostpasswordform {
+    background-color: #FFFFFF;
+    padding: 26px 24px 46px 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.13);
+}
+
+.login .privacy-policy-page-link {
+    display: none;
+}
+
+#login form#loginform .input, #login form#registerform .input, #login form#lostpasswordform .input {
+    border-color: #dddddd;
+    border-radius: 0px;
+    padding: 3px 3px 3px 3px;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+#login form#loginform label, #login form#registerform label, #login form#lostpasswordform label {
+}
+
+#login form#loginform .forgetmenot label, #login form#registerform .forgetmenot label, #login form#lostpasswordform .forgetmenot label {
+}
+
+#login form .submit .button {
+    height: auto;
+    background-color: #2ea2cc;
+    color: #ffffff;
+    padding: 0px 12px 2px 12px;
+    border-width: 1px;
+    text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+}
+
+#login form .submit .button:hover, #login form .submit .button:focus {
+    background-color: #1e8cbe;
+}
+
+#login #backtoblog {
+    display: none;
+}
+
+.login #nav, .login #nav a, .login #backtoblog a, .login .privacy-policy-page-link a {
+    color: #999999;
+}
+
+.login #backtoblog a:hover, .login #nav a:hover, .login .privacy-policy-page-link a:hover {
+    color: #2ea2cc;
+}

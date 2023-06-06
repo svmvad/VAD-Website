@@ -79,5 +79,6 @@ Thumbs.db
 
 # track these mu-plugins, plugins, and themes
 # add your own entries here
-!content/plugins/kkgk/
+!content/plugins/vad-vormingen/
+!content/plugins/vad-platform/
 !content/themes/ntdstheme/

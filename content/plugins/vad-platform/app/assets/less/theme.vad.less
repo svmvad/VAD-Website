@@ -1,0 +1,332 @@
+// Platform
+@import "platform.less";
+
+// UIkit Core
+@import "../vendor/assets/uikit/src/less/uikit.less";
+
+// UIkit Theme
+@import "../vendor/assets/uikit-themes/master/_import.less";
+
+// Theme
+@import "theme.less";
+
+
+@internal-fonts: ~'Montserrat:400,500,700|Nunito+Sans:400,700';
+
+//
+// Global
+//
+
+@global-font-family: 'Nunito Sans';
+@global-color: #2A4B6D;
+@global-emphasis-color: #C96858;
+@global-link-color: #C96858;
+@global-link-hover-color: #925042;
+@global-muted-background: #F4F6F7;
+@global-primary-background: #2A4B6D;
+
+//
+// Accordion
+//
+
+@accordion-item-margin-top: 10px;
+@accordion-title-background: #F4F6F7;
+@accordion-title-color: #2A4B6D;
+@accordion-title-font-weight: bold;
+@accordion-title-padding-horizontal: 25px;
+@accordion-icon-color: #FFFFFF;
+
+//
+// Background
+//
+
+@background-default-background: #FFFFFF;
+
+//
+// Base
+//
+
+@base-body-color: #2A4B6D;
+@base-link-color: #C96858;
+@base-link-hover-color: #955147;
+@base-strong-font-weight: 700;
+@base-em-color: #393939;
+@base-heading-color: #C96858;
+@base-heading-font-family: 'Montserrat';
+@base-heading-font-weight: 700;
+@base-heading-text-transform: none;
+@base-h1-color: #FFFFFF;
+@base-h4-color: #2A4B6D;
+
+//
+// Button
+//
+
+@button-border-radius: 30px;
+@button-border-width: 1px;
+@button-font-weight: bold;
+@button-text-transform: none;
+@button-default-background: #C96858;
+@button-default-border: transparent;
+@button-default-color: #FFFFFF;
+@button-default-hover-border: #C96858;
+@button-default-hover-color: #C96858;
+@button-default-active-background: #fff;
+@button-primary-background: #2A4B6D;
+@button-primary-hover-background: rgba(35, 62, 91, 0);
+@button-primary-hover-border: #2A4B6D;
+@button-primary-hover-color: #2A4B6D;
+@button-primary-active-background: #fff ;
+@button-text-color: #C96858;
+@button-text-hover-color: #9A5045;
+@button-link-color: #C96858;
+@button-link-hover-color: #9A5045;
+
+//
+// Card
+//
+
+@card-body-padding-horizontal: 20px;
+@card-body-padding-horizontal-l: 30px;
+@card-body-padding-vertical: 20px;
+@card-body-padding-vertical-l: 30px;
+@card-title-line-height: 1.2;
+@card-default-background: #FFFFFF;
+@card-default-border: #CBCBCB;
+@card-default-border-width: 1px;
+@card-default-hover-background: #FFFFFF;
+@card-default-hover-box-shadow: -8px 20px 30px 0 rgba(0, 0, 0, 0.13);
+@card-default-title-color: #2A4B6D;
+
+
+//
+// Inverse
+//
+
+@inverse-global-color: rgb(255, 255, 255);
+@inverse-global-color-mode: light;
+
+//
+// Navbar
+//
+
+@navbar-background: #FAFAFA;
+@navbar-border: rgba(0, 0, 0, 0.29);
+@navbar-border-width: 0;
+@navbar-mode: border;
+@navbar-nav-item-color: #2A4B6D;
+@navbar-nav-item-font-weight: bold;
+@navbar-nav-item-text-transform: none;
+@navbar-nav-item-active-color: #C96858;
+@navbar-nav-item-line-background: #C96858;
+@navbar-nav-item-line-height: 0;
+@navbar-nav-item-line-mode: true;
+@navbar-nav-item-line-hover-background: rgba(30, 135, 240, 0);
+@navbar-nav-item-line-onclick-background: #2A4B6D;
+@navbar-nav-item-line-active-background: #C96858;
+@navbar-nav-item-line-active-height: 5px;
+@navbar-sticky-box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.26);
+
+//
+// Section
+//
+
+@section-primary-color-mode: light;
+@section-small-padding-vertical: 40px;
+
+//
+// Subnav
+//
+
+@subnav-item-color: #C96858;
+@subnav-item-text-transform: none;
+
+//
+// Tab
+//
+
+@tab-item-font-family: 'Montserrat';
+@tab-item-font-size: 14px;
+
+//
+// Text
+//
+
+@text-lead-color: #FFFFFF;
+
+@internal-fonts: ~'Montserrat:400,500,700|Nunito+Sans:300,400,700';
+
+//
+// Base
+//
+
+@base-body-background: #FAFAFA;
+@base-h1-color: #2A4B6D;
+
+//
+// Card
+//
+
+@card-default-border: #FFFFFF;
+
+//
+// Navbar
+//
+
+@navbar-background: #FFFFFF;
+@navbar-nav-item-font-weight: 300;
+@navbar-nav-item-height: 100px;
+
+//
+// Section
+//
+
+@section-default-background: rgba(255, 255, 255, 0);
+
+//
+// Text
+//
+
+@text-lead-color: #2A4B6D;
+@text-lead-font-size: 1.25rem;
+@text-lead-font-weight: 300;
+
+//
+// FILTER
+//
+
+.ntdst-filter {
+  button.uk-search-icon {
+    color:#BC6D5D;
+  }
+  input.uk-search-input {
+    background:#fefefe;
+  }
+  .ntdst-categories {
+    margin-left:0;
+    position:relative;
+    border:2px solid rgba(0,0,0,0.05);
+
+    > div {
+      position:relative;
+      padding:0;
+
+      &:not(.uk-first-column) {
+        border-left:2px solid rgba(0,0,0,0.05);
+      }
+
+      .filter-active  {
+        margin:0 40px;
+        .uk-button {
+          margin:2px;
+        }
+      }
+      .uk-nav {
+        z-index:99;
+        background: white;
+        position: absolute;
+        left: 0;
+        top: 50px;
+        box-shadow: 0 6px 8px rgb(0 0 0 / 8%);
+      }
+    }
+
+    h3 {
+      color:#324A6A;
+      font-size:18px;
+      font-weight:normal;
+      position:relative;
+      padding: 20px 40px 5px 40px;
+
+      &[aria-expanded="true"] {
+        background:white;
+        span {
+          transform: rotate(-180deg);
+        }
+      }
+      span {
+        float: right;
+      }
+    }
+  }
+}
+
+
+/* FORM */
+form {
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+    .uk-input;
+  }
+  input[type="button"]{
+    .uk-button;
+    .uk-button-default;
+    .uk-align-center;
+  }
+
+  input[type="checkbox"] {
+
+  }
+
+}
+
+/* FOOTER */
+@media (min-width: 980px) {
+  .page-doormat {
+    -webkit-clip-path: polygon(100% 100%,100% 0,75px 0,0 75px,0 100%);
+    clip-path: polygon(100% 100%,100% 0,75px 0,0 75px,0 100%);
+  }
+}
+
+.page-footer {
+  padding:15px 0;
+  background-color:@global-muted-background;
+  z-index:99999;
+  position: relative;
+
+  .uk-subnav {
+    a {
+      font-size:smaller !important;
+    }
+  }
+}
+
+.page-doormat {
+  color:@inverse-global-color;
+  position: relative;
+  background-color: @global-primary-background;
+  overflow: hidden;
+  z-index:9999;
+  a, h3 {
+    color:@inverse-global-color;
+  }
+  a {
+    text-decoration: underline;
+    &.uk-button {
+      text-decoration: none;
+    }
+  }
+  .uk-container {
+    position: relative;
+    z-index: 1;
+    background: 0 0;
+  }
+  .uk-card {
+    background: #475c79;
+    clip-path: polygon(0% 0,100% 0,100% calc(100% - 16px),calc(100% - 12px) 100%,0 100%);
+  }
+
+  &:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    padding-bottom: 50%;
+    display: block;
+    content: '';
+    background: linear-gradient( 135deg,#475c79,#475c79 50%,#324A6A 50%,#324A6A);
+    z-index: 1;
+  }
+}

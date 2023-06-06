@@ -1,0 +1,11 @@
+.choices__list--dropdown, .choices__list[aria-expanded] {
+    color:black;
+}
+.choices input[type=search] {
+    background: none;
+    padding:0;
+}
+.choices__item.choices__item--selectable {
+    color:black;
+}
+

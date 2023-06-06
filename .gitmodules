@@ -1,6 +1,0 @@
-[submodule "wp"]
-	path = wp
-	url = https://github.com/WordPress/WordPress.git
-[submodule "content/plugins/ntdst_platform"]
-	path = content/plugins/ntdst_platform
-	url = https://github.com/netdust/ntdst_platform.git
